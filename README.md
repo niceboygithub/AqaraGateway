@@ -2,7 +2,11 @@
 
 Control Zigbee devices from Home Assistant with **Aqara Gateway (ZHWG15LM, ZHWG12LM, ZNSXJ12LM)**.
 
-**ATTENTION:** The component **only works on modified firmware**.
+This integration was based on the development of @AlexxIT(https://github.com/AlexxIT/XiaomiGateway3/), Thanks Alex.
+
+**ATTENTION:** The component **only works on modified firmware (M1S, M2). For G2H, you need to wired out the UART, then login to gateway to enable telnetd.**.
+
+The method to flash modified firmware will coming soon.
 
 Gateway support **Zigbee 3**.
 
