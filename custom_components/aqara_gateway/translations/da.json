@@ -1,0 +1,23 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Aqara Gateway er allerede konfigureret"
+        },
+        "error": {
+            "connection_error": "Kan ikke oprette forbindelse til Aqara Gateway.",
+        },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Vil du tilf\u00f8je Aqara Gateway-knudepunkt `{name}` til Home Assistant?\r\n{device_info}",
+                "title": "Fandt Aqara Gateway-knudepunkt"
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e6rt",
+                },
+                "description": "Angiv forbindelsesindstillinger for din Aqara Gateway."
+            }
+        }
+    }
+}

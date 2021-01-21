@@ -1,0 +1,23 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il dispositivo \u00e8 gi\u00e0 configurato"
+        },
+        "error": {
+            "connection_error": "Impossibile connettersi ad Aqara Gateway."
+         },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Vuoi aggiungere il nodo Aqara Gateway `{name}` a Home Assistant?\r\n{device_info}",
+                "title": "Trovato nodo Aqara Gateway"
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "description": "Inserisci le impostazioni di connessione del tuo nodo Aqara Gateway."
+            }
+        }
+    }
+}

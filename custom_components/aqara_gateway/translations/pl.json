@@ -1,0 +1,23 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Urz\u0105dzenie jest ju\u017c skonfigurowane"
+        },
+        "error": {
+            "connection_error": "Nie mo\u017cna nawi\u0105za\u0107 po\u0142\u0105czenia z Aqara Gateway."
+        },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Czy chcesz doda\u0107 w\u0119ze\u0142 Aqara Gateway `{name}` do Home Assistanta?\n\n{device_info}",
+                "title": "Znaleziono w\u0119ze\u0142 Aqara Gateway"
+            },
+            "user": {
+                "data": {
+                    "host": "Nazwa hosta lub adres IP"
+                },
+                "description": "Wprowad\u017a ustawienia po\u0142\u0105czenia Aqara Gateway."
+            }
+        }
+    }
+}

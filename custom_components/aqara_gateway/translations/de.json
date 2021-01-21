@@ -1,0 +1,23 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Aqara Gateway ist bereits konfiguriert",
+        },
+        "error": {
+            "connection_error": "Keine Verbindung zum Aqara Gateway m\u00f6glich. ",
+        },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Willst du den Aqara Gateway-Knoten `{name}` zu Home Assistant hinzuf\u00fcgen?\r\n{device_info}",
+                "title": "Gefundener Aqara Gateway-Knoten"
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "description": "Bitte gib die Verbindungseinstellungen deines Aqara Gateway."
+            }
+        }
+    }
+}

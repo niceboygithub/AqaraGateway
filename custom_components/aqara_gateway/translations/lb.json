@@ -1,0 +1,23 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Apparat ass scho konfigur\u00e9iert"
+        },
+        "error": {
+            "connection_error": "Keng Verbindung zum Aqara Gatewa."
+        },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "W\u00ebllt dir den Aqara Gateway Provider `{name}` am Home Assistant dob\u00e4isetzen?\n\n{device_info}",
+                "title": "Entdeckten Aqara Gateway Provider"
+            },
+            "user": {
+                "data": {
+                    "host": "Apparat"
+                },
+                "description": "Gitt Verbindungs Informatioune vun \u00e4rem Aqara Gateway an."
+            }
+        }
+    }
+}

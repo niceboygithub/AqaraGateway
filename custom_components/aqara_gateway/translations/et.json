@@ -1,0 +1,22 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud"        },
+        "error": {
+            "connection_error": "Aqara Gateway-ga ei saa \u00fchendust luua. Veendu.",
+        },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Kas soovid lisada Aqara Gateway'i s\u00f5lme '{name}' Home Assistant-ile?\r\n{device_info}",
+                "title": "Avastastud Aqara Gateway'i s\u00f5lm"
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "description": "Sisesta oma Aqara Gateway s\u00f5lme \u00fchenduse s\u00e4tted."
+            }
+        }
+    }
+}

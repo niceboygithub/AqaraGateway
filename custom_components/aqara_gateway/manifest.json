@@ -1,0 +1,16 @@
+{
+  "domain": "aqara_gateway",
+  "name": "Aqara Gateway",
+  "config_flow": true,
+  "zeroconf": ["_aqara._tcp.local.", "_aqara-setup._tcp.local."],
+  "documentation": "https://github.com/niceboygithub/AqaraGateway",
+  "dependencies": [
+  ],
+  "after_dependencies": ["zeroconf"],
+  "codeowners": [
+    "@niceboygithub"
+  ],
+  "requirements": [
+    "paho-mqtt>=1.5.0"
+  ]
+}

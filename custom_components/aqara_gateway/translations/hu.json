@@ -1,0 +1,23 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Az Aqara Gateway-t m\u00e1r konfigur\u00e1ltad."
+        },
+        "error": {
+            "connection_error": "Nem lehet csatlakozni az Aqara Gateway-hez.",
+        },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Szeretn\u00e9d hozz\u00e1adni a(z) `{name}` Aqara Gateway csom\u00f3pontot a Home Assistant-hoz?\r\n{device_info}",
+                "title": "Felfedezett ESPHome csom\u00f3pont"
+            },
+            "user": {
+                "data": {
+                    "host": "Hoszt"
+                },
+                "description": "K\u00e9rlek, add meg az Aqara Gateway csom\u00f3pontod kapcsol\u00f3d\u00e1si be\u00e1ll\u00edt\u00e1sait."
+            }
+        }
+    }
+}

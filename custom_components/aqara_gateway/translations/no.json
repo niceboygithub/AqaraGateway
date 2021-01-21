@@ -1,0 +1,23 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten er allerede konfigurert"
+        },
+        "error": {
+            "connection_error": "Kan ikke koble tilAqara Gateway."
+        },
+        "flow_title": "",
+        "step": {
+            "discovery_confirm": {
+                "description": "\u00d8nsker du \u00e5 legge Aqara Gateway `{name}` til Home Assistant?\n\n{device_info}",
+                "title": "Oppdaget Aqara Gateway"
+            },
+            "user": {
+                "data": {
+                    "host": "Vert"
+                },
+                "description": "Vennligst fyll inn tilkoblingsinnstillinger for din Aqara Gateway."
+            }
+        }
+    }
+}

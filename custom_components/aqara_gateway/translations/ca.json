@@ -1,0 +1,23 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositiu ja est\u00e0 configurat",
+        },
+        "error": {
+            "connection_error": "No s'ha pogut connectar amb Aqara Gateway.",
+        },
+        "flow_title": "ESPHome: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Vols afegir el node `{name}` d'Aqara Gateway a Home Assistant?\n\n{device_info}",
+                "title": "Node d'Aqara Gateway descobert"
+            },
+            "user": {
+                "data": {
+                    "host": "Amfitri\u00f3",
+                },
+                "description": "Introdueix la informaci\u00f3 de connexi\u00f3 del teu node Aqara Gateway."
+            }
+        }
+    }
+}

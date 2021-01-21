@@ -1,0 +1,15 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Aqara Gateway on jo m\u00e4\u00e4ritetty"
+        },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Palvelin"
+                }
+            }
+        }
+    }
+}

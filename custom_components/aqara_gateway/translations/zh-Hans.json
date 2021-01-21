@@ -1,0 +1,23 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u8bbe\u5907\u5df2\u7ecf\u914d\u7f6e\u8fc7\u4e86",
+        },
+        "error": {
+            "connection_error": "\u65e0\u6cd5\u8fde\u63a5\u5230 Aqara Gateway",
+        },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "\u662f\u5426\u8981\u5c06 Aqara Gateway \u8282\u70b9 `{name}` \u6dfb\u52a0\u5230 Home Assistant\uff1f \n\n{device_info}",
+                "title": "\u53d1\u73b0\u4e86 Aqara Gateway \u8282\u70b9"
+            },
+            "user": {
+                "data": {
+                    "host": "\u4e3b\u673a",
+                },
+                "description": "\u8bf7\u8f93\u5165\u60a8\u7684 Aqara Gateway \u8282\u70b9\u7684\u8fde\u63a5\u8bbe\u7f6e\u3002"
+            }
+        }
+    }
+}

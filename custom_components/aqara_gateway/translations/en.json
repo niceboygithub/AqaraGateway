@@ -1,0 +1,25 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
+        "error": {
+            "connection_error": "Can't connect to Aqara Gateway."
+        },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Do you want to add the Aqara Gateway `{name}` to Home Assistant? \n\n{device_info}",
+                "title": "Discovered Aqara Gateway"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Password",
+                    "model": "Model"
+                },
+                "description": "Please enter connection settings of your Aqara Gateway."
+            }
+        }
+    }
+}

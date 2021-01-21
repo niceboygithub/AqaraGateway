@@ -1,0 +1,23 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Aqara Gateway is al geconfigureerd"
+        },
+        "error": {
+            "connection_error": "Kan geen verbinding maken met Aqara Gateway."
+        },
+        "flow_title": "ESPHome: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Wil je de Aqara Gateway `{name}` toevoegen aan de Home Assistant?\n\n{device_info}",
+                "title": "Aqara Gateway ontdekt"
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "description": "Voer de verbindingsinstellingen in van uw Aqara Gateway."
+            }
+        }
+    }
+}
