@@ -14,12 +14,12 @@ from homeassistant.helpers.typing import HomeAssistantType
 # params: [lumi res name, xiaomi prop name, hass attr name, hass domain]
 # old devices uses params, new devices uses mi_spec
 DEVICES = [{
-    'lumi.gateway.acn01': ["Aqara", "Gateway M1S", "ZHWG15LM"], # tested
-#    'lumi.gateway.aeu01': ["Aqara", "Gateway M1S", "HM1S-G01"], 
-#    'lumi.gateway.iragl01': ["Aqara", "Gateway M2", "ZHWG12LM"],
-#    'lumi.gateway.iragl7': ["Aqara", "Gateway M2", "HM2-G01"],
-    'lumi.gateway.iragl5': ["Aqara", "Gateway M2", "ZHWG12LM"], # tested
-    'lumi.camera.gwagl02': ["Aqara", "Camera Hub G2H", "ZNSXJ12LM"], # tested
+    'lumi.gateway.acn01': ["Aqara", "Gateway M1S", "ZHWG15LM"],  # tested
+    # 'lumi.gateway.aeu01': ["Aqara", "Gateway M1S", "HM1S-G01"],
+    # 'lumi.gateway.iragl01': ["Aqara", "Gateway M2", "ZHWG12LM"],
+    # 'lumi.gateway.iragl7': ["Aqara", "Gateway M2", "HM2-G01"],
+    'lumi.gateway.iragl5': ["Aqara", "Gateway M2", "ZHWG12LM"],  # tested
+    'lumi.camera.gwagl02': ["Aqara", "Camera Hub G2H", "ZNSXJ12LM"],  # tested
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],
@@ -372,7 +372,7 @@ GLOBAL_PROP = {
     '0.12.85': 'load_power',
     '0.13.85': 'consumption',
     '0.14.85': 'load_current',
-    '8.0.2001': 'battery', # battery voltage
+    '8.0.2001': 'battery',  # battery voltage
     '8.0.2002': 'reset_cnt',
     '8.0.2003': 'send_all_cnt',
     '8.0.2004': 'send_fail_cnt',

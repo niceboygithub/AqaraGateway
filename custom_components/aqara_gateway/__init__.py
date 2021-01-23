@@ -45,7 +45,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     # migrate data (also after first setup) to options
     if entry.data:
-        hass.config_entries.async_update_entry(entry, data={},
+        hass.config_entries.async_update_entry(entry, data=entry.data,
                                                options=entry.data)
 
     config = hass.data[DOMAIN]['config']
@@ -124,22 +124,27 @@ class GatewayGenericDevice(Entity):
 
     @property
     def should_poll(self) -> bool:
+        """poll or not"""
         return False
 
     @property
     def unique_id(self):
+        """return unique_id """
         return self._unique_id
 
     @property
     def name(self):
+        """return name """
         return self._name
 
     @property
     def available(self) -> bool:
+        """ return available """
         return self.device.get('online', True)
 
     @property
     def device_state_attributes(self):
+        """ return attrs """
         return self._attrs
 
     @property

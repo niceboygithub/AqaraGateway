@@ -9,26 +9,26 @@ from threading import Thread
 from typing import Optional
 
 from homeassistant.core import Event
+from homeassistant.const import CONF_NAME, CONF_PASSWORD
 
 from paho.mqtt.client import Client, MQTTMessage
 
 from .shell import TelnetShell
 from .utils import DEVICES, Utils, GLOBAL_PROP
+from .const import CONF_MODEL
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class Gateway(Thread):
-    # pylint: disable=too-many-instance-attributes, unused-argument, too-many-arguments
+    # pylint: disable=too-many-instance-attributes, unused-argument
     """ Aqara Gateway """
 
-    def __init__(self, hass, host: str, password: str, model: str, config: dict, **options):
+    def __init__(self, hass, host: str, config: dict, **options):
         """Initialize the Xiaomi/Aqara device."""
         super().__init__(daemon=True)
         self.hass = hass
         self.host = host
-        self.password = password
-        self.model = model
         self.options = options
         # if mqtt server connected
         self.enabled = False
@@ -39,6 +39,7 @@ class Gateway(Thread):
         self._mqttc.on_disconnect = self.on_disconnect
         self._mqttc.on_message = self.on_message
 
+        self._debug = options.get('debug', '')  # for fast access
         self.parent_scan_interval = (-1 if options.get('parent') is None
                                      else options['parent'])
         self.default_devices = config['devices'] if config else None
@@ -69,7 +70,8 @@ class Gateway(Thread):
 
     def debug(self, message: str):
         """ deubug function """
-        _LOGGER.debug("%s: %s", self.host, message)
+        if 'true' in self._debug:
+            _LOGGER.debug("%s: %s", self.host, message)
 
     def stop(self):
         """ stop function """
@@ -84,7 +86,8 @@ class Gateway(Thread):
                 self.host
             )
         except OSError as err:
-            _LOGGER.error("Failed to connect to MQTT server due to exception: %s", err)
+            _LOGGER.error(
+                "Failed to connect to MQTT server due to exception: %s", err)
 
         if result is not None and result != 0:
             _LOGGER.error(
@@ -146,8 +149,9 @@ class Gateway(Thread):
         """
         try:
             shell = TelnetShell(self.host,
-                                self.password,
-                                Utils.get_device_name(self.model))
+                                self.options.get(CONF_PASSWORD, ''),
+                                Utils.get_device_name(
+                                    self.options.get(CONF_MODEL, '')))
 
             processes = shell.get_running_ps()
             public_mosquitto = shell.check_public_mosquitto()
@@ -336,8 +340,9 @@ class Gateway(Thread):
                                 ).strip().split(' '))
                         data.update(dict(zip(stat, stat)))
             shell = TelnetShell(self.host,
-                                self.password,
-                                Utils.get_device_name(self.model))
+                                self.options.get(CONF_PASSWORD, ''),
+                                Utils.get_device_name(self.options.get(
+                                    CONF_MODEL, '')))
             raw = shell.read_file('/data/zigbee/networkBak.info')
             if len(raw) >= 1:
                 value = json.loads(raw)
@@ -363,6 +368,10 @@ class Gateway(Thread):
     def on_message(self, client: Client, userdata, msg: MQTTMessage):
         # pylint: disable=unused-argument
         """ on getting messages from mqtt server """
+
+        if 'mqtt' in self._debug:
+            self.debug("MQTT on_message: %s %s", msg.topic, msg.payload.decode())
+
         try:
             json.loads(msg.payload)
         except ValueError:
@@ -387,8 +396,10 @@ class Gateway(Thread):
 
         if prop == 'paring' and value == 0:
             shell = TelnetShell(self.host,
-                                self.password,
-                                Utils.get_device_name(self.model))
+                                self.options.get(CONF_PASSWORD, ''),
+                                Utils.get_device_name(
+                                    self.options.get(CONF_MODEL, '')
+                                ))
             zb_device = shell.get_prop("sys.zb_device")
             if len(zb_device) >= 1:
                 raw = shell.read_file(zb_device)
@@ -424,6 +435,7 @@ class Gateway(Thread):
 
     def _process_message(self, data: dict):
         # pylint: disable=too-many-branches, too-many-statements
+        # pylint: disable=too-many-return-statements
 
         if data['cmd'] == 'heartbeat':
             # don't know if only one item
@@ -452,7 +464,8 @@ class Gateway(Thread):
                     if prop in GLOBAL_PROP:
                         prop = GLOBAL_PROP[prop]
                     if prop in ('removed_did', 'paring'):
-                        self._process_devices_info(prop, param.get('value', None))
+                        self._process_devices_info(
+                            prop, param.get('value', None))
 #                        self._handle_device_remove({})
                         return
             self.process_gateway_stats(data[pkey])
@@ -536,7 +549,7 @@ class Gateway(Thread):
             device['init'] = payload
             self.setup_devices([device])
 
-    async def _handle_device_remove(self, payload:dict):
+    async def _handle_device_remove(self, payload: dict):
         """Remove device from Hass. """
 
         async def device_registry_updated(event: Event):
@@ -554,7 +567,8 @@ class Gateway(Thread):
             # remove from Hass
 #            registry.async_remove_device(hass_device.id)
 
-        self.hass.bus.async_listen('device_registry_updated', device_registry_updated)
+        self.hass.bus.async_listen(
+            'device_registry_updated', device_registry_updated)
 
     def send(self, device: dict, data: dict):
         """ send command """
@@ -570,7 +584,8 @@ class Gateway(Thread):
                     if key == 'switch':
                         val = bool(val)
                     key = next(p[0] for p in device['mi_spec'] if p[2] == key)
-                    params.append({'siid': key[0], 'piid': key[1], 'value': val})
+                    params.append(
+                        {'siid': key[0], 'piid': key[1], 'value': val})
 
                 payload['mi_spec'] = params
             else:
@@ -593,7 +608,9 @@ class Gateway(Thread):
             return False
 
 
-def is_aqaragateway(host: str, password: str, device_name: str) -> Optional[dict]:
+def is_aqaragateway(host: str,
+                    password: str,
+                    device_name: str) -> Optional[dict]:
     """return name if is supported gateway"""
     result = {}
     result['status'] = 'error'
@@ -621,7 +638,8 @@ def is_aqaragateway(host: str, password: str, device_name: str) -> Optional[dict
             return result
 
         if model in DEVICES[0]:
-            result['name'] = "{}-{}".format(name, mac[-5:].upper().replace(":", ""))
+            result[CONF_NAME] = "{}-{}".format(
+                name, mac[-5:].upper().replace(":", ""))
             result['model'] = model
             result['status'] = 'ok'
     return result

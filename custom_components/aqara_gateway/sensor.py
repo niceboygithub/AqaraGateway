@@ -139,6 +139,7 @@ class GatewaySensor(GatewayGenericDevice):
                 self._state = data[key]
         self.async_write_ha_state()
 
+
 class GatewayGasSensor(GatewaySensor):
     """ Xiaomi/Aqara Gas sensor """
     def update(self, data: dict = None):

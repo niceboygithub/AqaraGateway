@@ -5,14 +5,21 @@ from typing import Optional
 
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
-from homeassistant.config_entries import CONN_CLASS_LOCAL_PUSH, ConfigFlow, OptionsFlow, ConfigEntry
+from homeassistant.config_entries import (
+    CONN_CLASS_LOCAL_PUSH,
+    ConfigFlow,
+    OptionsFlow,
+    ConfigEntry
+    )
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PASSWORD
 from homeassistant.core import callback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from homeassistant.util.network import is_ip_address
 
 from .core import gateway
-from .core.const import DOMAIN, DATA_KEY, OPT_DEVICE_NAME, CONF_MODEL
+from .core.const import (
+    DOMAIN, DATA_KEY, OPT_DEVICE_NAME, CONF_MODEL, OPT_DEBUG, CONF_DEBUG
+)
 from .core.entry_data import RuntimeEntryData
 
 
@@ -46,7 +53,9 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             self._set_user_input(user_input)
             if not is_ip_address(self._host):
                 return self.async_abort(reason="connection_error")
-            ret = gateway.is_aqaragateway(self._host, self._password, self._model)
+            ret = gateway.is_aqaragateway(self._host,
+                                          self._password,
+                                          self._model)
             if "error" in ret['status']:
                 return self.async_abort(reason="connection_error")
             self._name = ret.get('name', '')
@@ -59,7 +68,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         fields[vol.Optional(CONF_PASSWORD,
                             default=self._password or vol.UNDEFINED)] = str
         fields[vol.Optional(CONF_MODEL,
-                            default=self._model or ['m1s'])] = cv.multi_select(OPT_DEVICE_NAME)
+                            default=self._model or ['m1s'])] = vol.In(
+                                OPT_DEVICE_NAME)
 
         return self.async_show_form(
             step_id="user",
@@ -156,7 +166,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                 already_configured = True
             elif entry.entry_id in self.hass.data.get(DATA_KEY, {}):
                 # Does a config entry with this name already exist?
-                data: RuntimeEntryData = self.hass.data[DATA_KEY][entry.entry_id]
+                data: RuntimeEntryData = self.hass.data[
+                    DATA_KEY][entry.entry_id]
 
                 # Node names are unique in the network
                 if data.device_info is not None:
@@ -191,6 +202,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             },
         )
 
+
 class OptionsFlowHandler(OptionsFlow):
     _host = None
     _password = None
@@ -221,6 +233,7 @@ class OptionsFlowHandler(OptionsFlow):
         self._host = self.config_entry.options[CONF_HOST]
         self._password = self.config_entry.options[CONF_PASSWORD]
         self._model = self.config_entry.options.get(CONF_MODEL, '')
+        debug = self.config_entry.options.get(CONF_DEBUG, [])
 
         return self.async_show_form(
             step_id="init",
@@ -228,9 +241,12 @@ class OptionsFlowHandler(OptionsFlow):
                 {
                     vol.Required(CONF_HOST, default=self._host): str,
                     vol.Optional(CONF_PASSWORD, default=self._password): str,
-                    vol.Optional(CONF_MODEL): cv.multi_select(
+                    vol.Optional(CONF_MODEL): vol.In(
                         OPT_DEVICE_NAME
-                    )
+                    ),
+                    vol.Optional(CONF_DEBUG, default=debug): cv.multi_select(
+                        OPT_DEBUG
+                    ),
                 }
             ),
         )

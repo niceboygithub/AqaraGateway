@@ -293,7 +293,7 @@ class GatewayDoorSensor(GatewayBinarySensor, BinarySensorEntity):
                         value, (int, float)) else None
                 else:
                     self._chip_temperature = value
-            if key == NO_CLOSE: # handle push from the hub
+            if key == NO_CLOSE:  # handle push from the hub
                 self._open_since = value
             if key == LQI:
                 self._lqi = value
@@ -309,6 +309,7 @@ class GatewayDoorSensor(GatewayBinarySensor, BinarySensorEntity):
                     self._state = not value
 
         self.async_write_ha_state()
+
 
 class GatewaWaterLeakSensor(GatewayBinarySensor, BinarySensorEntity):
     """Representation of a Xiaomi/Aqara Water Leak Sensor."""
@@ -352,7 +353,7 @@ class GatewaWaterLeakSensor(GatewayBinarySensor, BinarySensorEntity):
                 self._chip_temperature = format(
                     (int(value) - 32) * 5 / 9, '.2f') if isinstance(
                     value, (int, float)) else None
-            if key == NO_CLOSE: # handle push from the hub
+            if key == NO_CLOSE:  # handle push from the hub
                 self._open_since = value
             if key == LQI:
                 self._lqi = value
@@ -492,7 +493,8 @@ class GatewayButtonSwitch(GatewayBinarySensor, BinarySensorEntity):
                 data[self._attr] = BUTTON.get(value, 'unknown')
                 break
             if key.startswith('button_both'):
-                data[self._attr] = key + '_' + BUTTON_BOTH.get(value, 'unknown')
+                data[self._attr] = key + '_' + BUTTON_BOTH.get(
+                    value, 'unknown')
                 break
             if key.startswith('button'):
                 data[self._attr] = key + '_' + BUTTON.get(value, 'unknown')
@@ -512,6 +514,7 @@ class GatewayButtonSwitch(GatewayBinarySensor, BinarySensorEntity):
             self._state = ''
 
         self.async_write_ha_state()
+
 
 class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
     """ Xiaomi/Aqara Action Cube """
