@@ -21,6 +21,7 @@ from .core.const import (
     DOMAIN, DATA_KEY, OPT_DEVICE_NAME, CONF_MODEL, OPT_DEBUG, CONF_DEBUG
 )
 from .core.entry_data import RuntimeEntryData
+from .core.utils import Utils
 
 
 
@@ -122,12 +123,6 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
     async def async_step_zeroconf(self, discovery_info: DiscoveryInfoType):
         """Handle zeroconf discovery."""
         # Hostname is format: _aqara._tcp.local., _aqara-setup._tcp.local.
-        if discovery_info.get('type') == '_aqara-setup._tcp.local.':
-            self._host = discovery_info["properties"].get(
-                "address", discovery_info["host"])
-            local_name = discovery_info["hostname"][:-1]
-            self._name = local_name[: -len(".local")]
-            return await self.async_step_user()
         local_name = discovery_info["hostname"][:-1]
         node_name = local_name[: -len(".local")]
         address = discovery_info["properties"].get(
@@ -144,8 +139,13 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                 f"Cloud: {fwcloud}"
             )
 
-        error = gateway.is_aqaragateway(address, None, model)
-        if error is None:
+        self._host = discovery_info[CONF_HOST]
+        self._name = node_name
+        self._password = ''
+        self._model = Utils.get_device_name(model).split(" ")[-1]
+
+        ret = gateway.is_aqaragateway(address, None, model)
+        if "ok" not in ret['status']:
             return await self.async_step_user()
 
         # Check if already configured
@@ -184,12 +184,10 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
 
                 return self.async_abort(reason="already_configured")
 
-        self._host = discovery_info[CONF_HOST]
-        self._name = node_name
-        self._password = ''
-        self._model = model
-
-        return await self.async_step_discovery_confirm()
+        if discovery_info.get('type') == '_aqara-setup._tcp.local.':
+            return await self.async_step_user()
+        else:
+            return await self.async_step_discovery_confirm()
 
     @callback
     def _async_get_entry(self):
