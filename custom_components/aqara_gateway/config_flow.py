@@ -1,5 +1,4 @@
 """Config flow to configure aqara gateway component."""
-import logging
 from collections import OrderedDict
 from typing import Optional
 
@@ -143,10 +142,6 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         self._name = node_name
         self._password = ''
         self._model = Utils.get_device_name(model).split(" ")[-1]
-
-        ret = gateway.is_aqaragateway(address, None, model)
-        if "ok" not in ret['status']:
-            return await self.async_step_user()
 
         # Check if already configured
         if node_name:
