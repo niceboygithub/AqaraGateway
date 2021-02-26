@@ -1,9 +1,9 @@
 {
     "config": {
-        "flow_title": "ESPHome: {name}",
+        "flow_title": "Aqara Gateway: {name}",
         "step": {
             "discovery_confirm": {
-                "title": "Fann ESPhome node"
+                "title": "Fann Aqara Gateway"
             }
         }
     }

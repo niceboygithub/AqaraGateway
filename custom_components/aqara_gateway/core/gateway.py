@@ -49,6 +49,7 @@ class Gateway(Thread):
         self.setups = {}
         self._device_state_attributes = {}
         self._info_ts = None
+        self._illuminance_did = ''
 
     @property
     def device(self):
@@ -71,7 +72,7 @@ class Gateway(Thread):
     def debug(self, message: str):
         """ deubug function """
         if 'true' in self._debug:
-            _LOGGER.debug("%s: %s", self.host, message)
+            _LOGGER.debug("{}: {}".format(self.host, message))
 
     def stop(self):
         """ stop function """
@@ -87,11 +88,11 @@ class Gateway(Thread):
             )
         except OSError as err:
             _LOGGER.error(
-                "Failed to connect to MQTT server due to exception: %s", err)
+                "Failed to connect to MQTT server due to exception: {}".format(err))
 
         if result is not None and result != 0:
             _LOGGER.error(
-                "Failed to connect to MQTT server: %s", self.host
+                "Failed to connect to MQTT server: {}".format(self.host)
             )
 
         self._mqttc.loop_start()
@@ -155,7 +156,8 @@ class Gateway(Thread):
 
             processes = shell.get_running_ps()
             public_mosquitto = shell.check_public_mosquitto()
-            self.debug("mosquitto is not running as public!")
+            if not public_mosquitto:
+                self.debug("mosquitto is not running as public!")
 
             if "/data/bin/mosquitto -d" not in processes:
                 if "mosquitto" not in processes or not public_mosquitto:
@@ -279,9 +281,12 @@ class Gateway(Thread):
                         time.sleep(1)
                         timeout = timeout - 1
                     attr = param[2]
+                    if attr == 'illuminance' and device['type'] =='gateway':
+                        self._illuminance_did = device['did']
+
                     self.setups[domain](self, device, attr)
 
-            if self.options.get('stats') and device['type'] != 'mesh':
+            if self.options.get('stats'):
                 while 'sensor' not in self.setups:
                     time.sleep(1)
                 self.setups['sensor'](self, device, device['type'])
@@ -370,14 +375,14 @@ class Gateway(Thread):
         """ on getting messages from mqtt server """
 
         if 'mqtt' in self._debug:
-            self.debug("MQTT on_message: %s %s", msg.topic, msg.payload.decode())
+            self.debug("MQTT on_message: {} {}".format(msg.topic, msg.payload.decode()))
 
         try:
             json.loads(msg.payload)
         except ValueError:
             self.debug("Decoding JSON failed")
             return
-        self.debug("MQTT on_message: {}".format(json.loads(msg.payload)))
+
         if msg.topic == 'zigbee/send':
             payload = json.loads(msg.payload)
             self._process_message(payload)
@@ -446,17 +451,19 @@ class Gateway(Thread):
         elif data['cmd'] == 'report':
             pkey = 'params' if 'params' in data else 'mi_spec'
         elif data['cmd'] in ('write_rsp', 'read_rsp'):
-            pkey = 'results'
+            pkey = 'results' if 'results' in data else 'mi_spec'
         elif data['cmd'] == 'write_ack':
             return
+        elif data['cmd'] == 'behaved':
+            return
         else:
-            _LOGGER.warning("Unsupported cmd: %s", data)
+            _LOGGER.warning("Unsupported cmd: {}".format(data))
             return
 
         did = data['did']
 
         if did == 'lumi.0':
-            if pkey == 'results':
+            if pkey == 'results' or pkey == 'params':
                 for param in data[pkey]:
                     if param.get('error_code', 0) != 0:
                         continue
@@ -468,6 +475,14 @@ class Gateway(Thread):
                             prop, param.get('value', None))
 #                        self._handle_device_remove({})
                         return
+                    if (prop in ('illuminance')
+                            and self._illuminance_did in self.updates):
+                        payload = {}
+                        payload[prop] = param.get('value')
+                        for handler in self.updates[self._illuminance_did]:
+                            handler(payload)
+                        return
+
             self.process_gateway_stats(data[pkey])
             if did in self.updates:
                 self.updates[did](data[pkey])
@@ -480,6 +495,8 @@ class Gateway(Thread):
         device = self.devices.get(did, None)
         if device is None:
             return
+        ts = time.time()
+
         payload = {}
 
         # convert codes to names
@@ -494,7 +511,7 @@ class Gateway(Thread):
             elif 'eiid' in param:
                 prop = f"{param['siid']}.{param['eiid']}"
             else:
-                _LOGGER.warning("Unsupported param: %s", data)
+                _LOGGER.warning("Unsupported param: {}".format(data))
                 return
 
             if prop in GLOBAL_PROP:
@@ -518,9 +535,8 @@ class Gateway(Thread):
             elif prop == 'battery' and param['value'] > 1000:
                 # xiaomi light sensor
                 payload[prop] = round((min(param['value'], 3200) - 2500) / 7)
-            elif prop == 'alive':
-                # {'res_name':'8.0.2102','value':{'status':'online','time':0}}
-                device['online'] = (param['value']['status'] == 'online')
+            elif prop == 'alive' and param['value']['status'] == 'offline':
+                device['online'] = False
             elif prop == 'angle':
                 # xiaomi cube 100 points = 360 degrees
                 payload[prop] = param['value'] * 4
@@ -536,6 +552,10 @@ class Gateway(Thread):
                     payload[prop] = 1
                 else:
                     payload[prop] = param['arguments']
+
+        self.debug("{} {} <= {} [{}]".format(
+            device['did'], device['model'], payload, ts
+        ))
 
         for handler in self.updates[did]:
             handler(payload)
@@ -556,8 +576,8 @@ class Gateway(Thread):
             if event.data['action'] != 'update':
                 return
 
-            registry = self.hass.data['device_registry']
-            hass_device = registry.async_get(event.data['device_id'])
+#            registry = self.hass.data['device_registry']
+#            hass_device = registry.async_get(event.data['device_id'])
             # check empty identifiers
 #            if not hass_device or not hass_device.identifiers:
 #                return

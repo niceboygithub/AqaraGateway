@@ -4,7 +4,7 @@
             "already_configured": "Enheten er allerede konfigurert"
         },
         "error": {
-            "connection_error": "Kan ikke koble tilAqara Gateway."
+            "connection_error": "Kan ikke koble til Aqara Gateway."
         },
         "flow_title": "",
         "step": {
@@ -14,9 +14,26 @@
             },
             "user": {
                 "data": {
-                    "host": "Vert"
+                    "host": "Vert",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
                 },
                 "description": "Vennligst fyll inn tilkoblingsinnstillinger for din Aqara Gateway."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "Vert",
+                    "password": "Password",
+                    "model": "Model",
+                    "stats": "Stats",
+                    "debug": "Debug"
+                }
             }
         }
     }

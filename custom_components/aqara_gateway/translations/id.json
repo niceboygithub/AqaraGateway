@@ -4,11 +4,28 @@
             "already_configured": "Aqara Gateway sudah dikonfigurasi"
         },
         "step": {
-            "authenticate": {
+            "user": {
                 "data": {
-                    "password": "Kata kunci"
+                    "host": "Host",
+                    "password": "Kata kunci",
+                    "model": "Model",
+                    "debug": "Debug"
                 },
                 "description": "Silakan masukkan kata kunci yang Anda atur di konfigurasi Anda."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "Host",
+                    "password": "Kata kunci",
+                    "model": "Model",
+                    "stats": "Stats",
+                    "debug": "Debug"
+                }
             }
         }
     }

@@ -7,7 +7,24 @@
         "step": {
             "user": {
                 "data": {
-                    "host": "Palvelin"
+                    "host": "Palvelin",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "Palvelin",
+                    "password": "Password",
+                    "model": "Model",
+                    "stats": "Stats",
+                    "debug": "Debug"
                 }
             }
         }

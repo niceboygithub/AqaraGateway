@@ -17,7 +17,7 @@ from homeassistant.util.network import is_ip_address
 
 from .core import gateway
 from .core.const import (
-    DOMAIN, DATA_KEY, OPT_DEVICE_NAME, CONF_MODEL, OPT_DEBUG, CONF_DEBUG
+    DOMAIN, DATA_KEY, OPT_DEVICE_NAME, CONF_MODEL, OPT_DEBUG, CONF_DEBUG, CONF_STATS
 )
 from .core.entry_data import RuntimeEntryData
 from .core.utils import Utils
@@ -220,12 +220,15 @@ class OptionsFlowHandler(OptionsFlow):
                 data={
                     CONF_HOST: self._host,
                     CONF_PASSWORD: self._password,
-                    CONF_MODEL: self._model
+                    CONF_MODEL: self._model,
+#                    CONF_STATS: user_input.get(CONF_STATS, False),
+                    CONF_DEBUG: user_input.get(CONF_DEBUG, []),
                 },
             )
         self._host = self.config_entry.options[CONF_HOST]
         self._password = self.config_entry.options[CONF_PASSWORD]
         self._model = self.config_entry.options.get(CONF_MODEL, '')
+#        stats = self.config_entry.options.get(CONF_STATS, False)
         debug = self.config_entry.options.get(CONF_DEBUG, [])
 
         return self.async_show_form(
@@ -234,9 +237,7 @@ class OptionsFlowHandler(OptionsFlow):
                 {
                     vol.Required(CONF_HOST, default=self._host): str,
                     vol.Optional(CONF_PASSWORD, default=self._password): str,
-                    vol.Optional(CONF_MODEL): vol.In(
-                        OPT_DEVICE_NAME
-                    ),
+#                    vol.Required(CONF_STATS, default=stats): bool,
                     vol.Optional(CONF_DEBUG, default=debug): cv.multi_select(
                         OPT_DEBUG
                     ),

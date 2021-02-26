@@ -14,9 +14,26 @@
             },
             "user": {
                 "data": {
-                    "host": "Host"
+                    "host": "Host",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
                 },
                 "description": "Introduce la configuraci\u00f3n de la conexi\u00f3n de tu nodo Aqara Gateway."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "Host",
+                    "password": "Password",
+                    "model": "Model",
+                    "stats": "Stats",
+                    "debug": "Debug"
+                }
             }
         }
     }

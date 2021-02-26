@@ -14,9 +14,26 @@
             },
             "user": {
                 "data": {
-                    "host": "Nazwa hosta lub adres IP"
+                    "host": "Nazwa hosta lub adres IP",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
                 },
                 "description": "Wprowad\u017a ustawienia po\u0142\u0105czenia Aqara Gateway."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "Nazwa hosta lub adres IP",
+                    "password": "Password",
+                    "model": "Model",
+                    "stats": "Stats",
+                    "debug": "Debug"
+                }
             }
         }
     }

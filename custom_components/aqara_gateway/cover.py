@@ -20,6 +20,10 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     aqara_gateway.add_setup('cover', setup)
 
 
+async def async_unload_entry(hass, entry):
+    return True
+
+
 class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
     """Representation of a XiaomiGenericCover."""
 

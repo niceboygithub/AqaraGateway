@@ -14,9 +14,26 @@
             },
             "user": {
                 "data": {
-                    "host": "Apparat"
+                    "host": "Apparat",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
                 },
                 "description": "Gitt Verbindungs Informatioune vun \u00e4rem Aqara Gateway an."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "Apparat",
+                    "password": "Password",
+                    "model": "Model",
+                    "stats": "Stats",
+                    "debug": "Debug"
+                }
             }
         }
     }

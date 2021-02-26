@@ -15,8 +15,25 @@
             "user": {
                 "data": {
                     "host": "Hostitel",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
                 },
                 "description": "Zadejte pros\u00edm nastaven\u00ed p\u0159ipojen\u00ed va\u0161eho Aqara Gateway."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "Hostitel",
+                    "password": "Password",
+                    "model": "Model",
+                    "stats": "Stats",
+                    "debug": "Debug"
+                }
             }
         }
     }

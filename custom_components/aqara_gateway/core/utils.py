@@ -1,7 +1,13 @@
 """ device info and utils """
+# pylint: disable=broad-except
+import logging
 import re
+import uuid
+from datetime import datetime
 from typing import Optional
 
+from aiohttp import web
+from homeassistant.components.http import HomeAssistantView
 from homeassistant.helpers.device_registry import DeviceRegistry
 from homeassistant.helpers.typing import HomeAssistantType
 
@@ -33,6 +39,7 @@ DEVICES = [{
         ['8.0.2111', None, 'pair_command', None],  # add new device
         ['8.0.2157', None, 'panId', None],
         ['8.0.2155', None, 'cloud', None],  # {"cloud_link":0}
+        ['0.3.85', 'illumination', 'illuminance', 'sensor'],
         [None, None, 'pair', 'remote'],
     ]
 }, {
@@ -114,6 +121,7 @@ DEVICES = [{
     ]
 }, {
     'lumi.switch.b2lacn02': ["Aqara", "Double Wall Switch D1", "QBKG22LM"],
+    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -250,7 +258,6 @@ DEVICES = [{
 }, {
     # motion sensor
     'lumi.sensor_motion': ["Xiaomi", "Motion Sensor", "RTCGQ01LM"],
-    'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
     'params': [
         ['3.1.85', None, 'motion', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
@@ -368,6 +375,7 @@ DEVICES = [{
 }]
 
 GLOBAL_PROP = {
+    '0.3.85': 'illuminance',
     '0.11.85': 'load_voltage',
     '0.12.85': 'load_power',
     '0.13.85': 'consumption',
@@ -401,6 +409,7 @@ GLOBAL_PROP = {
     '8.0.2041': 'model',
     '8.0.2042': 'max_power',
     '8.0.2044': 'plug_detection',
+    '8.0.2080': 'zgb_ver',
     '8.0.2082': 'removed_did',
     '8.0.2084': 'added_device',
     '8.0.2089': 'dfu',
@@ -410,6 +419,7 @@ GLOBAL_PROP = {
     '8.0.2109': 'paring',
     '8.0.2111': 'pair_command',
     '8.0.2114': '8.0.2114',
+    '8.0.2151': 'zigbee_pa',
     '8.0.2156': '8.0.2156',
     '8.0.2171': '8.0.2171',
     '8.0.2223': '8.0.2223',
@@ -439,6 +449,13 @@ CLUSTERS = {
     0x0B04: 'ElectrMeasur',
     0xFCC0: 'Xiaomi'
 }
+
+
+TITLE = "Aqara Gateway Debug"
+NOTIFY_TEXT = '<a href="%s?r=10" target="_blank">Open Log<a>'
+HTML = (f'<!DOCTYPE html><html><head><title>{TITLE}</title>'
+        '<meta http-equiv="refresh" content="%s"></head>'
+        '<body><pre>%s</pre></body></html>')
 
 
 class Utils:
@@ -508,9 +525,69 @@ class Utils:
         return feature
 
     @staticmethod
+    def gateway_illuminance_supported(model: str) -> Optional[bool]:
+        """ return the gateway illuminance supported """
+        if model in ('lumi.gateway.acn01'):
+            return True
+        return False
+
+    @staticmethod
     def get_device_name(model: str) -> Optional[str]:
-        """ return the zigbee folder """
+        """ return the device name """
         if model in DEVICES[0]:
             value = DEVICES[0][model][1].lower()
             return value
         return ''
+
+
+class AqaraGatewayDebug(logging.Handler, HomeAssistantView):
+    """ debug handler """
+    name = "gateway_debug"
+    requires_auth = False
+
+    text = ''
+
+    def __init__(self, hass: HomeAssistantType):
+        super().__init__()
+
+        # random url because without authorization!!!
+        self.url = "/{}".format(uuid.uuid4())
+
+        hass.http.register_view(self)
+        hass.components.persistent_notification.async_create(
+            NOTIFY_TEXT % self.url, title=TITLE)
+
+    def handle(self, rec: logging.LogRecord) -> None:
+        date_time = datetime.fromtimestamp(rec.created).strftime(
+            "%Y-%m-%d %H:%M:%S")
+        module = 'main' if rec.module == '__init__' else rec.module
+        self.text = "{} {}  {}  {}  {}\n".format(
+            self.text, date_time, rec.levelname, module, rec.msg)
+
+    async def get(self, request: web.Request):
+        """ for shortcut """
+        try:
+            if 'c' in request.query:
+                self.text = ''
+
+            if 'q' in request.query or 't' in request.query:
+                lines = self.text.split('\n')
+
+                if 'q' in request.query:
+                    reg = re.compile(fr"({request.query['q']})", re.IGNORECASE)
+                    lines = [p for p in lines if reg.search(p)]
+
+                if 't' in request.query:
+                    tail = int(request.query['t'])
+                    lines = lines[-tail:]
+
+                body = '\n'.join(lines)
+            else:
+                body = self.text
+
+            reload = request.query.get('r', '')
+            return web.Response(text=HTML % (reload, body),
+                                content_type="text/html")
+
+        except Exception:
+            return web.Response(status=500)

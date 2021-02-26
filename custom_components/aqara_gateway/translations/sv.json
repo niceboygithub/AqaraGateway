@@ -14,9 +14,25 @@
             },
             "user": {
                 "data": {
-                    "host": "V\u00e4rddatorn"
+                    "host": "V\u00e4rddatorn",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
                 },
                 "description": "Ange anslutningsinst\u00e4llningarna f\u00f6r Aqara Gateway."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "V\u00e4rddatorn",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
+                }
             }
         }
     }

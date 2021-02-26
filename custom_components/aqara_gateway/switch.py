@@ -37,6 +37,10 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     aqara_gateway.add_setup('switch', setup)
 
 
+async def async_unload_entry(hass, entry):
+    """Unload a config entry."""
+    return True
+
 class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
     """Representation of a Xiaomi/Aqara Plug."""
     # pylint: disable=unused-argument, too-many-instance-attributes

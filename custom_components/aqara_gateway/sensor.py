@@ -1,5 +1,4 @@
 """Support for Xiaomi Aqara sensors."""
-import logging
 from datetime import timedelta
 
 from homeassistant.util.dt import now
@@ -10,7 +9,7 @@ from homeassistant.const import (
 
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
-from .core.utils import CLUSTERS
+from .core.utils import CLUSTERS, Utils
 from .core.const import (
     ICONS,
     UNITS,
@@ -42,6 +41,12 @@ async def async_setup_entry(hass, entry, add_entities):
             add_entities([ZigbeeStats(gateway, device, attr)])
         elif attr == 'gas density':
             add_entities([GatewayGasSensor(gateway, device, attr)])
+        elif attr == 'illuminance':
+            if (device['type'] == 'gateway' and
+                    Utils.gateway_illuminance_supported(device['model'])):
+                add_entities([GatewaySensor(gateway, device, attr)])
+            elif device['type'] == 'zigbee':
+                add_entities([GatewaySensor(gateway, device, attr)])
         else:
             add_entities([GatewaySensor(gateway, device, attr)])
 
@@ -53,10 +58,6 @@ async def async_unload_entry(
     hass, entry
 ):
     """Unload a config entry."""
-    if entry.data[DOMAIN] is not None:
-        platforms = GATEWAY_PLATFORMS
-    else:
-        platforms = GATEWAY_PLATFORMS_NO_KEY
     return True
 
 
@@ -73,6 +74,9 @@ class GatewaySensor(GatewayGenericDevice):
         self._state = False
         self.with_attr = bool(attr not in (
             'key_id', 'battery', 'power', 'consumption'))
+        if device['type'] == 'gateway':
+            self.with_attr = False
+
         if self.with_attr:
             self._battery = None
             self._chip_temperature = None
@@ -190,7 +194,8 @@ class GatewayStats(GatewaySensor):
 
 class ZigbeeStats(GatewaySensor):
     """ Aqara Gateway Zigbee status """
-    last_seq = None
+    last_seq1 = None
+    last_seq2 = None
     _attrs = None
     _state = None
 
@@ -218,12 +223,10 @@ class ZigbeeStats(GatewaySensor):
                 'last_missed': 0,
             }
 
-        self.gateway.add_update(self._attrs['ieee'], self.update)
         self.gateway.add_stats(self._attrs['ieee'], self.update)
 
     async def async_will_remove_from_hass(self) -> None:
         """remove from hass."""
-        self.gateway.remove_update(self._attrs['ieee'], self.update)
         self.gateway.remove_stats(self._attrs['ieee'], self.update)
 
     def update(self, data: dict = None):

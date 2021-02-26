@@ -40,8 +40,9 @@ from homeassistant.components.climate.const import (
 DOMAIN = "aqara_gateway"
 
 CONF_HOST = "host"
-CONF_DEBUG = 'debug'
+CONF_DEBUG = "debug"
 CONF_MODEL = "model"
+CONF_STATS = "stats"
 
 OPT_DEBUG = {
     'true': "Basic logs",

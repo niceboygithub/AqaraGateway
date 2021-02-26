@@ -2,7 +2,7 @@
     "config": {
         "step": {
             "discovery_confirm": {
-                "title": "Ke\u015ffedilen ESPHome d\u00fc\u011f\u00fcm\u00fc"
+                "title": "Ke\u015ffedilen Aqara Gateway d\u00fc\u011f\u00fcm\u00fc"
             }
         }
     }

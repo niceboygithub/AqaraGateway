@@ -15,8 +15,25 @@
             "user": {
                 "data": {
                     "host": "\u4e3b\u673a",
+                    "password": "\u5bc6\u78bc",
+                    "model": "Model",
+                    "debug": "Debug"
                 },
                 "description": "\u8bf7\u8f93\u5165\u60a8\u7684 Aqara Gateway \u8282\u70b9\u7684\u8fde\u63a5\u8bbe\u7f6e\u3002"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+            "title": "Gateway Config",
+                "data": {
+                    "host": "\u4e3b\u673a",
+                    "password": "\u5bc6\u78bc",
+                    "model": "Model",
+                    "stats": "Stats",
+                    "debug": "Debug"
+                }
             }
         }
     }

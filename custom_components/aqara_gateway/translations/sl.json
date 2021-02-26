@@ -14,9 +14,25 @@
             },
             "user": {
                 "data": {
-                    "host": "Gostitelj"
+                    "host": "Gostitelj",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
                 },
                 "description": "Prosimo, vnesite nastavitve povezave va\u0161ega vozli\u0161\u010da Aqara Gateway."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "Gostitelj",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
+                }
             }
         }
     }

@@ -15,8 +15,25 @@
             "user": {
                 "data": {
                     "host": "Amfitri\u00f3",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
                 },
                 "description": "Introdueix la informaci\u00f3 de connexi\u00f3 del teu node Aqara Gateway."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "Amfitri\u00f3",
+                    "password": "Password",
+                    "model": "Model",
+                    "stats": "Stats",
+                    "debug": "Debug"
+                }
             }
         }
     }

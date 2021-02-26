@@ -20,6 +20,11 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     aqara_gateway.add_setup('remote', setup)
 
 
+async def async_unload_entry(hass, entry):
+    """Unload a config entry."""
+    return True
+
+
 class GatewayRemote(GatewayGenericDevice, ToggleEntity):
     """ Gateway Remote """
     _state = False

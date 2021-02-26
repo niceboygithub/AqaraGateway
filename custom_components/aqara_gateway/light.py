@@ -17,6 +17,10 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     aqara_gateway.add_setup('light', setup)
 
 
+async def async_unload_entry(hass, entry):
+    return True
+
+
 class GatewayLight(GatewayGenericDevice, LightEntity):
     """Representation of a Xiaomi/Aqara Light."""
     _brightness = None

@@ -8,8 +8,10 @@ from homeassistant.const import STATE_UNKNOWN, EVENT_HOMEASSISTANT_STOP
 from homeassistant.core import HomeAssistant, Event
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.entity_registry import EntityRegistry
 
 from .core.gateway import Gateway
+from .core.utils import AqaraGatewayDebug
 from .core.const import DOMAINS, DOMAIN, CONF_DEBUG
 
 _LOGGER = logging.getLogger(__name__)
@@ -32,12 +34,9 @@ async def async_setup(hass: HomeAssistant, hass_config: dict):
 
     config.setdefault('devices', {})
 
+    await _handle_device_remove(hass)
+
     return True
-
-
-async def async_update_options(hass: HomeAssistant, entry: ConfigEntry):
-    """ Update Optioins if available """
-    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
@@ -45,8 +44,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     # migrate data (also after first setup) to options
     if entry.data:
-        hass.config_entries.async_update_entry(entry, data=entry.data,
+        hass.config_entries.async_update_entry(entry, data={},
                                                options=entry.data)
+
+    await _setup_logger(hass)
 
     config = hass.data[DOMAIN]['config']
 
@@ -74,6 +75,36 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     return True
 
 
+async def async_update_options(hass: HomeAssistant, entry: ConfigEntry):
+    """ Update Optioins if available """
+    await hass.config_entries.async_reload(entry.entry_id)
+
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
+    """ Update Optioins if available """
+
+    # remove all stats entities if disable stats
+    if not entry.options.get('stats'):
+        suffix = ('_gateway', '_zigbee')
+        registry: EntityRegistry = hass.data['entity_registry']
+        remove = [
+            entity.entity_id
+            for entity in list(registry.entities.values())
+            if entity.config_entry_id == entry.entry_id and
+               entity.unique_id.endswith(suffix)
+        ]
+        for entity_id in remove:
+            registry.async_remove(entity_id)
+
+    gateway = hass.data[DOMAIN][entry.entry_id]
+    gateway.stop()
+
+    return all([
+        await hass.config_entries.async_forward_entry_unload(entry, domain)
+        for domain in DOMAINS
+    ])
+
+
 def gateway_state_property(func):
     """Wrap a state property of an gateway entity.
     This checks if the state object in the entity is set, and
@@ -92,6 +123,55 @@ def gateway_state_property(func):
         return val
 
     return _wrapper
+
+
+async def _handle_device_remove(hass: HomeAssistant):
+    """Remove device from Hass and Mi Home if the device is renamed to
+    `delete`.
+    """
+
+    async def device_registry_updated(event: Event):
+        if event.data['action'] != 'update':
+            return
+
+        registry = hass.data['device_registry']
+        hass_device = registry.async_get(event.data['device_id'])
+
+        # check empty identifiers
+        if not hass_device or not hass_device.identifiers:
+            return
+
+        identifier = next(iter(hass_device.identifiers))
+
+        # handle only our devices
+        if identifier[0] != DOMAIN or hass_device.name_by_user != 'delete':
+            return
+
+        # remove from Hass
+        registry.async_remove_device(hass_device.id)
+
+    hass.bus.async_listen('device_registry_updated', device_registry_updated)
+
+
+async def _setup_logger(hass: HomeAssistant):
+    entries = hass.config_entries.async_entries(DOMAIN)
+    any_debug = any(e.options.get('debug') for e in entries)
+
+    # only if global logging don't set
+    if not hass.data[DOMAIN]['debug']:
+        # disable log to console
+        _LOGGER.propagate = not any_debug
+        # set debug if any of integrations has debug
+        _LOGGER.setLevel(logging.DEBUG if any_debug else logging.NOTSET)
+
+    # if don't set handler yet
+    if any_debug and not _LOGGER.handlers:
+        handler = AqaraGatewayDebug(hass)
+        _LOGGER.addHandler(handler)
+
+        info = await hass.helpers.system_info.async_get_system_info()
+        info.pop('timezone')
+        _LOGGER.debug(f"SysInfo: {info}")
 
 
 class GatewayGenericDevice(Entity):
