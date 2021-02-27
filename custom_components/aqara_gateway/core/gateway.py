@@ -188,7 +188,7 @@ class Gateway(Thread):
                 raw = shell.read_file(zb_coordinator)
                 did = shell.get_prop("persist.sys.did")
                 model = shell.get_prop("persist.sys.model")
-            elif 'lumi.gateway' in model:
+            elif 'lumi.gateway' in model or 'lumi.aircondition' in model:
                 raw = shell.read_file('/data/zigbee/coordinator.info')
                 did = shell.get_prop("persist.sys.did")
                 model = shell.get_prop("persist.sys.model")
@@ -216,7 +216,7 @@ class Gateway(Thread):
             zb_device = shell.get_prop("sys.zb_device")
             if len(zb_device) >= 1:
                 raw = shell.read_file(zb_device)
-            elif 'lumi.gateway' in model:
+            elif 'lumi.gateway' in model or 'lumi.aircondition' in model:
                 raw = shell.read_file('/data/zigbee/device.info')
             else:
                 raw = shell.read_file('/mnt/config/zigbee/device.info')

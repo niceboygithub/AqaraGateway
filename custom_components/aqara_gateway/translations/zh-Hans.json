@@ -1,10 +1,10 @@
 {
     "config": {
         "abort": {
-            "already_configured": "\u8bbe\u5907\u5df2\u7ecf\u914d\u7f6e\u8fc7\u4e86",
+            "already_configured": "\u8bbe\u5907\u5df2\u7ecf\u914d\u7f6e\u8fc7\u4e86"
         },
         "error": {
-            "connection_error": "\u65e0\u6cd5\u8fde\u63a5\u5230 Aqara Gateway",
+            "connection_error": "\u65e0\u6cd5\u8fde\u63a5\u5230 Aqara Gateway"
         },
         "flow_title": "Aqara Gateway: {name}",
         "step": {

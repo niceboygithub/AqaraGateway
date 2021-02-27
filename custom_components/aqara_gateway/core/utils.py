@@ -21,6 +21,7 @@ from homeassistant.helpers.typing import HomeAssistantType
 # old devices uses params, new devices uses mi_spec
 DEVICES = [{
     'lumi.gateway.acn01': ["Aqara", "Gateway M1S", "ZHWG15LM"],  # tested
+    'lumi.aircondition.acn05': ["Aqara", "AirCondition P3", "KTBL12LM"],  # xStars tested
     # 'lumi.gateway.aeu01': ["Aqara", "Gateway M1S", "HM1S-G01"],
     # 'lumi.gateway.iragl01': ["Aqara", "Gateway M2", "ZHWG12LM"],
     # 'lumi.gateway.iragl7': ["Aqara", "Gateway M2", "HM2-G01"],
@@ -527,7 +528,7 @@ class Utils:
     @staticmethod
     def gateway_illuminance_supported(model: str) -> Optional[bool]:
         """ return the gateway illuminance supported """
-        if model in ('lumi.gateway.acn01'):
+        if model in ('lumi.gateway.acn01', 'lumi.aircondition.acn05'):
             return True
         return False
 
@@ -541,6 +542,7 @@ class Utils:
 
 
 class AqaraGatewayDebug(logging.Handler, HomeAssistantView):
+    # pylint: disable=abstract-method, arguments-differ
     """ debug handler """
     name = "gateway_debug"
     requires_auth = False
