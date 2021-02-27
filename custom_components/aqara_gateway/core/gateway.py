@@ -7,9 +7,11 @@ import json
 import re
 from threading import Thread
 from typing import Optional
+from random import randint
 
 from homeassistant.core import Event
 from homeassistant.const import CONF_NAME, CONF_PASSWORD
+from homeassistant.components.light import ATTR_HS_COLOR
 
 from paho.mqtt.client import Client, MQTTMessage
 
@@ -72,7 +74,7 @@ class Gateway(Thread):
     def debug(self, message: str):
         """ deubug function """
         if 'true' in self._debug:
-            _LOGGER.debug("{}: {}".format(self.host, message))
+            _LOGGER.debug(f"{self.host}: {message}")
 
     def stop(self):
         """ stop function """
@@ -88,11 +90,11 @@ class Gateway(Thread):
             )
         except OSError as err:
             _LOGGER.error(
-                "Failed to connect to MQTT server due to exception: {}".format(err))
+                "Failed to connect to MQTT server due to exception: %s", err)
 
         if result is not None and result != 0:
             _LOGGER.error(
-                "Failed to connect to MQTT server: {}".format(self.host)
+                "Failed to connect to MQTT server: %s", self.host
             )
 
         self._mqttc.loop_start()
@@ -281,7 +283,7 @@ class Gateway(Thread):
                         time.sleep(1)
                         timeout = timeout - 1
                     attr = param[2]
-                    if attr == 'illuminance' and device['type'] =='gateway':
+                    if attr in ('illuminance', 'light') and device['type'] =='gateway':
                         self._illuminance_did = device['did']
 
                     self.setups[domain](self, device, attr)
@@ -457,13 +459,13 @@ class Gateway(Thread):
         elif data['cmd'] == 'behaved':
             return
         else:
-            _LOGGER.warning("Unsupported cmd: {}".format(data))
+            _LOGGER.warning("Unsupported cmd: %s", data)
             return
 
         did = data['did']
 
         if did == 'lumi.0':
-            if pkey == 'results' or pkey == 'params':
+            if pkey in ('results', 'params'):
                 for param in data[pkey]:
                     if param.get('error_code', 0) != 0:
                         continue
@@ -475,7 +477,7 @@ class Gateway(Thread):
                             prop, param.get('value', None))
 #                        self._handle_device_remove({})
                         return
-                    if (prop in ('illuminance')
+                    if (prop in ('illuminance', 'light')
                             and self._illuminance_did in self.updates):
                         payload = {}
                         payload[prop] = param.get('value')
@@ -495,7 +497,7 @@ class Gateway(Thread):
         device = self.devices.get(did, None)
         if device is None:
             return
-        ts = time.time()
+        time_stamp = time.time()
 
         payload = {}
 
@@ -511,7 +513,7 @@ class Gateway(Thread):
             elif 'eiid' in param:
                 prop = f"{param['siid']}.{param['eiid']}"
             else:
-                _LOGGER.warning("Unsupported param: {}".format(data))
+                _LOGGER.warning("Unsupported param: %s", data)
                 return
 
             if prop in GLOBAL_PROP:
@@ -554,7 +556,7 @@ class Gateway(Thread):
                     payload[prop] = param['arguments']
 
         self.debug("{} {} <= {} [{}]".format(
-            device['did'], device['model'], payload, ts
+            device['did'], device['model'], payload, time_stamp
         ))
 
         for handler in self.updates[did]:
@@ -593,36 +595,62 @@ class Gateway(Thread):
     def send(self, device: dict, data: dict):
         """ send command """
         try:
-            did = data.get('did', device['did'])
-            data.pop('did', '')
+            if device['type'] == 'zigbee':
+                did = data.get('did', device['did'])
+                data.pop('did', '')
 
-            # convert hass prop to lumi prop
-            if device['mi_spec']:
-                payload = {'cmd': 'write', 'did': did, 'id': 5}
-                params = []
-                for key, val in data.items():
-                    if key == 'switch':
-                        val = bool(val)
-                    key = next(p[0] for p in device['mi_spec'] if p[2] == key)
-                    params.append(
-                        {'siid': key[0], 'piid': key[1], 'value': val})
+                # convert hass prop to lumi prop
+                if device['mi_spec']:
+                    payload = {'cmd': 'write', 'did': did, 'id': 5}
+                    params = []
+                    for key, val in data.items():
+                        if key == 'switch':
+                            val = bool(val)
+                        key = next(p[0] for p in device['mi_spec'] if p[2] == key)
+                        params.append(
+                            {'siid': key[0], 'piid': key[1], 'value': val})
 
-                payload['mi_spec'] = params
-            else:
-                params = [{
-                    'res_name': next(
-                        p[0] for p in device['params'] if p[2] == key),
-                    'value': val
-                } for key, val in data.items()]
+                    payload['mi_spec'] = params
+                else:
+                    params = [{
+                        'res_name': next(
+                            p[0] for p in device['params'] if p[2] == key),
+                        'value': val
+                    } for key, val in data.items()]
 
-                payload = {
-                    'cmd': 'write',
-                    'did': did,
-                    'params': params,
-                }
+                    payload = {
+                        'cmd': 'write',
+                        'did': did,
+                        'params': params,
+                    }
 
-            payload = json.dumps(payload, separators=(',', ':')).encode()
-            self._mqttc.publish('zigbee/recv', payload)
+                payload = json.dumps(payload, separators=(',', ':')).encode()
+                self._mqttc.publish('zigbee/recv', payload)
+            elif device['type'] == 'gateway':
+                payload = {}
+                if ATTR_HS_COLOR in data:
+                    hs_color = data.get(ATTR_HS_COLOR, 0)
+                    brightness = (hs_color >> 24) & 0xFF
+                    payload = {
+                        'cmd': 'control',
+                        'data': {
+                            'blue': int((hs_color & 0xFF) * brightness / 100),
+                            'breath': 500,
+                            'green': int(((hs_color >> 8) & 0xFF) * brightness / 100),
+                            'red': int(((hs_color >> 16) & 0xFF) * brightness / 100)},
+                        'type': 'rgb',
+                        'rev': 1,
+                        'id': randint(0, 65535)
+                    }
+                else:
+                    payload = {
+                        'cmd': 'control',
+                        'data': data,
+                        'rev': 1,
+                        'id': randint(0, 65535)
+                    }
+                payload = json.dumps(payload, separators=(',', ':')).encode()
+                self._mqttc.publish('ioctl/recv', payload)
             return True
         except ConnectionError:
             return False

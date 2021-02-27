@@ -41,6 +41,7 @@ DEVICES = [{
         ['8.0.2157', None, 'panId', None],
         ['8.0.2155', None, 'cloud', None],  # {"cloud_link":0}
         ['0.3.85', 'illumination', 'illuminance', 'sensor'],
+        [None, 'light_level', 'rgb_color', 'light'],
         [None, None, 'pair', 'remote'],
     ]
 }, {
@@ -528,6 +529,13 @@ class Utils:
     @staticmethod
     def gateway_illuminance_supported(model: str) -> Optional[bool]:
         """ return the gateway illuminance supported """
+        if model in ('lumi.gateway.acn01', 'lumi.aircondition.acn05'):
+            return True
+        return False
+
+    @staticmethod
+    def gateway_light_supported(model: str) -> Optional[bool]:
+        """ return the gateway light supported """
         if model in ('lumi.gateway.acn01', 'lumi.aircondition.acn05'):
             return True
         return False
