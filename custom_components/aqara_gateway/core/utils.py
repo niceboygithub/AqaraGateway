@@ -529,7 +529,7 @@ class Utils:
     @staticmethod
     def gateway_illuminance_supported(model: str) -> Optional[bool]:
         """ return the gateway illuminance supported """
-        if model in ('lumi.gateway.acn01', 'lumi.aircondition.acn05'):
+        if model in ('lumi.gateway.acn01'):
             return True
         return False
 

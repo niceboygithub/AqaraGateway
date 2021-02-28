@@ -233,8 +233,6 @@ class GatewayMotionSensor(GatewayBinarySensor):
             if delay < 0 and time_now + delay < self._last_off:
                 delay *= 2
 
-            self.debug(f"Extend delay: {delay} seconds")
-
             self._unsub_set_no_motion = async_call_later(
                 self.hass, abs(delay), self._set_no_motion)
 
