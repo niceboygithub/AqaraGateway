@@ -599,7 +599,7 @@ class Gateway(Thread):
     def send(self, device: dict, data: dict):
         """ send command """
         try:
-            if device['type'] == 'zigbee':
+            if device['type'] == 'zigbee' or 'paring' in data:
                 did = data.get('did', device['did'])
                 data.pop('did', '')
 
