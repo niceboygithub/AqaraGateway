@@ -1,6 +1,5 @@
 """ Telnet Shell """
 # pylint: disable=line-too-long
-import logging
 import time
 import base64
 
@@ -99,7 +98,10 @@ class TelnetShell(Telnet):
 
     def get_prop(self, property_value: str):
         """ get property """
-        command = "getprop {}\n".format(property_value)
+        if self.file_exist("/tmp/out/agetprop"):
+            command = "agetprop {}\n".format(property_value)
+        else:
+            command = "getprop {}\n".format(property_value)
         self.write(command.encode())
         self.read_until(b"\r")
         return str(self.read_until(

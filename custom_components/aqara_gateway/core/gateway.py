@@ -52,6 +52,7 @@ class Gateway(Thread):
         self._device_state_attributes = {}
         self._info_ts = None
         self._illuminance_did = ''
+        self._model = None  # for fast access
 
     @property
     def device(self):
@@ -189,11 +190,11 @@ class Gateway(Thread):
             if len(zb_coordinator) >= 1:
                 raw = shell.read_file(zb_coordinator)
                 did = shell.get_prop("persist.sys.did")
-                model = shell.get_prop("persist.sys.model")
+                model = shell.get_prop("ro.sys.model")
             elif 'lumi.gateway' in model or 'lumi.aircondition' in model:
                 raw = shell.read_file('/data/zigbee/coordinator.info')
                 did = shell.get_prop("persist.sys.did")
-                model = shell.get_prop("persist.sys.model")
+                model = shell.get_prop("ro.sys.model")
             else:
                 raw = str(shell.read_file('/mnt/config/miio/device.conf'))
                 data = re.search(r"did=([0-9]+).+", raw)
@@ -214,14 +215,15 @@ class Gateway(Thread):
                 'debugStatus': value['debugStatus'],
                 'type': 'gateway',
             }]
+            self._model = model
 
+            # zigbee devices
             zb_device = shell.get_prop("sys.zb_device")
             if len(zb_device) >= 1:
                 raw = shell.read_file(zb_device)
-            elif 'lumi.gateway' in model or 'lumi.aircondition' in model:
-                raw = shell.read_file('/data/zigbee/device.info')
             else:
-                raw = shell.read_file('/mnt/config/zigbee/device.info')
+                raw = shell.read_file('{}/zigbee/device.info'.format(
+                    Utils.get_info_store_path(self._model)))
 
             value = json.loads(raw)
             dev_info = value.get("devInfo", 'null') or []
@@ -350,7 +352,8 @@ class Gateway(Thread):
                                 self.options.get(CONF_PASSWORD, ''),
                                 Utils.get_device_name(self.options.get(
                                     CONF_MODEL, '')))
-            raw = shell.read_file('/data/zigbee/networkBak.info')
+            raw = shell.read_file('{}/zigbee/networkBak.info'.format(
+                    Utils.get_info_store_path(self._model)))
             if len(raw) >= 1:
                 value = json.loads(raw)
                 data.update(value)
@@ -411,7 +414,8 @@ class Gateway(Thread):
             if len(zb_device) >= 1:
                 raw = shell.read_file(zb_device)
             else:
-                raw = shell.read_file('/mnt/config/zigbee/device.info')
+                raw = shell.read_file('{}/zigbee/device.info'.format(
+                    Utils.get_info_store_path(self._model)))
 
             value = json.loads(raw)
             dev_info = value.get("devInfo", 'null') or []

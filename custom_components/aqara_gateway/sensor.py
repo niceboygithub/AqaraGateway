@@ -72,6 +72,7 @@ class GatewaySensor(GatewayGenericDevice):
     ):
         """Initialize the Xiaomi/Aqara Sensors."""
         self._state = False
+        self.is_metric = False
         self.with_attr = bool(attr not in (
             'key_id', 'battery', 'power', 'consumption'))
         if device['type'] == 'gateway':

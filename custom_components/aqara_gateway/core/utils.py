@@ -529,14 +529,14 @@ class Utils:
     @staticmethod
     def gateway_illuminance_supported(model: str) -> Optional[bool]:
         """ return the gateway illuminance supported """
-        if model in ('lumi.gateway.acn01'):
+        if 'lumi.gateway.acn01' in model:
             return True
         return False
 
     @staticmethod
     def gateway_light_supported(model: str) -> Optional[bool]:
         """ return the gateway light supported """
-        if model in ('lumi.gateway.acn01', 'lumi.aircondition.acn05'):
+        if 'lumi.gateway.acn01' in model:
             return True
         return False
 
@@ -547,6 +547,13 @@ class Utils:
             value = DEVICES[0][model][1].lower()
             return value
         return ''
+
+    @staticmethod
+    def get_info_store_path(model: str) -> Optional[str]:
+        """ return the path of zigbee info """
+        if model.startswith('lumi.camera.'):
+            return '/mnt/config'
+        return '/data'
 
 
 class AqaraGatewayDebug(logging.Handler, HomeAssistantView):
