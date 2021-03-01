@@ -65,6 +65,16 @@ DEVICES = [{
         ['4.1.85', 'channel_0', 'switch', 'switch'],  # @to4ko
     ]
 }, {
+    # on/off, power measurement
+    'lumi.plug.sacn03': ["Aqara", "Socket H1 USB", "QBCZ15LM"],  #  @miniknife88
+    'params': [
+        ['0.11.85', 'load_voltage', 'power', None],
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'neutral_0', 'switch_usb', 'switch'],
+        ['4.2.85', 'neutral_1', 'switch', 'switch'],
+    ]
+}, {
     'lumi.ctrl_ln1': ["Aqara", "Single Wall Switch", "QBKG11LM"],
     'lumi.ctrl_ln1.aq1': ["Aqara", "Single Wall Switch", "QBKG11LM"],
     'lumi.switch.b1nacn02': ["Aqara", "Single Wall Switch D1", "QBKG23LM"],
@@ -150,6 +160,7 @@ DEVICES = [{
 }, {
     # with neutral wire, thanks @Mantoui
     'lumi.switch.n3acn3': ["Aqara", "Triple Wall Switch D1", "QBKG26LM"],
+    'lumi.switch.n4acn4': ["Aqara", "Scene Panel", "ZNCJMB14LM"],  # @miniknife88
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -189,14 +200,31 @@ DEVICES = [{
         ['14.2.85', 'colour_temperature', 'color_temp', None],
     ]
 }, {
+    # light with brightness and color temp
+    'lumi.light.rgbac1': ["Aqara", "RGBW LED Controller T1", "ZNTGMK11LM"],  # @miniknife88
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['14.1.85', 'light_level', 'brightness', None],
+        ['14.2.85', 'colour_temperature', 'rgb_color', None],
+        ['20.4.85', 'light_level', 'rgb_color', None],
+    ]
+}, {
     # light with brightness
     'ikea.light.led1623g12': ["IKEA", "Bulb E27 1000 lm", "LED1623G12"],
     'ikea.light.led1650r5': ["IKEA", "Bulb GU10 400 lm", "LED1650R5"],
     'ikea.light.led1649c5': ["IKEA", "Bulb E14", "LED1649C5"],  # tested
-    'lumi.light.cwacn1': ["Aqara", "0-10V Dimmer", "ZNTGMK12LM"],  # miniknife88
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
+    ]
+}, {
+    # light with brightness
+    'lumi.light.cwacn1': ["Aqara", "0-10V Dimmer", "ZNTGMK12LM"],  # @miniknife88
+    'params': [
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['14.1.85', 'light_level', 'brightness', None],
+        ['14.2.85', 'colour_temperature', 'color_temp', None],
     ]
 }, {
     # button switch, no retain
@@ -261,7 +289,7 @@ DEVICES = [{
 }, {
     # motion sensor
     'lumi.sensor_motion': ["Xiaomi", "Motion Sensor", "RTCGQ01LM"],
-    'lumi.motion.agl02': ["Aqara", "Motion Sensor T1", "RTCGQ12LM"],  # miniknife88
+    'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
     'params': [
         ['3.1.85', None, 'motion', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
@@ -269,6 +297,7 @@ DEVICES = [{
 }, {
     # motion sensor with illuminance
     'lumi.sensor_motion.aq2': ["Aqara", "Motion Sensor", "RTCGQ11LM"],
+    'lumi.motion.agl02': ["Aqara", "Motion Sensor T1", "RTCGQ12LM"],  # miniknife88
     'params': [
         ['0.3.85', 'lux', 'illuminance_lux', None],
         ['0.4.85', 'illumination', 'illuminance', 'sensor'],
@@ -370,16 +399,9 @@ DEVICES = [{
         ['3.2', '3.2', 'power', 'sensor'],
         # ['5.7', '5.7', 'voltage', 'sensor'],
     ]
-}, {
-    'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
-    'mi_spec': [
-        ['4.1', None, 'motion', 'binary_sensor'],
-        ['3.1', '3.1', 'battery', 'sensor'],
-    ]
 }]
 
 GLOBAL_PROP = {
-    '0.3.85': 'illuminance',
     '0.11.85': 'load_voltage',
     '0.12.85': 'load_power',
     '0.13.85': 'consumption',

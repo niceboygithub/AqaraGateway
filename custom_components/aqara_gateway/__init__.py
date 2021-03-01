@@ -72,6 +72,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         await hass.data[DOMAIN][entry.entry_id].async_disconnect()
 
     hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, async_stop_mqtt)
+
     return True
 
 
@@ -81,7 +82,7 @@ async def async_update_options(hass: HomeAssistant, entry: ConfigEntry):
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """ Update Optioins if available """
+    """ Unload Entry """
 
     # remove all stats entities if disable stats
     if not entry.options.get('stats'):

@@ -62,13 +62,18 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             self._model = ret.get('model', '')
             return self._async_get_entry()
 
+        for name, _ in OPT_DEVICE_NAME.items():
+            if self._name and name in self._name.lower():
+                self._model = name
+                break
+
         fields = OrderedDict()
         fields[vol.Required(CONF_HOST,
                             default=self._host or vol.UNDEFINED)] = str
         fields[vol.Optional(CONF_PASSWORD,
                             default=self._password or vol.UNDEFINED)] = str
         fields[vol.Optional(CONF_MODEL,
-                            default=self._model or ['m1s'])] = vol.In(
+                            default=self._model or 'm1s')] = vol.In(
                                 OPT_DEVICE_NAME)
 
         return self.async_show_form(
@@ -143,14 +148,6 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         self._password = ''
         self._model = Utils.get_device_name(model).split(" ")[-1]
 
-        # Check if already configured
-        if node_name:
-            await self.async_set_unique_id(node_name)
-
-        self._abort_if_unique_id_configured(
-            updates={CONF_HOST: discovery_info[CONF_HOST]}
-        )
-
         for entry in self._async_current_entries():
             already_configured = False
             if CONF_HOST in entry.data and entry.data[CONF_HOST] in [
@@ -159,23 +156,14 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             ]:
                 # Is this address or IP address already configured?
                 already_configured = True
-            elif entry.entry_id in self.hass.data.get(DATA_KEY, {}):
-                # Does a config entry with this name already exist?
-                data: RuntimeEntryData = self.hass.data[
-                    DATA_KEY][entry.entry_id]
-
-                # Node names are unique in the network
-                if data.device_info is not None:
-                    already_configured = data.device_info.name == node_name
+            elif CONF_HOST in entry.options and entry.options[CONF_HOST] in [
+                address,
+                discovery_info[CONF_HOST],
+            ]:
+                # Is this address or IP address already configured?
+                already_configured = True
             if already_configured:
                 # Backwards compat, we update old entries
-                if not entry.unique_id:
-                    self.hass.config_entries.async_update_entry(
-                        entry,
-                        data={**entry.data,
-                              CONF_HOST: discovery_info[CONF_HOST]},
-                        unique_id=node_name,
-                    )
 
                 return self.async_abort(reason="already_configured")
 

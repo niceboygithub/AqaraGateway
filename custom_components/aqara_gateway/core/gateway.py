@@ -51,7 +51,7 @@ class Gateway(Thread):
         self.setups = {}
         self._device_state_attributes = {}
         self._info_ts = None
-        self._illuminance_did = ''
+        self._gateway_did = ''
         self._model = None  # for fast access
 
     @property
@@ -91,11 +91,11 @@ class Gateway(Thread):
             )
         except OSError as err:
             _LOGGER.error(
-                "Failed to connect to MQTT server due to exception: %s", err)
+                f"Failed to connect to MQTT server {self.host} due to exception: {err}")
 
         if result is not None and result != 0:
             _LOGGER.error(
-                "Failed to connect to MQTT server: %s", self.host
+                f"Failed to connect to MQTT server: {self.host}"
             )
 
         self._mqttc.loop_start()
@@ -286,7 +286,7 @@ class Gateway(Thread):
                         timeout = timeout - 1
                     attr = param[2]
                     if attr in ('illuminance', 'light') and device['type'] =='gateway':
-                        self._illuminance_did = device['did']
+                        self._gateway_did = device['did']
 
                     self.setups[domain](self, device, attr)
 
@@ -469,6 +469,7 @@ class Gateway(Thread):
         did = data['did']
 
         if did == 'lumi.0':
+            device = self.devices.get(self._gateway_did, None)
             if pkey in ('results', 'params'):
                 for param in data[pkey]:
                     if param.get('error_code', 0) != 0:
@@ -476,16 +477,21 @@ class Gateway(Thread):
                     prop = param.get('res_name', None)
                     if prop in GLOBAL_PROP:
                         prop = GLOBAL_PROP[prop]
+                    else:
+                        prop = next((
+                            p[2] for p in (device['params'])
+                            if p[0] == prop
+                        ), prop)
                     if prop in ('removed_did', 'paring'):
                         self._process_devices_info(
                             prop, param.get('value', None))
 #                        self._handle_device_remove({})
                         return
                     if (prop in ('illuminance', 'light')
-                            and self._illuminance_did in self.updates):
+                            and self._gateway_did in self.updates):
                         payload = {}
                         payload[prop] = param.get('value')
-                        for handler in self.updates[self._illuminance_did]:
+                        for handler in self.updates[self._gateway_did]:
                             handler(payload)
                         return
 

@@ -107,6 +107,14 @@ class TelnetShell(Telnet):
         return str(self.read_until(
             b"# ")[:-2], encoding="utf-8").strip().rstrip()
 
+    def set_prop(self, property_value: str, value: str):
+        """ set property """
+        if self.file_exist("/tmp/out/asetprop"):
+            command = "asetprop {} {}\n".format(property_value, value)
+        else:
+            command = "setprop {} {}\n".format(property_value, value)
+        self.write(command.encode())
+
     def get_version(self):
         """ get gateway version """
         return self.get_prop("ro.sys.fw_ver")

@@ -21,6 +21,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
 
 async def async_unload_entry(hass, entry):
+    # pylint: disable=unused-argument
+    """ unload entry """
     return True
 
 

@@ -54,10 +54,9 @@ async def async_setup_entry(hass, entry, add_entities):
     aqara_gateway.add_setup('sensor', setup)
 
 
-async def async_unload_entry(
-    hass, entry
-):
-    """Unload a config entry."""
+async def async_unload_entry(hass, entry):
+    # pylint: disable=unused-argument
+    """ unload entry """
     return True
 
 
