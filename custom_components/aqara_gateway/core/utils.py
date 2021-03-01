@@ -193,6 +193,7 @@ DEVICES = [{
     'ikea.light.led1623g12': ["IKEA", "Bulb E27 1000 lm", "LED1623G12"],
     'ikea.light.led1650r5': ["IKEA", "Bulb GU10 400 lm", "LED1650R5"],
     'ikea.light.led1649c5': ["IKEA", "Bulb E14", "LED1649C5"],  # tested
+    'lumi.light.cwacn1': ["Aqara", "0-10V Dimmer", "ZNTGMK12LM"],  # miniknife88
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
@@ -260,6 +261,7 @@ DEVICES = [{
 }, {
     # motion sensor
     'lumi.sensor_motion': ["Xiaomi", "Motion Sensor", "RTCGQ01LM"],
+    'lumi.motion.agl02': ["Aqara", "Motion Sensor T1", "RTCGQ12LM"],  # miniknife88
     'params': [
         ['3.1.85', None, 'motion', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
