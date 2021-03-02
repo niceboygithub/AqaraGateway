@@ -120,6 +120,7 @@ class GatewaySensor(GatewayGenericDevice):
 
     def update(self, data: dict = None):
         """update sensor."""
+        self.debug("{} <= {}".format(self._attr, data))
         for key, value in data.items():
             if self.with_attr:
                 if key == BATTERY:
