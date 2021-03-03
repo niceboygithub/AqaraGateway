@@ -325,6 +325,7 @@ class GatewaWaterLeakSensor(GatewayBinarySensor, BinarySensorEntity):
         self._lqi = None
         self._voltage = None
         self._should_poll = False
+        self._open_since = None
         super().__init__(gateway, device, attr)
 
     @property

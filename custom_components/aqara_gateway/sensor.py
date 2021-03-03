@@ -72,10 +72,9 @@ class GatewaySensor(GatewayGenericDevice):
         """Initialize the Xiaomi/Aqara Sensors."""
         self._state = False
         self.is_metric = False
-        self.with_attr = bool(attr not in (
-            'key_id', 'battery', 'power', 'consumption'))
-        if device['type'] == 'gateway':
-            self.with_attr = False
+        self.with_attr = bool(device['type'] not in(
+            'gateway', 'zigbee')) and bool(attr not in (
+                'key_id', 'battery', 'power', 'consumption'))
 
         if self.with_attr:
             self._battery = None
@@ -157,6 +156,7 @@ class GatewayGasSensor(GatewaySensor):
 class GatewayStats(GatewaySensor):
     """ Aqara Gateway status """
     _state = None
+    _attrs = None
 
     @property
     def device_class(self):

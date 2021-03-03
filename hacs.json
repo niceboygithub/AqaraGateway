@@ -1,4 +1,7 @@
 {
     "name": "Aqara Gateway",
-    "render_readme": true
+    "render_readme": true,
+    "domain": "aqara_gateway",
+    "documentation": "https://github.com/niceboygithub/AqaraGateway",
+    "issue_tracker": "https://github.com/niceboygithub/AqaraGateway/issues"
 }

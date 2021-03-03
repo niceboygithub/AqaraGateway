@@ -33,8 +33,12 @@ class TelnetShell(Telnet):
 
     def run_command(self, command: str, as_bytes=False) -> Union[str, bytes]:
         """Run command and return it result."""
-        self.write(command.encode() + b"\r\n")
-        raw = self.read_until(b"\r\n# ", timeout=30)
+        # pylint: disable=broad-except
+        try:
+            self.write(command.encode() + b"\r\n")
+            raw = self.read_until(b"\r\n# ", timeout=30)
+        except Exception:
+            raw = b''
         return raw if as_bytes else raw.decode()
 
     def run_basis_cli(self, command: str, as_bytes=False) -> Union[str, bytes]:
@@ -85,27 +89,33 @@ class TelnetShell(Telnet):
 
     def read_file(self, filename: str, as_base64=False):
         """ read file content """
-        if as_base64:
-            command = "cat {} | base64\n".format(filename)
+        try:
+            if as_base64:
+                command = "cat {} | base64\n".format(filename)
+                self.write(command.encode())
+                self.read_until(b"\n")
+                raw = self.read_until(b"# ")
+                return base64.b64decode(raw)
+            command = "cat {}\n".format(filename)
             self.write(command.encode())
             self.read_until(b"\n")
-            raw = self.read_until(b"# ")
-            return base64.b64decode(raw)
-        command = "cat {}\n".format(filename)
-        self.write(command.encode())
-        self.read_until(b"\n")
-        return self.read_until(b"# ")[:-2]
+            return self.read_until(b"# ")[:-2]
+        except ConnectionResetError:
+            return b''
 
     def get_prop(self, property_value: str):
         """ get property """
-        if self.file_exist("/tmp/out/agetprop"):
-            command = "agetprop {}\n".format(property_value)
-        else:
-            command = "getprop {}\n".format(property_value)
-        self.write(command.encode())
-        self.read_until(b"\r")
-        return str(self.read_until(
-            b"# ")[:-2], encoding="utf-8").strip().rstrip()
+        try:
+            if self.file_exist("/tmp/out/agetprop"):
+                command = "agetprop {}\n".format(property_value)
+            else:
+                command = "getprop {}\n".format(property_value)
+            self.write(command.encode())
+            self.read_until(b"\r")
+            return str(self.read_until(
+                b"# ")[:-2], encoding="utf-8").strip().rstrip()
+        except ConnectionResetError:
+            return ''
 
     def set_prop(self, property_value: str, value: str):
         """ set property """

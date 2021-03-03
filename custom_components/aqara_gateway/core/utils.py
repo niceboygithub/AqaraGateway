@@ -200,14 +200,14 @@ DEVICES = [{
         ['14.2.85', 'colour_temperature', 'color_temp', None],
     ]
 }, {
-    # light with brightness and color temp
+    # light with brightness and color temp, rgb color
     'lumi.light.rgbac1': ["Aqara", "RGBW LED Controller T1", "ZNTGMK11LM"],  # @miniknife88
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
-        ['14.2.85', 'colour_temperature', 'rgb_color', None],
-        ['20.4.85', 'light_level', 'rgb_color', None],
+        ['14.2.85', 'colour_temperature', 'color_temp', None],
+        ['14.8.85', 'light_level', 'rgb_color', None],
     ]
 }, {
     # light with brightness
@@ -451,6 +451,7 @@ GLOBAL_PROP = {
     '8.0.2223': '8.0.2223',
     '8.0.9001': 'battery_end_of_life',
     '8.1.2222': '8.1.2222',
+    '20.4.85': 'control',
     '200.1.11': '200.1.11',
     '200.1.12': '200.1.12'
 }

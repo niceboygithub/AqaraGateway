@@ -8,12 +8,12 @@ import re
 from threading import Thread
 from typing import Optional
 from random import randint
+from paho.mqtt.client import Client, MQTTMessage
 
 from homeassistant.core import Event
 from homeassistant.const import CONF_NAME, CONF_PASSWORD
 from homeassistant.components.light import ATTR_HS_COLOR
 
-from paho.mqtt.client import Client, MQTTMessage
 
 from .shell import TelnetShell
 from .utils import DEVICES, Utils, GLOBAL_PROP
@@ -119,7 +119,7 @@ class Gateway(Thread):
                 time.sleep(30)
                 continue
             devices = self._prepeare_gateway(get_devices=True)
-            if devices:
+            if isinstance(devices, list):
                 self.setup_devices(devices)
                 break
 
@@ -477,7 +477,7 @@ class Gateway(Thread):
                     prop = param.get('res_name', None)
                     if prop in GLOBAL_PROP:
                         prop = GLOBAL_PROP[prop]
-                    else:
+                    elif device:
                         prop = next((
                             p[2] for p in (device['params'])
                             if p[0] == prop
@@ -496,8 +496,7 @@ class Gateway(Thread):
                         return
 
             self.process_gateway_stats(data[pkey])
-            if did in self.updates:
-                self.updates[did](data[pkey])
+
             return
 
         # skip without updates callback
