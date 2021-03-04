@@ -167,7 +167,9 @@ class Gateway(Thread):
                     shell.run_public_mosquitto()
 
             if get_devices:
-                return self._get_devices(shell)
+                devices = self._get_devices(shell)
+                shell.close()
+                return devices
             return True
 
         except (ConnectionRefusedError, socket.timeout):
@@ -354,6 +356,7 @@ class Gateway(Thread):
                                     CONF_MODEL, '')))
             raw = shell.read_file('{}/zigbee/networkBak.info'.format(
                     Utils.get_info_store_path(self._model)))
+            shell.close()
             if len(raw) >= 1:
                 value = json.loads(raw)
                 data.update(value)
@@ -417,6 +420,7 @@ class Gateway(Thread):
                 raw = shell.read_file('{}/zigbee/device.info'.format(
                     Utils.get_info_store_path(self._model)))
 
+            shell.close()
             value = json.loads(raw)
             dev_info = value.get("devInfo", 'null') or []
             for dev in dev_info:

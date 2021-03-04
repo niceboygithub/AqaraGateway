@@ -71,8 +71,8 @@ DEVICES = [{
         ['0.11.85', 'load_voltage', 'power', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
-        ['4.1.85', 'neutral_0', 'switch_usb', 'switch'],
-        ['4.2.85', 'neutral_1', 'switch', 'switch'],
+        ['4.1.85', 'neutral_0', 'switch', 'switch'],
+        ['4.2.85', 'neutral_1', 'switch_usb', 'switch'],
     ]
 }, {
     'lumi.ctrl_ln1': ["Aqara", "Single Wall Switch", "QBKG11LM"],
@@ -103,7 +103,7 @@ DEVICES = [{
         ['13.1.85', None, 'button_1', None],
         ['13.2.85', None, 'button_2', None],
         ['13.5.85', None, 'button_both', None],
-        # [None, None, 'switch', 'binary_sensor'],
+        [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
     'lumi.ctrl_neutral1': ["Aqara", "Single Wall Switch", "QBKG04LM"],
@@ -432,7 +432,7 @@ GLOBAL_PROP = {
     '8.0.2034': 'load_s0',  # ctrl_dualchn
     '8.0.2035': 'load_s1',  # ctrl_dualchn
     '8.0.2036': 'parent',
-    '8.0.2041': 'model',
+    '8.0.2041': 'model',  # identify
     '8.0.2042': 'max_power',
     '8.0.2044': 'plug_detection',
     '8.0.2080': 'zgb_ver',

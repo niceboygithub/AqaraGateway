@@ -214,7 +214,7 @@ class OptionsFlowHandler(OptionsFlow):
                 },
             )
         self._host = self.config_entry.options[CONF_HOST]
-        self._password = self.config_entry.options[CONF_PASSWORD]
+        self._password = self.config_entry.options.get(CONF_PASSWORD, '')
         self._model = self.config_entry.options.get(CONF_MODEL, '')
 #        stats = self.config_entry.options.get(CONF_STATS, False)
         debug = self.config_entry.options.get(CONF_DEBUG, [])

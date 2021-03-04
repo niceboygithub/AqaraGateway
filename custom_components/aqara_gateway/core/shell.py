@@ -89,6 +89,7 @@ class TelnetShell(Telnet):
 
     def read_file(self, filename: str, as_base64=False):
         """ read file content """
+        # pylint: disable=broad-except
         try:
             if as_base64:
                 command = "cat {} | base64\n".format(filename)
@@ -100,11 +101,12 @@ class TelnetShell(Telnet):
             self.write(command.encode())
             self.read_until(b"\n")
             return self.read_until(b"# ")[:-2]
-        except ConnectionResetError:
+        except Exception:
             return b''
 
     def get_prop(self, property_value: str):
         """ get property """
+        # pylint: disable=broad-except
         try:
             if self.file_exist("/tmp/out/agetprop"):
                 command = "agetprop {}\n".format(property_value)
@@ -114,7 +116,7 @@ class TelnetShell(Telnet):
             self.read_until(b"\r")
             return str(self.read_until(
                 b"# ")[:-2], encoding="utf-8").strip().rstrip()
-        except ConnectionResetError:
+        except Exception:
             return ''
 
     def set_prop(self, property_value: str, value: str):

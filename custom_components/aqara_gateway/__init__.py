@@ -194,6 +194,7 @@ class GatewayGenericDevice(Entity):
         self.entity_id = f"{DOMAIN}.{self._unique_id}"
 
     def debug(self, message: str):
+        """ debug function """
         self.gateway.debug(f"{self.entity_id} | {message}")
 
     async def async_added_to_hass(self):
