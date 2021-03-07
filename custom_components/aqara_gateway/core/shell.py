@@ -8,7 +8,7 @@ from telnetlib import Telnet
 
 
 CHECK_SOCAT = "(md5sum /data/socat | grep 92b77e1a93c4f4377b4b751a5390d979)"
-DOWNLOAD_SOCAT = "(curl -o /data/socat http://pkg.musl.cc/socat/mipsel-linux-musln32/bin/socat && chmod +x /data/socat)"
+DOWNLOAD_SOCAT = "(wget -O /data/socat http://pkg.simple-ha.ru/mipsel/socat && chmod +x /data/socat)"
 RUN_SOCAT_BT_IRDA = "/data/socat tcp-l:8888,reuseaddr,fork /dev/ttyS2"
 RUN_SOCAT_ZIGBEE = "/data/socat tcp-l:8888,reuseaddr,fork /dev/ttyS1"
 

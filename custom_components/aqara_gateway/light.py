@@ -67,6 +67,8 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             features |= SUPPORT_BRIGHTNESS
         if self._color_temp is not None:
             features |= SUPPORT_COLOR_TEMP
+        if self._rgb_color is not None:
+            features |= SUPPORT_COLOR
         if self.device['type'] == 'gateway':
             features = SUPPORT_COLOR | SUPPORT_BRIGHTNESS
         return features
@@ -107,9 +109,13 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                 self._attr == ATTR_RGB_COLOR):
             rgb = color_util.color_hs_to_RGB(*self._hs)
             rgba = (self._brightness,) + rgb
-            rgbhex = binascii.hexlify(struct.pack("BBBB", *rgba)).decode("ASCII")
-            rgbhex = int(rgbhex, 16)
-            payload[ATTR_HS_COLOR] = rgbhex
+            if isinstance(self._brightness, int):
+                rgbhex = binascii.hexlify(struct.pack("BBBB", *rgba)).decode("ASCII")
+                rgbhex = int(rgbhex, 16)
+                if self.device['type'] == 'zigbee':
+                    payload[ATTR_HS_COLOR] = rgbhex * 150
+                else:
+                    payload[ATTR_HS_COLOR] = rgbhex
 
         if not payload:
             payload[self._attr] = 1

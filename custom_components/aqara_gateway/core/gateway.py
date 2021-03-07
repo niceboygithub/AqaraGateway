@@ -383,7 +383,11 @@ class Gateway(Thread):
         """ on getting messages from mqtt server """
 
         if 'mqtt' in self._debug:
-            self.debug("MQTT on_message: {} {}".format(msg.topic, msg.payload.decode()))
+            try:
+                self.debug("MQTT on_message: {} {}".format(msg.topic, msg.payload.decode()))
+            except UnicodeDecodeError:
+                self.debug("MQTT on_message: {}".format(msg.topic))
+                self.debug(msg.payload)
 
         try:
             json.loads(msg.payload)
@@ -608,6 +612,7 @@ class Gateway(Thread):
     def send(self, device: dict, data: dict):
         """ send command """
         try:
+            payload = {}
             if device['type'] == 'zigbee' or 'paring' in data:
                 did = data.get('did', device['did'])
                 data.pop('did', '')
@@ -640,7 +645,6 @@ class Gateway(Thread):
                 payload = json.dumps(payload, separators=(',', ':')).encode()
                 self._mqttc.publish('zigbee/recv', payload)
             elif device['type'] == 'gateway':
-                payload = {}
                 if ATTR_HS_COLOR in data:
                     hs_color = data.get(ATTR_HS_COLOR, 0)
                     brightness = (hs_color >> 24) & 0xFF

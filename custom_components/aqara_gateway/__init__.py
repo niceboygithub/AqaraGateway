@@ -83,6 +83,8 @@ async def async_update_options(hass: HomeAssistant, entry: ConfigEntry):
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
     """ Unload Entry """
+    if entry.entry_id not in hass.data[DOMAIN]:
+        return True
 
     # remove all stats entities if disable stats
     if not entry.options.get('stats'):

@@ -153,6 +153,12 @@ BUTTON = {
     16: 'hold',
     17: 'release',
     18: 'shake',
+    22: 'clockwise',
+    23: 'counterclockwise',
+    24: 'hold_clockwise',
+    25: 'hold_counterclockwise',
+    26: 'rotate',
+    27: 'hold_rotate',
     128: 'many',
 }
 

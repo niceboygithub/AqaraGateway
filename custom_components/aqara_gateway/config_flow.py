@@ -167,6 +167,14 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
 
                 return self.async_abort(reason="already_configured")
 
+        # Check if already configured
+        if node_name:
+            await self.async_set_unique_id(node_name)
+
+        self._abort_if_unique_id_configured(
+            updates={CONF_HOST: discovery_info[CONF_HOST]}
+        )
+
         if discovery_info.get('type') == '_aqara-setup._tcp.local.':
             return await self.async_step_user()
         else:

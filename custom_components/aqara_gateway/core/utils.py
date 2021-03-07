@@ -41,7 +41,7 @@ DEVICES = [{
         ['8.0.2157', None, 'panId', None],
         ['8.0.2155', None, 'cloud', None],  # {"cloud_link":0}
         ['0.3.85', 'illumination', 'illuminance', 'sensor'],
-        [None, 'light_level', 'rgb_color', 'light'],
+        [None, 'rgb_color', 'rgb_color', 'light'],
         [None, None, 'pair', 'remote'],
     ]
 }, {
@@ -207,7 +207,7 @@ DEVICES = [{
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
         ['14.2.85', 'colour_temperature', 'color_temp', None],
-        ['14.8.85', 'light_level', 'rgb_color', None],
+        ['14.8.85', 'rgb_color', 'hs_color', None],
     ]
 }, {
     # light with brightness
@@ -330,6 +330,12 @@ DEVICES = [{
         ['3.1', '3.1', 'battery', 'sensor'],
     ]
 }, {
+    'lumi.sen_ill.agl01': ["Aqara", "Light Sensor T1", "GZCGQ11LM"],
+    'mi_spec': [
+        ['0.3.85', None, 'illuminance', 'sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
+}, {
     'lumi.sensor_smoke': ["Honeywell", "Smoke Sensor", "JTYJ-GD-01LM/BW"],
     'params': [
         ['0.1.85', 'density', 'smoke density', 'sensor'],
@@ -385,14 +391,23 @@ DEVICES = [{
     'params': [
         ['13.1.85', None, 'channels', 'sensor']
     ]
+}, { # button switch with roation
+    'lumi.remote.rkba01': ["Aqara", "Smart Knob H1", "ZNXNKG02LM"],  # miniknife88
+    'params': [
+        ['13.1.85', None, 'button', None],
+        ['0.24.85', '0.24.85', 'rotation_1', None],
+        ['0.25.85', '0.25.85', 'rotation_2', None],
+        ['0.50.85', '0.50.85', 'button_pressure', None],
+        [None, None, 'switch', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor']
+    ]
 }, {
     # no N, https://www.aqara.com/en/single_switch_T1_no-neutral.html
     'lumi.switch.l0agl1': ["Aqara", "Relay T1", "SSM-U02"],
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],
     ]
-}, {
-    # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
+}, { # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
     'lumi.switch.n0agl1': ["Aqara", "Relay T1", "SSM-U01"],
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],
@@ -512,6 +527,8 @@ class Utils:
     @staticmethod
     def remove_device(hass: HomeAssistantType, did: str):
         """Remove device by did from Hass"""
+        if not isinstance(did, str):
+            return
         assert did.startswith('lumi.'), did
         # lumi.1234567890 => 0x1234567890
         mac = '0x' + did[5:]
