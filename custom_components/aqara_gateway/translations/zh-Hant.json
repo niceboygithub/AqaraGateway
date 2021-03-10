@@ -35,5 +35,11 @@
                 }
             }
         }
+    },
+    "system_health": {
+        "info": {
+            "telnet_logged": "Telnet \u5df2\u555f\u7528",
+            "mqtt_connected": "MQTT \u5df2\u9023\u7dda"
+        }
     }
 }

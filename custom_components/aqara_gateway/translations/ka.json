@@ -1,7 +1,46 @@
 {
     "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
         "error": {
-            "invalid_auth": "\u10db\u10ea\u10d3\u10d0\u10e0\u10d8 \u10d0\u10d5\u10d7\u10d4\u10dc\u10d7\u10d8\u10d9\u10d0\u10ea\u10d8\u10d0"
+            "connection_error": "Can't connect to Aqara Gateway."
+        },
+        "flow_title": "Aqara Gateway: {name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Do you want to add the Aqara Gateway `{name}` to Home Assistant? \n\n{device_info}",
+                "title": "Discovered Aqara Gateway"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Password",
+                    "model": "Model",
+                    "debug": "Debug"
+                },
+                "description": "Please enter connection settings of your Aqara Gateway."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Config",
+                "data": {
+                    "host": "Host",
+                    "password": "Password",
+                    "model": "Model",
+                    "stats": "Stats",
+                    "debug": "Debug"
+                }
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "telnet_logged": "Telnet \u10d3\u10d0\u10e8\u10d5\u10d4\u10d1\u10e3\u10da\u10d8\u10d0",
+            "mqtt_connected": "MQTT \u10db\u10d8\u10d4\u10e0\u10d7\u10d4\u10d1\u10e3\u10da\u10d8\u10d0"
         }
     }
 }

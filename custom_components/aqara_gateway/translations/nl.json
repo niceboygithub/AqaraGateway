@@ -6,7 +6,7 @@
         "error": {
             "connection_error": "Kan geen verbinding maken met Aqara Gateway."
         },
-        "flow_title": "ESPHome: {name}",
+        "flow_title": "Aqara Gateway: {name}",
         "step": {
             "discovery_confirm": {
                 "description": "Wil je de Aqara Gateway `{name}` toevoegen aan de Home Assistant?\n\n{device_info}",
@@ -35,6 +35,12 @@
                     "debug": "Debug"
                 }
             }
+        }
+    },
+    "system_health": {
+        "info": {
+            "telnet_logged": "Telnet Logged",
+            "mqtt_connected": "MQTT Connected"
         }
     }
 }

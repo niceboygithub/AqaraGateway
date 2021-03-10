@@ -36,5 +36,11 @@
                 }
             }
         }
+    },
+    "system_health": {
+        "info": {
+            "telnet_logged": "Telnet aktiv\u00e9iert",
+            "mqtt_connected": "MQTT verbonnen"
+        }
     }
 }

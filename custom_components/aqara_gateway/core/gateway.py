@@ -17,7 +17,7 @@ from homeassistant.components.light import ATTR_HS_COLOR
 
 from .shell import TelnetShell
 from .utils import DEVICES, Utils, GLOBAL_PROP
-from .const import CONF_MODEL
+from .const import CONF_MODEL, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -114,23 +114,41 @@ class Gateway(Thread):
 
     def run(self):
         """ Main thread loop. """
+        telnetshell = False
+        if "telnet" not in self.hass.data[DOMAIN]:
+            self.hass.data[DOMAIN]["telnet"] = []
+        if "mqtt" not in self.hass.data[DOMAIN]:
+            self.hass.data[DOMAIN]["mqtt"] = []
         while not self.enabled and not self.available:
             if not self._check_port(23):
+                if self.host in self.hass.data[DOMAIN]["telnet"]:
+                    self.hass.data[DOMAIN]["telnet"].remove(self.host)
                 time.sleep(30)
                 continue
+
+            telnetshell = True
             devices = self._prepeare_gateway(get_devices=True)
             if isinstance(devices, list):
+                self._gw_topic = "gw/{}/".format(devices[0]['mac'][2:].upper())
                 self.setup_devices(devices)
                 break
 
+        if telnetshell:
+            self.hass.data[DOMAIN]["telnet"].append(self.host)
+
         while not self.available:
             if not self._mqtt_connect() or not self._prepeare_gateway():
+                if self.host in self.hass.data[DOMAIN]["mqtt"]:
+                    self.hass.data[DOMAIN]["mqtt"].remove(self.host)
                 time.sleep(60)
                 continue
 
             self._mqttc.loop_start()
             self.available = True
 #            self._mqttc.loop_forever()
+
+        if self.available:
+            self.hass.data[DOMAIN]["mqtt"].append(self.host)
 
     def _mqtt_connect(self) -> bool:
         try:
@@ -234,7 +252,7 @@ class Gateway(Thread):
                 desc = Utils.get_device(model)
                 # skip unknown model
                 if desc is None:
-                    self.debug("{} has an unsupported modell: {}".format(
+                    self.debug("{} has an unsupported model: {}".format(
                         dev['did'], model
                     ))
                     continue

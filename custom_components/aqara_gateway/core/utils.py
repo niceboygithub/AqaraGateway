@@ -391,7 +391,8 @@ DEVICES = [{
     'params': [
         ['13.1.85', None, 'channels', 'sensor']
     ]
-}, { # button switch with roation
+}, {
+    # button switch with roation
     'lumi.remote.rkba01': ["Aqara", "Smart Knob H1", "ZNXNKG02LM"],  # miniknife88
     'params': [
         ['13.1.85', None, 'button', None],
@@ -407,7 +408,8 @@ DEVICES = [{
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],
     ]
-}, { # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
+}, {
+    # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
     'lumi.switch.n0agl1': ["Aqara", "Relay T1", "SSM-U01"],
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],

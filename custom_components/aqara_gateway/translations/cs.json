@@ -36,5 +36,11 @@
                 }
             }
         }
+    },
+    "system_health": {
+        "info": {
+            "telnet_logged": "Telnet povolena",
+            "mqtt_connected": "MQTT p\u0159ipojen"
+        }
     }
 }

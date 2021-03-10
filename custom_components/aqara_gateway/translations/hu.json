@@ -36,5 +36,11 @@
                 }
             }
         }
+    },
+    "system_health": {
+        "info": {
+            "telnet_logged": "Telnet enged\u00e9lyezve",
+            "mqtt_connected": "MQTT csatlakoz\u00e1s"
+        }
     }
 }

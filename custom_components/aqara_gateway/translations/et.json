@@ -35,5 +35,11 @@
                 }
             }
         }
+    },
+    "system_health": {
+        "info": {
+            "telnet_logged": "Telnet on lubatud",
+            "mqtt_connected": "MQTT on \u00fchendatud"
+        }
     }
 }
