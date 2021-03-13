@@ -31,7 +31,8 @@
                     "password": "Password",
                     "model": "Model",
                     "stats": "Stats",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 }
             }
         }

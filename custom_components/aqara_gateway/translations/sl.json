@@ -31,7 +31,9 @@
                     "host": "Gostitelj",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "stats": "Stats",
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 }
             }
         }

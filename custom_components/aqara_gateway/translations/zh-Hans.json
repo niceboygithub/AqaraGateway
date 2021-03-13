@@ -26,13 +26,14 @@
     "options": {
         "step": {
             "init": {
-            "title": "Gateway Config",
+                "title": "\u7f51\u5173\u914d\u7f6e",
                 "data": {
                     "host": "\u4e3b\u673a",
                     "password": "\u5bc6\u78bc",
                     "model": "Model",
                     "stats": "Stats",
-                    "debug": "Debug"
+                    "debug": "\u9664\u9519",
+                    "noffline": "\u5ffd\u7565\u79bb\u7ebf\u8baf\u606f"
                 }
             }
         }

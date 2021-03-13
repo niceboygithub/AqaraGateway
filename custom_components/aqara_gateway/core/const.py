@@ -43,6 +43,7 @@ CONF_HOST = "host"
 CONF_DEBUG = "debug"
 CONF_MODEL = "model"
 CONF_STATS = "stats"
+CONF_NOFFLINE = "noffline"
 
 OPT_DEBUG = {
     'true': "Basic logs",

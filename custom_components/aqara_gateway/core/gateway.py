@@ -577,7 +577,8 @@ class Gateway(Thread):
                 # xiaomi light sensor
                 payload[prop] = round((min(param['value'], 3200) - 2500) / 7)
             elif prop == 'alive' and param['value']['status'] == 'offline':
-                device['online'] = False
+                if not self.options.get('noffline', False):
+                    device['online'] = False
             elif prop == 'angle':
                 # xiaomi cube 100 points = 360 degrees
                 payload[prop] = param['value'] * 4

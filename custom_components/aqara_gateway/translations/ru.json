@@ -26,14 +26,22 @@
     "options": {
         "step": {
             "init": {
-            "title": "Gateway Config",
+                "title": "Gateway Config",
                 "data": {
                     "host": "\u0425\u043e\u0441\u0442",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "stats": "Stats",
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 }
             }
+        }
+    },
+    "system_health": {
+        "info": {
+            "telnet_logged": "Telnet Logged",
+            "mqtt_connected": "MQTT Connected"
         }
     }
 }
