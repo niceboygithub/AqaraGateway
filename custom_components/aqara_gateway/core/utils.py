@@ -22,10 +22,13 @@ from homeassistant.helpers.typing import HomeAssistantType
 DEVICES = [{
     'lumi.gateway.acn01': ["Aqara", "Gateway M1S", "ZHWG15LM"],  # tested
     'lumi.aircondition.acn05': ["Aqara", "AirCondition P3", "KTBL12LM"],  # xStars tested
+    # 'lumi.aircondition.acn04': ["Aqara", "AirCondition P3", "KTBL12LM"],
+    # 'lumi.acpartner.acn04': ["Aqara", "AirCondition P3", "KTBL12LM"],
     # 'lumi.gateway.aeu01': ["Aqara", "Gateway M1S", "HM1S-G01"],
     # 'lumi.gateway.iragl01': ["Aqara", "Gateway M2", "ZHWG12LM"],
     # 'lumi.gateway.iragl7': ["Aqara", "Gateway M2", "HM2-G01"],
     'lumi.gateway.iragl5': ["Aqara", "Gateway M2", "ZHWG12LM"],  # tested
+    'lumi.gateway.sacn01': ["Aqara", "Smart Hub H1", "QBCZWG11LM"],
     'lumi.camera.gwagl02': ["Aqara", "Camera Hub G2H", "ZNSXJ12LM"],  # tested
     'params': [
         ['8.0.2012', None, 'power_tx', None],
@@ -134,6 +137,7 @@ DEVICES = [{
 }, {
     'lumi.switch.b2lacn02': ["Aqara", "Double Wall Switch D1", "QBKG22LM"],
     'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
+    'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 PRO", "QBKG31LM"],   # @miniknife88
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -214,6 +218,7 @@ DEVICES = [{
     'ikea.light.led1623g12': ["IKEA", "Bulb E27 1000 lm", "LED1623G12"],
     'ikea.light.led1650r5': ["IKEA", "Bulb GU10 400 lm", "LED1650R5"],
     'ikea.light.led1649c5': ["IKEA", "Bulb E14", "LED1649C5"],  # tested
+    'lumi.light.cbacn1': ["Aqara", "LED Controller T1", "HLQDQ01LM"],
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
@@ -394,6 +399,7 @@ DEVICES = [{
 }, {
     # button switch with roation
     'lumi.remote.rkba01': ["Aqara", "Smart Knob H1", "ZNXNKG02LM"],  # miniknife88
+    'lumi.switch.rkna01': ["Aqara", "Smart Knob H1", "ZNXNKG01LM"],  # miniknife88
     'params': [
         ['13.1.85', None, 'button', None],
         ['0.24.85', '0.24.85', 'rotation_1', None],

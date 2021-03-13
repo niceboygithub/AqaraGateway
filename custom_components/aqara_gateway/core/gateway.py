@@ -386,12 +386,16 @@ class Gateway(Thread):
         """ on connect to mqtt server """
         self._mqttc.subscribe("#")
         self.available = True
+        if self.host in self.hass.data[DOMAIN]["mqtt"]:
+            self.hass.data[DOMAIN]["mqtt"].append(self.host)
 #        self.process_gateway_stats()
 
     def on_disconnect(self, client, userdata, ret):
         # pylint: disable=unused-argument
         """ on disconnect to mqtt server """
         self._mqttc.disconnect()
+        if self.host in self.hass.data[DOMAIN]["mqtt"]:
+            self.hass.data[DOMAIN]["mqtt"].remove(self.host)
         self.available = False
 #        self.process_gateway_stats()
         self.run()
