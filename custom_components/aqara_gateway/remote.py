@@ -67,6 +67,22 @@ class GatewayRemote(GatewayGenericDevice, ToggleEntity):
         """ return icon """
         return 'mdi:zigbee'
 
+    def update(self, data: dict = None):
+        if 'pairing_start' in data:
+            self._state = True
+
+        elif 'pairing_stop' in data:
+            self._state = False
+
+        elif 'added_device' in data:
+            text = "New device:\n" + '\n'.join(
+                f"{k}: {v}" for k, v in data['added_device'].items()
+            )
+            persistent_notification.async_create(self.hass, text,
+                                                 "Aqara Gateway")
+
+        self.schedule_update_ha_state()
+
     async def async_turn_on(self, **kwargs):
         """Turn the remote on."""
         self._state = True

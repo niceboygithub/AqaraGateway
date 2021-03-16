@@ -17,6 +17,7 @@ from homeassistant.const import (
     STATE_CLOSING,
     STATE_OPENING,
     TEMP_CELSIUS,
+    CONCENTRATION_PARTS_PER_BILLION,
 )
 
 from homeassistant.components.climate.const import (
@@ -101,6 +102,7 @@ UNITS = {
     'gas density': '% LEL',
     'smoke density': '% obs/ft',
     'moisture': '%',
+    'tvoc ppb': CONCENTRATION_PARTS_PER_BILLION,
     # 'link_quality': 'lqi',
     # 'rssi': 'dBm',
     # 'msg_received': 'msg',

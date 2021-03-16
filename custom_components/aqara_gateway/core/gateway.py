@@ -430,7 +430,8 @@ class Gateway(Thread):
     def _process_devices_info(self, prop, value):
         if prop == 'removed_did' and value:
             Utils.remove_device(self.hass, value)
-            self.devices.pop(value)
+            if value['did'] in self.devices:
+                self.devices.pop(value['did'], None)
             return
 
         if prop == 'paring' and value == 0:
