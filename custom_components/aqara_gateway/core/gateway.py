@@ -65,7 +65,7 @@ class Gateway(Thread):
         self.updates.setdefault(did, []).append(handler)
 
     def remove_update(self, did: str, handler):
-        """remote update"""
+        """remove update"""
         self.updates.setdefault(did, []).remove(handler)
 
     def add_setup(self, domain: str, handler):
@@ -323,7 +323,7 @@ class Gateway(Thread):
             self._info_ts = time.time() + 5
 
     def remove_stats(self, ieee: str, handler):
-        """ remote gateway stats """
+        """ remove gateway stats """
         self._device_state_attributes.pop(ieee)
 
     def process_gateway_stats(self, payload: dict = None):
@@ -430,8 +430,10 @@ class Gateway(Thread):
     def _process_devices_info(self, prop, value):
         if prop == 'removed_did' and value:
             Utils.remove_device(self.hass, value)
-            if value['did'] in self.devices:
+            if isinstance(value, dict) and value['did'] in self.devices:
                 self.devices.pop(value['did'], None)
+            if isinstance(value, str) and value in self.devices:
+                self.devices.pop(value, None)
             return
 
         if prop == 'paring' and value == 0:

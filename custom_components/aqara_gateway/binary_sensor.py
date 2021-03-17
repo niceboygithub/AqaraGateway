@@ -61,8 +61,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             async_add_entities([GatewaySmokeSensor(gateway, device, attr)])
         elif attr == 'motion':
             async_add_entities([GatewayMotionSensor(gateway, device, attr)])
-        elif attr == 'tvoc':
-            async_add_entities([GatewayTvocSensor(gateway, device, attr)])
         else:
             async_add_entities([GatewayBinarySensor(gateway, device, attr)])
 
@@ -104,74 +102,6 @@ class GatewayBinarySensor(GatewayGenericDevice, BinarySensorEntity):
                 self._state = bool(data[self._attr])
             else:
                 self._state = not data[self._attr]
-
-        self.async_write_ha_state()
-
-
-class GatewayTvocSensor(GatewayGenericDevice, BinarySensorEntity):
-    """Representation of a Xiaomi/Aqara Binary Sensor."""
-    _state = False
-    _battery = None
-    _chip_temperature = None
-    _fw_ver = None
-    _lqi = None
-    _voltage = None
-    _should_poll = False
-    is_metric = False
-
-    @property
-    def device_state_attributes(self):
-        """Return the state attributes."""
-        attrs = {
-            ATTR_BATTERY_LEVEL: self._battery,
-            ATTR_CHIP_TEMPERATURE: self._chip_temperature,
-            ATTR_FW_VER: self._fw_ver,
-            ATTR_LQI: self._lqi,
-            ATTR_VOLTAGE: self._voltage,
-        }
-        return attrs
-
-    @property
-    def should_poll(self):
-        """Return True if entity has to be polled for state."""
-        return self._should_poll
-
-    @property
-    def is_on(self):
-        """Return true if sensor is on."""
-        return self._state
-
-    @property
-    def device_class(self):
-        """Return the class of binary sensor."""
-        return DEVICE_CLASS.get(self._attr, self._attr)
-
-    def update(self, data: dict = None):
-        """Update the sensor state."""
-        for key, value in data.items():
-            if key == BATTERY:
-                self._battery = value
-            if key == CHIP_TEMPERATURE:
-                if self.is_metric:
-                    self._chip_temperature = format(
-                        (int(value) - 32) * 5 / 9, '.2f') if isinstance(
-                        value, (int, float)) else None
-                else:
-                    self._chip_temperature = value
-            if key == LQI:
-                self._lqi = value
-            if key == FW_VER:
-                self._fw_ver = value
-            if key == VOLTAGE:
-                self._voltage = format(
-                    float(value) / 1000, '.3f') if isinstance(
-                    value, (int, float)) else None
-            if key == self._attr:
-                custom = self.hass.data[DATA_CUSTOMIZE].get(self.entity_id)
-                if not custom.get(CONF_INVERT_STATE):
-                    self._state = bool(value)
-                else:
-                    self._state = not value
 
         self.async_write_ha_state()
 

@@ -82,7 +82,8 @@ POWER_CONSUMED = "power_consumed"
 POWER = "power"
 VOLTAGE = "voltage"
 
-DOMAINS = ['binary_sensor',
+DOMAINS = ['air_quality',
+           'binary_sensor',
            'climate',
            'cover',
            'light',
@@ -102,7 +103,7 @@ UNITS = {
     'gas density': '% LEL',
     'smoke density': '% obs/ft',
     'moisture': '%',
-    'tvoc ppb': CONCENTRATION_PARTS_PER_BILLION,
+    'tvoc': CONCENTRATION_PARTS_PER_BILLION,
     # 'link_quality': 'lqi',
     # 'rssi': 'dBm',
     # 'msg_received': 'msg',
@@ -118,7 +119,8 @@ ICONS = {
     'smoke density': 'mdi:google-circles-communities',
     'gateway': 'mdi:router-wireless',
     'zigbee': 'mdi:zigbee',
-    'ble': 'mdi:bluetooth'
+    'ble': 'mdi:bluetooth',
+    'air quality': 'mdi:cloud',
 }
 
 # Binary_sensor
@@ -186,3 +188,13 @@ DENSITY = "density"
 SMOKE_DENSITY = "smoke density"
 GAS_DENSITY = "gas density"
 NO_CLOSE = "no_close"
+
+# Air Quality Monitor
+ATTR_CO2E = "carbon_dioxide_equivalent"
+ATTR_TVOC = "total_volatile_organic_compounds"
+ATTR_TEMP = "temperature"
+ATTR_HUM = "humidity"
+CO2E = "carbon_dioxide_equivalent"
+TVOC = "total_volatile_organic_compounds"
+TEMPERATURE = "temperature"
+HUMIDITY = "humidity"
