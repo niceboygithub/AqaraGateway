@@ -19,6 +19,7 @@ from homeassistant.const import (
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
 from .core.const import (
+    ATTR_ANGLE,
     ATTR_CHIP_TEMPERATURE,
     ATTR_FW_VER,
     ATTR_DENSITY,
@@ -532,6 +533,11 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
         self._chip_temperature = None
         self._lqi = None
         self._voltage = None
+        self._rotate_angle = None
+        self.with_rotation = False
+        if (device['model'] == 'lumi.remote.rkba01' or 
+                device['model'] == 'lumi.switch.rkna01'):
+            self.with_rotation = True
         super().__init__(gateway, device, attr)
 
     @property
@@ -553,10 +559,14 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
             ATTR_LQI: self._lqi,
             ATTR_VOLTAGE: self._voltage,
         }
+        if self.with_rotation:
+            attrs[ATTR_ANGLE] = self._rotate_angle
         return attrs
 
     def update(self, data: dict = None):
         """update Button Switch."""
+        if self.with_rotation:
+            self._rotate_angle = None
         for key, value in data.items():
             if key == BATTERY:
                 self._battery = value
@@ -576,6 +586,25 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
                 break
             if key == 'tilt_angle':
                 data = {'vibration': 2, 'angle': value, self._attr: 'tilt'}
+                break
+            if key == 'rotate_angle':
+                rotation = BUTTON.get(data.get('button', 0), 'unknown')
+                duration = data.get('action_duration', 'unknown')
+                if rotation != 'unknown':
+                    data = {'duration': duration, 'angle': value, self._attr: rotation}
+                self._rotate_angle = value
+                break
+            if key == 'button':
+                if 'voltage' in data:
+                    return
+                data[self._attr] = BUTTON.get(value, 'unknown')
+                break
+            if key.startswith('button_both'):
+                data[self._attr] = key + '_' + BUTTON_BOTH.get(
+                    value, 'unknown')
+                break
+            if key.startswith('button'):
+                data[self._attr] = key + '_' + BUTTON.get(value, 'unknown')
                 break
 
         if self._attr in data:

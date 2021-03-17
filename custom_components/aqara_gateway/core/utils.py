@@ -397,15 +397,16 @@ DEVICES = [{
         ['13.1.85', None, 'channels', 'sensor']
     ]
 }, {
-    # button switch with roation
+    # button switch with rotation
     'lumi.remote.rkba01': ["Aqara", "Smart Knob H1", "ZNXNKG02LM"],  # @miniknife88
     'lumi.switch.rkna01': ["Aqara", "Smart Knob Switch H1", "ZNXNKG01LM"],  # @miniknife88
     'params': [
         ['13.1.85', None, 'button', None],
-        ['0.24.85', '0.24.85', 'rotation_1', None],
-        ['0.25.85', '0.25.85', 'rotation_2', None],
-        ['0.50.85', '0.50.85', 'button_pressure', None],
-        [None, None, 'switch', 'binary_sensor'],
+        ['0.24.85', 'rotate_angle', 'rotate_angle', None],
+        ['0.25.85', 'action_duration', 'action_time', None],
+        ['0.29.85', 'rotate_angle', 'rotate_angle', None],  # while hold
+        ['0.30.85', 'action_duration', 'rotate_angle', None],  # while hold
+        [None, None, 'action', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor']
     ]
 }, {
@@ -484,6 +485,7 @@ GLOBAL_PROP = {
     '8.0.2156': '8.0.2156',
     '8.0.2171': '8.0.2171',
     '8.0.2223': '8.0.2223',
+    '8.0.2230': '8.0.2230',
     '8.0.9001': 'battery_end_of_life',
     '8.1.2222': '8.1.2222',
     '20.4.85': 'control',

@@ -124,7 +124,7 @@ ICONS = {
 }
 
 # Binary_sensor
-
+ATTR_ANGLE = 'angle'
 CONF_INVERT_STATE = 'invert_state'
 CONF_OCCUPANCY_TIMEOUT = 'occupancy_timeout'
 
@@ -158,6 +158,8 @@ BUTTON = {
     16: 'hold',
     17: 'release',
     18: 'shake',
+#    20: 'rotate',
+#    21: 'hold_rotate',
     22: 'clockwise',
     23: 'counterclockwise',
     24: 'hold_clockwise',
