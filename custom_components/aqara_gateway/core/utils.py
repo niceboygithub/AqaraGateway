@@ -401,6 +401,7 @@ DEVICES = [{
     'lumi.remote.rkba01': ["Aqara", "Smart Knob H1", "ZNXNKG02LM"],  # @miniknife88
     'lumi.switch.rkna01': ["Aqara", "Smart Knob Switch H1", "ZNXNKG01LM"],  # @miniknife88
     'params': [
+        ['1.16.85', 'slee_time', 'slee_time', None],
         ['13.1.85', None, 'button', None],
         ['0.24.85', 'rotate_angle', 'rotate_angle', None],
         ['0.25.85', 'action_duration', 'action_time', None],
@@ -408,6 +409,18 @@ DEVICES = [{
         ['0.30.85', 'action_duration', 'rotate_angle', None],  # while hold
         [None, None, 'action', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor']
+    ]
+}, {
+    'lumi.airmonitor.acn01': ["Aqara", "Smart TVOC Air Quality Monitor", "VOCKQJK11LM"],
+    'params': [
+        ['0.1.85', 'temperature', 'temperature', 'sensor'],
+        ['0.2.85', 'humidity', 'humidity', 'sensor'],
+        ['0.3.85', 'tvoc', 'tvoc', 'sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['8.0.2041', None, 'identify', None],
+        ['8.0.2175', None, 'level', None],
+        ['13.1.85', 'alarm', 'tvoc_level', 'air_quality'],
+        ['14.1.85', None, 'unit', None],
     ]
 }, {
     # no N, https://www.aqara.com/en/single_switch_T1_no-neutral.html
@@ -422,18 +435,6 @@ DEVICES = [{
         ['2.1', '2.1', 'switch', 'switch'],
         ['3.2', '3.2', 'power', 'sensor'],
         # ['5.7', '5.7', 'voltage', 'sensor'],
-    ]
-}, {
-    'lumi.airmonitor.acn01': ["Aqara", "Smart TVOC Air Quality Monitor", "VOCKQJK11LM"],
-    'params': [
-        ['0.1.85', 'temperature', 'temperature', 'sensor'],
-        ['0.2.85', 'humidity', 'humidity', 'sensor'],
-        ['0.3.85', 'tvoc', 'tvoc', 'sensor'],
-        ['8.0.2001', 'battery', 'battery', 'sensor'],
-        ['8.0.2041', None, 'identify', None],
-        ['8.0.2175', None, 'level', None],
-        ['13.1.85', 'alarm', 'tvoc_level', 'air_quality'],
-        ['14.1.85', None, 'unit', None],
     ]
 }]
 

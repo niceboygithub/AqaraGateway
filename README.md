@@ -50,7 +50,7 @@ fw_update /tmp/linux_3.0.7_0007.0515.bin
 fw_update /tmp/rootfs_3.0.7_0007.0515_modified.bin
 ```
 
-For G2H, you need to wired out the UART, then login to gateway to <a href="https://github.com/niceboygithub/AqaraCameraHubfw/tree/main/binutils#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils">enable telnetd</a>.
+For G2H, there is way to <a href="https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/binutils/README.md#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils">enable telnetd</a>.
 
 Gateway support **Zigbee 3**.
 

@@ -134,7 +134,8 @@ class Gateway(Thread):
                 break
 
         if telnetshell:
-            self.hass.data[DOMAIN]["telnet"].append(self.host)
+            if self.host not in self.hass.data[DOMAIN]["telnet"]:
+                self.hass.data[DOMAIN]["telnet"].append(self.host)
 
         while not self.available:
             if not self._mqtt_connect() or not self._prepeare_gateway():
@@ -148,7 +149,8 @@ class Gateway(Thread):
 #            self._mqttc.loop_forever()
 
         if self.available:
-            self.hass.data[DOMAIN]["mqtt"].append(self.host)
+            if self.host not in self.hass.data[DOMAIN]["mqtt"]:
+                self.hass.data[DOMAIN]["mqtt"].append(self.host)
 
     def _mqtt_connect(self) -> bool:
         try:
@@ -386,7 +388,7 @@ class Gateway(Thread):
         """ on connect to mqtt server """
         self._mqttc.subscribe("#")
         self.available = True
-        if self.host in self.hass.data[DOMAIN]["mqtt"]:
+        if self.host not in self.hass.data[DOMAIN]["mqtt"]:
             self.hass.data[DOMAIN]["mqtt"].append(self.host)
 #        self.process_gateway_stats()
 
@@ -520,9 +522,9 @@ class Gateway(Thread):
                             prop, param.get('value', None))
 #                        self._handle_device_remove({})
                         return
-                    if (prop in ('illuminance', 'light')
+                    payload = {}
+                    if (prop in ('illuminance', 'light', 'added_device')
                             and self._gateway_did in self.updates):
-                        payload = {}
                         payload[prop] = param.get('value')
                         for handler in self.updates[self._gateway_did]:
                             handler(payload)

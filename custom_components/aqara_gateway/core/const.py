@@ -104,6 +104,7 @@ UNITS = {
     'smoke density': '% obs/ft',
     'moisture': '%',
     'tvoc': CONCENTRATION_PARTS_PER_BILLION,
+    'li battery': '%',
     # 'link_quality': 'lqi',
     # 'rssi': 'dBm',
     # 'msg_received': 'msg',
@@ -120,7 +121,7 @@ ICONS = {
     'gateway': 'mdi:router-wireless',
     'zigbee': 'mdi:zigbee',
     'ble': 'mdi:bluetooth',
-    'air quality': 'mdi:cloud',
+    'tvoc': 'mdi:cloud',
 }
 
 # Binary_sensor
