@@ -1,4 +1,4 @@
-"""Runtime entry data for ESPHome stored in hass.data."""
+"""Runtime entry data for Aqara stored in hass.data."""
 import asyncio
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Set, Tuple
 

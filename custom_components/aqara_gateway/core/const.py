@@ -122,6 +122,7 @@ ICONS = {
     'zigbee': 'mdi:zigbee',
     'ble': 'mdi:bluetooth',
     'tvoc': 'mdi:cloud',
+    'li battery': 'mdi:battery',
 }
 
 # Binary_sensor
@@ -201,3 +202,33 @@ CO2E = "carbon_dioxide_equivalent"
 TVOC = "total_volatile_organic_compounds"
 TEMPERATURE = "temperature"
 HUMIDITY = "humidity"
+
+# Lock
+ATTR_NOTIFICATION = "notification"
+ATTR_LOCK_STATUS = "lock_status"
+ATTR_LATCH_STATUS = "latch_status"
+ATTR_CODE_SLOT = "code_slot"
+ATTR_USERCODE = "usercode"
+ATTR_LI_BATTERY = "Li Battery Level"
+CONFIG_ADVANCED = "Advanced"
+LI_BATTERY = "li battery"
+LATCH_STATUS = "latch_state"
+
+LOCK_STATUS = {
+    "0": False,
+    "1": True,
+    "2": False,
+    "3": True,
+}
+
+LOCK_STATUS_TYPE = {
+    "0": "Door Unlock",
+    "1": "Door Lock",
+    "2": "Door is not closed",
+    "3": "Door Bell",
+}
+
+LATCH_STATUS_TYPE = {
+    "0": "Latch Unlock",
+    "1": "Latch Lock",
+}

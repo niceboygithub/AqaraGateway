@@ -381,6 +381,31 @@ DEVICES = [{
         ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
 }, {
+    'aqara.lock.wbzac1': ["Aqara", "Door Lock P100", "ZNMS19LM"],
+    'params': [
+        ['8.0.2148', None, 'timestamp', None],
+        ['13.1.85', None, 'unlock from inside', None],
+        ['13.2.85', None, 'unlock by fringprint', None],
+        ['13.3.85', None, 'unlock by password', None],
+        ['13.8.85', None, 'open in away mode', None],
+        ['13.10.85', None, 'lock by handle', None],
+        ['13.11.85', None, 'latch_state', None],
+        ['13.12.85', None, 'away mode', None],
+        ['13.13.85', None, 'someone detected', None],
+        ['13.15.85', None, 'key_id', 'sensor'],
+        ['13.20.85', 'lock_state', 'lock', 'sensor'],
+        ['13.30.85', None, 'li battery notify', None],
+        ['13.31.85', 'voltage', 'voltage', None],
+        ['13.32.85', 'li battery', 'li battery', 'sensor'],
+        ['13.33.85', 'battery life', 'battery life', None],
+        ['13.37.85', 'battery', 'battery', 'sensor'],
+        ['13.60.85', None, '13.60.85', None],
+        ['13.40.85', None, 'password number', None],
+        ['14.1.85', None, 'camera connected', None],
+        ['13.50.85', None, 'wifi_info', None],
+        ['13.51.85', None, 'wifi_connect', None],
+    ]
+}, {
     # https://github.com/AlexxIT/XiaomiGateway3/issues/101
     'lumi.airrtc.tcpecn02': ["Aqara", "Thermostat S2", "KTWKQ03ES"],
     'params': [

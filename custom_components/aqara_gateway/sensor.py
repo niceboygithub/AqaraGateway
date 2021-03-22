@@ -21,6 +21,24 @@ from .core.const import (
     LOAD_POWER,
     POWER,
     VOLTAGE,
+    ATTR_NOTIFICATION,
+    ATTR_LOCK_STATUS,
+    ATTR_LATCH_STATUS,
+    ATTR_LI_BATTERY,
+    LOCK_STATUS,
+    LOCK_STATUS_TYPE,
+    LATCH_STATUS_TYPE,
+    LI_BATTERY,
+    LATCH_STATUS,
+    )
+from .core.lock_data import (
+    WITH_LI_BATTERY,
+    SUPPORT_ALARM,
+    SUPPORT_DOORBELL,
+    SUPPORT_CAMERA,
+    SUPPORT_WIFI,
+    LOCK_NOTIFICATIOIN,
+    DEVICE_MAPPINGS,
     )
 
 GATEWAY_PLATFORMS = ["binary_sensor",
@@ -41,6 +59,8 @@ async def async_setup_entry(hass, entry, add_entities):
             add_entities([ZigbeeStats(gateway, device, attr)])
         elif attr == 'gas density':
             add_entities([GatewayGasSensor(gateway, device, attr)])
+        elif attr == 'lock':
+            add_entities([GatewayLockSensor(gateway, device, attr)])
         elif attr == 'illuminance':
             if (device['type'] == 'gateway' and
                     Utils.gateway_illuminance_supported(device['model'])):
@@ -119,7 +139,6 @@ class GatewaySensor(GatewayGenericDevice):
 
     def update(self, data: dict = None):
         """update sensor."""
-        self.debug("{} <= {}".format(self._attr, data))
         for key, value in data.items():
             if self.with_attr:
                 if key == BATTERY:
@@ -272,3 +291,71 @@ class ZigbeeStats(GatewaySensor):
             self._attrs['unresponsive'] += 1
 
         self.async_write_ha_state()
+
+
+class GatewayLockSensor(GatewayGenericDevice):
+    """Representation of a Aqara Lock."""
+
+    def __init__(self, gateway, device, attr):
+        """Initialize the Aqara lock device."""
+        super().__init__(gateway, device, attr)
+        self._features = DEVICE_MAPPINGS[self.device['model']]
+        self._battery = None
+        self._li_battery = None
+        self._lqi = None
+        self._voltage = None
+        self._state = None
+        self._notification = "Unknown"
+        self._lock_status = None
+        self._latch_status = None
+
+    @property
+    def device_state_attributes(self):
+        """Return the state attributes."""
+        attrs = {
+            ATTR_BATTERY_LEVEL: self._battery,
+            ATTR_LQI: self._lqi,
+            ATTR_VOLTAGE: self._voltage,
+            ATTR_LOCK_STATUS: self._lock_status,
+            ATTR_LATCH_STATUS: self._latch_status,
+            ATTR_NOTIFICATION: self._notification,
+        }
+        if self._features & WITH_LI_BATTERY:
+            attrs[ATTR_LI_BATTERY] = self._li_battery
+        return attrs
+
+    def update(self, data: dict = None):
+        """ update lock state """
+        # handle available change
+        for key, value in data.items():
+            if key == BATTERY:
+                self._battery = value
+            if key == LI_BATTERY:
+                self._li_battery = value
+            if key == LQI:
+                self._lqi = value
+            if key == VOLTAGE:
+                self._voltage = format(
+                    float(value) / 1000, '.3f') if isinstance(
+                    value, (int, float)) else None
+            if key == LATCH_STATUS:
+                self._latch_status = LATCH_STATUS_TYPE.get(str(value), str(value))
+            if key in LOCK_NOTIFICATIOIN:
+                notify = LOCK_NOTIFICATIOIN[key]
+                self._notification = notify.get(str(value), None) if notify.get(
+                    str(value), None) is None else notify.get("default")
+            if key == self._attr:
+                self._state = LOCK_STATUS.get(str(value), False)
+                self._lock_status = LOCK_STATUS_TYPE.get(str(value), str(value))
+        self.async_write_ha_state()
+
+    @property
+    def extra_state_attributes(self):
+        """Return the device specific state attributes."""
+        data = super().extra_state_attributes
+        self.debug(f'extra_state_attributes {data}')
+        if self._notification:
+            data[ATTR_NOTIFICATION] = self._notification
+        if self._lock_status:
+            data[ATTR_LOCK_STATUS] = self._lock_status
+        return data
