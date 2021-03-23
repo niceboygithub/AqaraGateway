@@ -4,7 +4,8 @@ from datetime import timedelta
 from homeassistant.util.dt import now
 from homeassistant.const import (
     ATTR_BATTERY_LEVEL,
-    ATTR_VOLTAGE
+    ATTR_VOLTAGE,
+    STATE_PROBLEM,
 )
 
 from . import DOMAIN, GatewayGenericDevice
@@ -25,11 +26,12 @@ from .core.const import (
     ATTR_LOCK_STATUS,
     ATTR_LATCH_STATUS,
     ATTR_LI_BATTERY,
+    LOCK_STATE,
     LOCK_STATUS,
     LOCK_STATUS_TYPE,
     LATCH_STATUS_TYPE,
-    LI_BATTERY,
     LATCH_STATUS,
+    LI_BATTERY,
     )
 from .core.lock_data import (
     WITH_LI_BATTERY,
@@ -61,6 +63,8 @@ async def async_setup_entry(hass, entry, add_entities):
             add_entities([GatewayGasSensor(gateway, device, attr)])
         elif attr == 'lock':
             add_entities([GatewayLockSensor(gateway, device, attr)])
+        elif attr == 'lock_event':
+            add_entities([GatewayLockEventSensor(gateway, device, attr)])
         elif attr == 'illuminance':
             if (device['type'] == 'gateway' and
                     Utils.gateway_illuminance_supported(device['model'])):
@@ -293,7 +297,7 @@ class ZigbeeStats(GatewaySensor):
         self.async_write_ha_state()
 
 
-class GatewayLockSensor(GatewayGenericDevice):
+class GatewayLockSensor(GatewaySensor):
     """Representation of a Aqara Lock."""
 
     def __init__(self, gateway, device, attr):
@@ -308,6 +312,16 @@ class GatewayLockSensor(GatewayGenericDevice):
         self._notification = "Unknown"
         self._lock_status = None
         self._latch_status = None
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return "mdi:lock"
+
+    @property
+    def device_class(self):
+        """Return the class of this device."""
+        return "lock_state"
 
     @property
     def device_state_attributes(self):
@@ -343,9 +357,9 @@ class GatewayLockSensor(GatewayGenericDevice):
             if key in LOCK_NOTIFICATIOIN:
                 notify = LOCK_NOTIFICATIOIN[key]
                 self._notification = notify.get(str(value), None) if notify.get(
-                    str(value), None) is None else notify.get("default")
+                    str(value), None) else notify.get("default")
             if key == self._attr:
-                self._state = LOCK_STATUS.get(str(value), False)
+                self._state = LOCK_STATE.get(str(value), STATE_PROBLEM)
                 self._lock_status = LOCK_STATUS_TYPE.get(str(value), str(value))
         self.async_write_ha_state()
 
@@ -359,3 +373,27 @@ class GatewayLockSensor(GatewayGenericDevice):
         if self._lock_status:
             data[ATTR_LOCK_STATUS] = self._lock_status
         return data
+
+class GatewayLockEventSensor(GatewaySensor):
+    """Representation of a Aqara Lock Event."""
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return "mdi:lock"
+
+    @property
+    def device_class(self):
+        """Return the class of this device."""
+        return None
+
+    def update(self, data: dict = None):
+        """ update lock state """
+        # handle available change
+        for key, value in data.items():
+            if key in LOCK_NOTIFICATIOIN:
+                notify = LOCK_NOTIFICATIOIN[key]
+                self._state = notify.get(str(value), None) if notify.get(
+                    str(value), None) else notify.get("default")
+        self.debug(f"wbz {self._state}")
+        self.async_write_ha_state()

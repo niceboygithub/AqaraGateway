@@ -18,7 +18,13 @@ from homeassistant.const import (
     STATE_OPENING,
     TEMP_CELSIUS,
     CONCENTRATION_PARTS_PER_BILLION,
-)
+    STATE_OPEN,
+    STATE_OPENING,
+    STATE_CLOSED,
+    STATE_CLOSING,
+    STATE_LOCKED,
+    STATE_UNLOCKED
+    )
 
 from homeassistant.components.climate.const import (
     FAN_AUTO,
@@ -219,6 +225,12 @@ LOCK_STATUS = {
     "1": True,
     "2": False,
     "3": True,
+}
+
+LOCK_STATE = {
+    "0": STATE_UNLOCKED,
+    "1": STATE_LOCKED,
+    "2": STATE_OPEN,
 }
 
 LOCK_STATUS_TYPE = {

@@ -16,8 +16,8 @@ DEVICE_MAPPINGS = {
 LOCK_NOTIFICATIOIN = {
     "latch_state": {
         "default": "Latch state changed",
-        "0": "Latch lock",
-        "1": "Latch unlock"},
+        "0": "Latch unlock",
+        "1": "Latch lock"},
     "lock_state": {
         "default": "Lock state changed",
         "0": "Door is open",
@@ -26,7 +26,7 @@ LOCK_NOTIFICATIOIN = {
         "3": "Doorbell is ringing"},
     "unlock from inside": {"default": "Unlock from Inside"},
     "someone detected": {"default": "Someone is lingering at the door"},
-    "li battery notify": 
+    "li battery notify":
         {"default": "Li Battery notify",
          "0": "Li Battery is abnormal",
          "1": "Li Battery is normal"},

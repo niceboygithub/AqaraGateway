@@ -1,6 +1,7 @@
 """ Aqara Gateway remote """
 import logging
 
+from homeassistant.components import persistent_notification
 from homeassistant.helpers.entity import ToggleEntity
 from homeassistant.helpers.debounce import Debouncer
 

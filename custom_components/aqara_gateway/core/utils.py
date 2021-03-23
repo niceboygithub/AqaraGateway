@@ -404,6 +404,7 @@ DEVICES = [{
         ['14.1.85', None, 'camera connected', None],
         ['13.50.85', None, 'wifi_info', None],
         ['13.51.85', None, 'wifi_connect', None],
+        [None, None, 'lock_event', 'sensor'],
     ]
 }, {
     # https://github.com/AlexxIT/XiaomiGateway3/issues/101
