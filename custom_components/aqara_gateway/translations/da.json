@@ -17,7 +17,8 @@
                     "host": "V\u00e6rt",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Angiv forbindelsesindstillinger for din Aqara Gateway."
             }

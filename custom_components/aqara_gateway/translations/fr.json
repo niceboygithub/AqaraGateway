@@ -9,15 +9,16 @@
         "flow_title": "Aqara Gateway: {name}",
         "step": {
             "discovery_confirm": {
-                "description": "Voulez-vous ajouter le n\u0153ud ESPHome ` {name} ` \u00e0 Home Assistant?\r\n{device_info}",
-                "title": "N\u0153ud ESPHome d\u00e9couvert"
+                "description": "Voulez-vous ajouter le n\u0153ud Aqara Gateway ` {name} ` \u00e0 Home Assistant?\r\n{device_info}",
+                "title": "N\u0153ud Aqara Gateway d\u00e9couvert"
             },
             "user": {
                 "data": {
                     "host": "Nom d'h\u00f4te ou adresse IP",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Veuillez saisir les param\u00e8tres de connexion de votre n\u0153ud Aqara Gateway."
             }

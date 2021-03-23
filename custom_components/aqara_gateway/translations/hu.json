@@ -10,14 +10,15 @@
         "step": {
             "discovery_confirm": {
                 "description": "Szeretn\u00e9d hozz\u00e1adni a(z) `{name}` Aqara Gateway csom\u00f3pontot a Home Assistant-hoz?\r\n{device_info}",
-                "title": "Felfedezett ESPHome csom\u00f3pont"
+                "title": "Felfedezett Aqara Gateway csom\u00f3pont"
             },
             "user": {
                 "data": {
                     "host": "Hoszt",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "K\u00e9rlek, add meg az Aqara Gateway csom\u00f3pontod kapcsol\u00f3d\u00e1si be\u00e1ll\u00edt\u00e1sait."
             }

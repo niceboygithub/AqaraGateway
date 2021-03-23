@@ -10,14 +10,15 @@
         "step": {
             "discovery_confirm": {
                 "description": "Chcete p\u0159idat uzel Aqara Gateway `{name}` do Home Assistant?\r\n{device_info}",
-                "title": "Nalezen uzel ESPHome"
+                "title": "Nalezen uzel Aqara Gateway"
             },
             "user": {
                 "data": {
                     "host": "Hostitel",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Zadejte pros\u00edm nastaven\u00ed p\u0159ipojen\u00ed va\u0161eho Aqara Gateway."
             }

@@ -16,7 +16,9 @@
                 "data": {
                     "host": "\u4e3b\u6a5f\u7aef",
                     "password": "\u5bc6\u78bc",
-                    "model": "Model"
+                    "model": "Model",
+                    "debug": "\u9664\u932F",
+                    "noffline": "\u5ffd\u7565\u96e2\u7dda\u8a0a\u606f"
                 },
                 "description": "\u8acb\u8f38\u5165\u7bc0\u9ede\u9023\u7dda\u8cc7\u8a0a\u3002"
             }

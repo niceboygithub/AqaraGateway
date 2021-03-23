@@ -17,7 +17,8 @@
                     "host": "V\u00e4rddatorn",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Ange anslutningsinst\u00e4llningarna f\u00f6r Aqara Gateway."
             }

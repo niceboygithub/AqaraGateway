@@ -17,7 +17,8 @@
                     "host": "Apparat",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Gitt Verbindungs Informatioune vun \u00e4rem Aqara Gateway an."
             }

@@ -17,7 +17,8 @@
                     "host": "Host",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Voer de verbindingsinstellingen in van uw Aqara Gateway."
             }

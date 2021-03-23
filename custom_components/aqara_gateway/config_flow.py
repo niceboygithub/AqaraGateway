@@ -23,7 +23,6 @@ from .core.entry_data import RuntimeEntryData
 from .core.utils import Utils
 
 
-
 class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
     """Handle a Aqara Gateway config flow."""
 
@@ -75,6 +74,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         fields[vol.Optional(CONF_MODEL,
                             default=self._model or 'm1s')] = vol.In(
                                 OPT_DEVICE_NAME)
+        fields[vol.Optional(CONF_NOFFLINE, default=True)] = bool
 
         return self.async_show_form(
             step_id="user",
@@ -108,7 +108,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             data={
                 CONF_HOST: self._host,
                 CONF_PASSWORD: self._password,
-                CONF_MODEL: self._model
+                CONF_MODEL: self._model,
+                CONF_NOFFLINE: True
             },
         )
 
@@ -186,7 +187,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             data={
                 CONF_HOST: self._host,
                 CONF_PASSWORD: self._password,
-                CONF_MODEL: self._model
+                CONF_MODEL: self._model,
+                CONF_NOFFLINE: True
             },
         )
 
@@ -218,7 +220,7 @@ class OptionsFlowHandler(OptionsFlow):
                     CONF_MODEL: self._model,
 #                    CONF_STATS: user_input.get(CONF_STATS, False),
                     CONF_DEBUG: user_input.get(CONF_DEBUG, []),
-                    CONF_NOFFLINE: user_input.get(CONF_NOFFLINE, False),
+                    CONF_NOFFLINE: user_input.get(CONF_NOFFLINE, True),
                 },
             )
         self._host = self.config_entry.options[CONF_HOST]
@@ -226,7 +228,7 @@ class OptionsFlowHandler(OptionsFlow):
         self._model = self.config_entry.options.get(CONF_MODEL, '')
 #        stats = self.config_entry.options.get(CONF_STATS, False)
         debug = self.config_entry.options.get(CONF_DEBUG, [])
-        ignore_offline = self.config_entry.options.get(CONF_NOFFLINE, False)
+        ignore_offline = self.config_entry.options.get(CONF_NOFFLINE, True)
 
         return self.async_show_form(
             step_id="init",

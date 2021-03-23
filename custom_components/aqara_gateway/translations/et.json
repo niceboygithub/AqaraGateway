@@ -16,7 +16,8 @@
                     "host": "Host",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Sisesta oma Aqara Gateway s\u00f5lme \u00fchenduse s\u00e4tted."
             }

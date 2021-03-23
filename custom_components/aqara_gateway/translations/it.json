@@ -17,7 +17,8 @@
                     "host": "Host",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Inserisci le impostazioni di connessione del tuo nodo Aqara Gateway."
             }

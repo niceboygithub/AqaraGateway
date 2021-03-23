@@ -17,7 +17,8 @@
                     "host": "Nazwa hosta lub adres IP",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Wprowad\u017a ustawienia po\u0142\u0105czenia Aqara Gateway."
             }

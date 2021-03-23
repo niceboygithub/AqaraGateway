@@ -6,7 +6,7 @@
         "error": {
             "connection_error": "No s'ha pogut connectar amb Aqara Gateway.",
         },
-        "flow_title": "ESPHome: {name}",
+        "flow_title": "Aqara Gateway: {name}",
         "step": {
             "discovery_confirm": {
                 "description": "Vols afegir el node `{name}` d'Aqara Gateway a Home Assistant?\n\n{device_info}",
@@ -17,7 +17,8 @@
                     "host": "Amfitri\u00f3",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Introdueix la informaci\u00f3 de connexi\u00f3 del teu node Aqara Gateway."
             }

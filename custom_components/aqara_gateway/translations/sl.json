@@ -17,7 +17,8 @@
                     "host": "Gostitelj",
                     "password": "Password",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "Ignore Offline message"
                 },
                 "description": "Prosimo, vnesite nastavitve povezave va\u0161ega vozli\u0161\u010da Aqara Gateway."
             }

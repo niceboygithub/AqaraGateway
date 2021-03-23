@@ -17,7 +17,8 @@
                     "host": "\u4e3b\u673a",
                     "password": "\u5bc6\u78bc",
                     "model": "Model",
-                    "debug": "Debug"
+                    "debug": "Debug",
+                    "noffline": "\u5ffd\u7565\u79bb\u7ebf\u8baf\u606f"
                 },
                 "description": "\u8bf7\u8f93\u5165\u60a8\u7684 Aqara Gateway \u8282\u70b9\u7684\u8fde\u63a5\u8bbe\u7f6e\u3002"
             }
