@@ -89,6 +89,7 @@ POWER = "power"
 VOLTAGE = "voltage"
 
 DOMAINS = ['air_quality',
+           'alarm_control_panel',
            'binary_sensor',
            'climate',
            'cover',

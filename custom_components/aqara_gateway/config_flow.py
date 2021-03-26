@@ -17,9 +17,9 @@ from homeassistant.util.network import is_ip_address
 
 from .core import gateway
 from .core.const import (
-    DOMAIN, DATA_KEY, OPT_DEVICE_NAME, CONF_MODEL, OPT_DEBUG, CONF_DEBUG, CONF_STATS, CONF_NOFFLINE
+    DOMAIN, OPT_DEVICE_NAME, CONF_MODEL, OPT_DEBUG,
+    CONF_DEBUG, CONF_STATS, CONF_NOFFLINE
 )
-from .core.entry_data import RuntimeEntryData
 from .core.utils import Utils
 
 
@@ -103,6 +103,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         self._model = user_input.get(CONF_MODEL, "")
 
     async def _async_add(self, user_input):
+        if user_input is None:
+            return self._async_get_entry()
         return self.async_create_entry(
             title=self._name,
             data={
@@ -194,11 +196,11 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
 
 
 class OptionsFlowHandler(OptionsFlow):
+    # pylint: disable=too-few-public-methods
     """Handle options flow changes."""
     _host = None
     _password = None
     _model = None
-    # pylint: disable=too-few-public-methods
 
     def __init__(self, config_entry):
         """Initialize options flow."""
@@ -218,7 +220,7 @@ class OptionsFlowHandler(OptionsFlow):
                     CONF_HOST: self._host,
                     CONF_PASSWORD: self._password,
                     CONF_MODEL: self._model,
-#                    CONF_STATS: user_input.get(CONF_STATS, False),
+                    # CONF_STATS: user_input.get(CONF_STATS, False),
                     CONF_DEBUG: user_input.get(CONF_DEBUG, []),
                     CONF_NOFFLINE: user_input.get(CONF_NOFFLINE, True),
                 },
@@ -226,7 +228,7 @@ class OptionsFlowHandler(OptionsFlow):
         self._host = self.config_entry.options[CONF_HOST]
         self._password = self.config_entry.options.get(CONF_PASSWORD, '')
         self._model = self.config_entry.options.get(CONF_MODEL, '')
-#        stats = self.config_entry.options.get(CONF_STATS, False)
+        # stats = self.config_entry.options.get(CONF_STATS, False)
         debug = self.config_entry.options.get(CONF_DEBUG, [])
         ignore_offline = self.config_entry.options.get(CONF_NOFFLINE, True)
 
@@ -236,7 +238,7 @@ class OptionsFlowHandler(OptionsFlow):
                 {
                     vol.Required(CONF_HOST, default=self._host): str,
                     vol.Optional(CONF_PASSWORD, default=self._password): str,
-#                    vol.Required(CONF_STATS, default=stats): bool,
+                    # vol.Required(CONF_STATS, default=stats): bool,
                     vol.Optional(CONF_DEBUG, default=debug): cv.multi_select(
                         OPT_DEBUG
                     ),

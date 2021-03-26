@@ -63,6 +63,8 @@ async def async_setup_entry(hass, entry, add_entities):
             add_entities([GatewayGasSensor(gateway, device, attr)])
         elif attr == 'lock':
             add_entities([GatewayLockSensor(gateway, device, attr)])
+        elif attr == 'key_id':
+            add_entities([GatewayKeyIDSensor(gateway, device, attr)])
         elif attr == 'lock_event':
             add_entities([GatewayLockEventSensor(gateway, device, attr)])
         elif attr == 'illuminance':
@@ -96,7 +98,7 @@ class GatewaySensor(GatewayGenericDevice):
         """Initialize the Xiaomi/Aqara Sensors."""
         self._state = False
         self.is_metric = False
-        self.with_attr = bool(device['type'] not in(
+        self.with_attr = bool(device['type'] not in (
             'gateway', 'zigbee')) and bool(attr not in (
                 'key_id', 'battery', 'power', 'consumption'))
 
@@ -298,6 +300,7 @@ class ZigbeeStats(GatewaySensor):
 
 
 class GatewayLockSensor(GatewaySensor):
+    # pylint: disable=too-many-instance-attributes
     """Representation of a Aqara Lock."""
 
     def __init__(self, gateway, device, attr):
@@ -353,14 +356,17 @@ class GatewayLockSensor(GatewaySensor):
                     float(value) / 1000, '.3f') if isinstance(
                     value, (int, float)) else None
             if key == LATCH_STATUS:
-                self._latch_status = LATCH_STATUS_TYPE.get(str(value), str(value))
+                self._latch_status = LATCH_STATUS_TYPE.get(
+                    str(value), str(value))
             if key in LOCK_NOTIFICATIOIN:
                 notify = LOCK_NOTIFICATIOIN[key]
-                self._notification = notify.get(str(value), None) if notify.get(
+                self._notification = notify.get(
+                    str(value), None) if notify.get(
                     str(value), None) else notify.get("default")
             if key == self._attr:
                 self._state = LOCK_STATE.get(str(value), STATE_PROBLEM)
-                self._lock_status = LOCK_STATUS_TYPE.get(str(value), str(value))
+                self._lock_status = LOCK_STATUS_TYPE.get(
+                    str(value), str(value))
         self.async_write_ha_state()
 
     @property
@@ -373,6 +379,29 @@ class GatewayLockSensor(GatewaySensor):
         if self._lock_status:
             data[ATTR_LOCK_STATUS] = self._lock_status
         return data
+
+
+class GatewayKeyIDSensor(GatewaySensor):
+    """Representation of a Aqara Lock Key ID."""
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return "mdi:lock"
+
+    @property
+    def device_class(self):
+        """Return the class of this device."""
+        return None
+
+    def update(self, data: dict = None):
+        """ update lock state """
+        # handle available change
+        for key, value in data.items():
+            if (key == self._attr or "unlock by" in key):
+                self._state = value
+        self.async_write_ha_state()
+
 
 class GatewayLockEventSensor(GatewaySensor):
     """Representation of a Aqara Lock Event."""

@@ -1,15 +1,16 @@
 """Provide info to system health."""
-from yarl import URL
 
 from homeassistant.components import system_health
 from homeassistant.core import HomeAssistant, callback
 
 from .core.const import DOMAIN
 
+
 @callback
 def async_register(
     hass: HomeAssistant, register: system_health.SystemHealthRegistration
 ) -> None:
+    # pylint: disable=unused-argument
     """Register system health callbacks."""
     register.async_register_info(system_health_info, "/config/integrations")
 

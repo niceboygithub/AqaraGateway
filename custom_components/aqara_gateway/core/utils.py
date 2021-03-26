@@ -45,6 +45,7 @@ DEVICES = [{
         ['8.0.2155', None, 'cloud', None],  # {"cloud_link":0}
         ['0.3.85', 'illumination', 'illuminance', 'sensor'],
         [None, 'rgb_color', 'rgb_color', 'light'],
+        [None, None, 'alarm', 'alarm_control_panel'],
         [None, None, 'pair', 'remote'],
     ]
 }, {
@@ -69,7 +70,7 @@ DEVICES = [{
     ]
 }, {
     # on/off, power measurement
-    'lumi.plug.sacn03': ["Aqara", "Socket H1 USB", "QBCZ15LM"],  #  @miniknife88
+    'lumi.plug.sacn03': ["Aqara", "Socket H1 USB", "QBCZ15LM"],  # @miniknife88
     'params': [
         ['0.11.85', 'load_voltage', 'power', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
@@ -137,7 +138,7 @@ DEVICES = [{
 }, {
     'lumi.switch.b2lacn02': ["Aqara", "Double Wall Switch D1", "QBKG22LM"],
     'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
-    'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 PRO", "QBKG31LM"],   # @miniknife88
+    'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 PRO", "QBKG31LM"],  # @miniknife88
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -387,20 +388,25 @@ DEVICES = [{
         ['13.1.85', None, 'unlock from inside', None],
         ['13.2.85', None, 'unlock by fringprint', None],
         ['13.3.85', None, 'unlock by password', None],
+        ['13.4.85', None, 'unlock by nfc', None],
+        ['13.5.85', None, 'unlock by homekit', None],
+        ['13.6.85', None, 'unlock by bluetooth', None],
+        ['13.7.85', None, 'unlock by key', None],
+        [None, None, 'key_id', 'sensor'],
         ['13.8.85', None, 'open in away mode', None],
         ['13.10.85', None, 'lock by handle', None],
         ['13.11.85', None, 'latch_state', None],
         ['13.12.85', None, 'away mode', None],
         ['13.13.85', None, 'someone detected', None],
-        ['13.15.85', None, 'key_id', 'sensor'],
+        ['13.15.85', None, 'key_type', None],
         ['13.20.85', 'lock_state', 'lock', 'sensor'],
         ['13.30.85', None, 'li battery notify', None],
         ['13.31.85', 'voltage', 'voltage', None],
         ['13.32.85', 'li battery', 'li battery', 'sensor'],
         ['13.33.85', 'battery life', 'battery life', None],
         ['13.37.85', 'battery', 'battery', 'sensor'],
-        ['13.60.85', None, '13.60.85', None],
         ['13.40.85', None, 'password number', None],
+        ['13.60.85', None, '13.60.85', None],
         ['14.1.85', None, 'camera connected', None],
         ['13.50.85', None, 'wifi_info', None],
         ['13.51.85', None, 'wifi_connect', None],
@@ -511,7 +517,7 @@ GLOBAL_PROP = {
     '8.0.2151': 'zigbee_pa',
     '8.0.2156': '8.0.2156',
     '8.0.2171': '8.0.2171',
-    '8.0.2223': '8.0.2223',
+    '8.0.2223': 'back_version',
     '8.0.2230': '8.0.2230',
     '8.0.9001': 'battery_end_of_life',
     '8.1.2222': '8.1.2222',
@@ -628,6 +634,22 @@ class Utils:
     def gateway_light_supported(model: str) -> Optional[bool]:
         """ return the gateway light supported """
         if 'lumi.gateway.acn01' in model:
+            return True
+        return False
+
+    @staticmethod
+    def gateway_alarm_mode_supported(model: str) -> Optional[bool]:
+        """ return the gateway alarm mode supported """
+        #  basic_cli not support
+        if 'lumi.camera.gwagl02' not in model:
+            return True
+        return False
+
+    @staticmethod
+    def gateway_infrared_supported(model: str) -> Optional[bool]:
+        """ return the gateway infrared supported """
+        if model in ('lumi.aircondition.acn05', 'lumi.gateway.iragl5',
+                     'lumi.gateway.iragl7', 'lumi.gateway.iragl01'):
             return True
         return False
 

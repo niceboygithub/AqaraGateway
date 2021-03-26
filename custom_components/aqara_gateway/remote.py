@@ -69,6 +69,7 @@ class GatewayRemote(GatewayGenericDevice, ToggleEntity):
         return 'mdi:zigbee'
 
     def update(self, data: dict = None):
+        """ update state"""
         if 'pairing_start' in data:
             self._state = True
 

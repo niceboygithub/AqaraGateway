@@ -4,8 +4,8 @@ import struct
 
 import homeassistant.util.color as color_util
 from homeassistant.components.light import LightEntity, SUPPORT_BRIGHTNESS, \
-    ATTR_BRIGHTNESS, SUPPORT_COLOR_TEMP, ATTR_COLOR_TEMP, ATTR_RGB_COLOR, SUPPORT_COLOR, \
-    ATTR_HS_COLOR
+    ATTR_BRIGHTNESS, SUPPORT_COLOR_TEMP, ATTR_COLOR_TEMP, ATTR_RGB_COLOR, \
+    SUPPORT_COLOR, ATTR_HS_COLOR
 
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
@@ -110,7 +110,8 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             rgb = color_util.color_hs_to_RGB(*self._hs)
             rgba = (self._brightness,) + rgb
             if isinstance(self._brightness, int):
-                rgbhex = binascii.hexlify(struct.pack("BBBB", *rgba)).decode("ASCII")
+                rgbhex = binascii.hexlify(
+                    struct.pack("BBBB", *rgba)).decode("ASCII")
                 rgbhex = int(rgbhex, 16)
                 if self.device['type'] == 'zigbee':
                     payload[ATTR_HS_COLOR] = rgbhex * 150

@@ -18,11 +18,14 @@ HA_BLE2MQTT = "(ha_ble | awk '{print $0;fflush();}' | mosquitto_pub -t log/ha_bl
 
 class TelnetShell(Telnet):
     """ Telnet Shell """
+    _aqara_property = False
     # pylint: disable=unsubscriptable-object
+
     def __init__(self, host: str, password=None, device_name=None):
         super().__init__(host, timeout=5)
         self.read_until(b"login: ", timeout=10)
-        login_name = 'root' if device_name and 'g2h' in device_name else 'admin'
+        login_name = 'root' if (
+            device_name and 'g2h' in device_name) else 'admin'
         if password:
             command = '{}\r\n'.format(login_name)
             self.write(command.encode())
@@ -30,6 +33,8 @@ class TelnetShell(Telnet):
             self.run_command(password)
         else:
             self.run_command(login_name)
+        if self.file_exist("/tmp/out/agetprop"):
+            self._aqara_property = True
 
     def run_command(self, command: str, as_bytes=False) -> Union[str, bytes]:
         """Run command and return it result."""
@@ -44,9 +49,9 @@ class TelnetShell(Telnet):
     def run_basis_cli(self, command: str, as_bytes=False) -> Union[str, bytes]:
         """Run command and return it result."""
         command = "basis_cli " + command
-        self.write(command.encode() + b"\r\n")
-        raw = self.read_until(b"\r\n# ", timeout=30)
-        return raw if as_bytes else raw.decode()
+        self.run_command(command, as_bytes)
+        self.read_until(b"#", timeout=1)
+        self.read_until(b"#", timeout=1)
 
     def file_exist(self, filename: str) -> bool:
         """ check file exit """
@@ -108,7 +113,7 @@ class TelnetShell(Telnet):
         """ get property """
         # pylint: disable=broad-except
         try:
-            if self.file_exist("/tmp/out/agetprop"):
+            if self._aqara_property:
                 command = "agetprop {}\n".format(property_value)
             else:
                 command = "getprop {}\n".format(property_value)
@@ -121,11 +126,11 @@ class TelnetShell(Telnet):
 
     def set_prop(self, property_value: str, value: str):
         """ set property """
-        if self.file_exist("/tmp/out/asetprop"):
+        if self._aqara_property:
             command = "asetprop {} {}\n".format(property_value, value)
         else:
             command = "setprop {} {}\n".format(property_value, value)
-        self.write(command.encode())
+        self.run_command(command)
 
     def get_version(self):
         """ get gateway version """

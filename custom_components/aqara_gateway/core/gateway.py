@@ -307,7 +307,8 @@ class Gateway(Thread):
                         time.sleep(1)
                         timeout = timeout - 1
                     attr = param[2]
-                    if attr in ('illuminance', 'light') and device['type'] =='gateway':
+                    if (attr in ('illuminance', 'light') and
+                            device['type'] == 'gateway'):
                         self._gateway_did = device['did']
 
                     self.setups[domain](self, device, attr)
@@ -408,7 +409,8 @@ class Gateway(Thread):
 
         if 'mqtt' in self._debug:
             try:
-                self.debug("MQTT on_message: {} {}".format(msg.topic, msg.payload.decode()))
+                self.debug("MQTT on_message: {} {}".format(
+                    msg.topic, msg.payload.decode()))
             except UnicodeDecodeError:
                 self.debug("MQTT on_message: {}".format(msg.topic))
                 self.debug(msg.payload)
@@ -652,7 +654,8 @@ class Gateway(Thread):
                     for key, val in data.items():
                         if key == 'switch':
                             val = bool(val)
-                        key = next(p[0] for p in device['mi_spec'] if p[2] == key)
+                        key = next(
+                            p[0] for p in device['mi_spec'] if p[2] == key)
                         params.append(
                             {'siid': key[0], 'piid': key[1], 'value': val})
 
@@ -681,8 +684,10 @@ class Gateway(Thread):
                         'data': {
                             'blue': int((hs_color & 0xFF) * brightness / 100),
                             'breath': 500,
-                            'green': int(((hs_color >> 8) & 0xFF) * brightness / 100),
-                            'red': int(((hs_color >> 16) & 0xFF) * brightness / 100)},
+                            'green': int(
+                                ((hs_color >> 8) & 0xFF) * brightness / 100),
+                            'red': int(
+                                ((hs_color >> 16) & 0xFF) * brightness / 100)},
                         'type': 'rgb',
                         'rev': 1,
                         'id': randint(0, 65535)

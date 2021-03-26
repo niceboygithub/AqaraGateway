@@ -36,13 +36,15 @@ PROP_TO_ATTR = {
     HUMIDITY: ATTR_HUM,
 }
 
+
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """ Perform the setup for Xiaomi/Aqara devices. """
     def setup(gateway: Gateway, device: dict, attr: str):
         if attr == 'tvoc_level':
             async_add_entities([GatewayTvocSensor(gateway, device, attr)])
         else:
-            async_add_entities([GatewayAirMonitorSensor(gateway, device, attr)])
+            async_add_entities([GatewayAirMonitorSensor(
+                gateway, device, attr)])
 
     aqara_gateway: Gateway = hass.data[DOMAIN][config_entry.entry_id]
     aqara_gateway.add_setup('air_quality', setup)

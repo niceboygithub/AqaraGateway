@@ -178,6 +178,7 @@ class GatewayMotionSensor(GatewayBinarySensor):
 
     @callback
     def _set_no_motion(self, *args):
+        # pylint: disable=unused-argument
         self._last_off = time.time()
         self._timeout_pos = 0
         self._unsub_set_no_motion = None
@@ -244,6 +245,7 @@ class GatewayMotionSensor(GatewayBinarySensor):
 
 
 class GatewayDoorSensor(GatewayBinarySensor, BinarySensorEntity):
+    # pylint: disable=too-many-instance-attributes
     """Representation of a Xiaomi/Aqara Door Sensor."""
 
     def __init__(
@@ -470,6 +472,7 @@ class GatewayButtonSwitch(GatewayBinarySensor, BinarySensorEntity):
         return attrs
 
     def update(self, data: dict = None):
+        # pylint: disable=too-many-branches
         """update Button Switch."""
         for key, value in data.items():
             if key == BATTERY:
@@ -535,7 +538,7 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
         self._voltage = None
         self._rotate_angle = None
         self.with_rotation = False
-        if (device['model'] == 'lumi.remote.rkba01' or 
+        if (device['model'] == 'lumi.remote.rkba01' or
                 device['model'] == 'lumi.switch.rkna01'):
             self.with_rotation = True
         super().__init__(gateway, device, attr)
@@ -564,6 +567,7 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
         return attrs
 
     def update(self, data: dict = None):
+        # pylint: disable=too-many-branches
         """update Button Switch."""
         if self.with_rotation:
             self._rotate_angle = None
@@ -591,7 +595,8 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
                 rotation = BUTTON.get(data.get('button', 0), 'unknown')
                 duration = data.get('action_duration', 'unknown')
                 if rotation != 'unknown':
-                    data = {'duration': duration, 'angle': value, self._attr: rotation}
+                    data = {'duration': duration,
+                            'angle': value, self._attr: rotation}
                 self._rotate_angle = value
                 break
             if key == 'button':

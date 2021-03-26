@@ -20,7 +20,6 @@ from .core.const import (
     LOAD_POWER,
     LQI,
     LOAD_VOLTAGE,
-    VOLTAGE,
 )
 
 from .core.utils import Utils
@@ -41,6 +40,7 @@ async def async_unload_entry(hass, entry):
     # pylint: disable=unused-argument
     """ unload entry """
     return True
+
 
 class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
     """Representation of a Xiaomi/Aqara Plug."""
