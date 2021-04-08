@@ -369,16 +369,6 @@ class GatewayLockSensor(GatewaySensor):
                     str(value), str(value))
         self.async_write_ha_state()
 
-    @property
-    def extra_state_attributes(self):
-        """Return the device specific state attributes."""
-        data = super().extra_state_attributes
-        self.debug(f'extra_state_attributes {data}')
-        if self._notification:
-            data[ATTR_NOTIFICATION] = self._notification
-        if self._lock_status:
-            data[ATTR_LOCK_STATUS] = self._lock_status
-        return data
 
 
 class GatewayKeyIDSensor(GatewaySensor):
