@@ -63,7 +63,7 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
         if 'position' in data:
             self._attrs[ATTR_CURRENT_POSITION] = data['position']
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
     def close_cover(self, **kwargs):
         """Close the cover."""

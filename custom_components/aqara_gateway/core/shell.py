@@ -27,7 +27,7 @@ class TelnetShell(Telnet):
         login_name = 'root' if (
             device_name and 'g2h' in device_name) else 'admin'
         if password:
-            command = '{}\r\n'.format(login_name)
+            command = '{}\n'.format(login_name)
             self.write(command.encode())
             self.read_until(b"Password: ", timeout=10)
             self.run_command(password)
@@ -40,7 +40,7 @@ class TelnetShell(Telnet):
         """Run command and return it result."""
         # pylint: disable=broad-except
         try:
-            self.write(command.encode() + b"\r\n")
+            self.write(command.encode() + b"\n")
             raw = self.read_until(b"\r\n# ", timeout=30)
         except Exception:
             raw = b''

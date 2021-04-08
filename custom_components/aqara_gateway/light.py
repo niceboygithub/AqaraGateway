@@ -84,7 +84,7 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
         if ATTR_RGB_COLOR in data:
             self._rgb_color = data[ATTR_RGB_COLOR]
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
     def turn_on(self, **kwargs):
         """Turn the light on."""

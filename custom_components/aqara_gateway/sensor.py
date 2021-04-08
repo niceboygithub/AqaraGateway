@@ -26,12 +26,14 @@ from .core.const import (
     ATTR_LOCK_STATUS,
     ATTR_LATCH_STATUS,
     ATTR_LI_BATTERY,
+    ATTR_LI_BATTERY_TEMP,
     LOCK_STATE,
     LOCK_STATUS,
     LOCK_STATUS_TYPE,
     LATCH_STATUS_TYPE,
     LATCH_STATUS,
     LI_BATTERY,
+    LI_BATTERY_TEMP,
     )
 from .core.lock_data import (
     WITH_LI_BATTERY,
@@ -267,24 +269,30 @@ class ZigbeeStats(GatewaySensor):
 
             self._attrs['msg_received'] += 1
 
-            # for some devices better works APSCounter, for other - sequence
-            # number in payload
-            new_seq1 = int(data['APSCounter'], 0)
-            raw = data['APSPlayload']
-            manufact_specific = int(raw[2:4], 16) & 4
-            new_seq2 = int(raw[8:10] if manufact_specific else raw[4:6], 16)
-            if self.last_seq1 is not None:
-                miss = min(
-                    (new_seq1 - self.last_seq1 - 1) & 0xFF,
-                    (new_seq2 - self.last_seq2 - 1) & 0xFF
-                )
-                self._attrs['msg_missed'] += miss
-                self._attrs['last_missed'] = miss
-                if miss:
-                    self.debug(f"Msg missed: {self.last_seq1} => {new_seq1}, "
-                               f"{self.last_seq2} => {new_seq2}, {cluster}")
-            self.last_seq1 = new_seq1
-            self.last_seq2 = new_seq2
+            # For some devices better works APSCounter, for other - sequence
+            # number in payload. Sometimes broken messages arrived.
+            try:
+                new_seq1 = int(data['APSCounter'], 0)
+                raw = data['APSPlayload']
+                manufact_spec = int(raw[2:4], 16) & 4
+                new_seq2 = int(raw[8:10] if manufact_spec else raw[4:6], 16)
+                if self.last_seq1 is not None:
+                    miss = min(
+                        (new_seq1 - self.last_seq1 - 1) & 0xFF,
+                        (new_seq2 - self.last_seq2 - 1) & 0xFF
+                    )
+                    self._attrs['msg_missed'] += miss
+                    self._attrs['last_missed'] = miss
+                    if miss:
+                        self.debug(
+                            f"Msg missed: {self.last_seq1} => {new_seq1}, "
+                            f"{self.last_seq2} => {new_seq2}, {cluster}"
+                        )
+                self.last_seq1 = new_seq1
+                self.last_seq2 = new_seq2
+
+            except:
+                pass
 
             self._state = now().isoformat(timespec='seconds')
 
@@ -296,7 +304,7 @@ class ZigbeeStats(GatewaySensor):
         elif data.get('deviceState') == 17:
             self._attrs['unresponsive'] += 1
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
 
 class GatewayLockSensor(GatewaySensor):
@@ -309,6 +317,7 @@ class GatewayLockSensor(GatewaySensor):
         self._features = DEVICE_MAPPINGS[self.device['model']]
         self._battery = None
         self._li_battery = None
+        self._li_battery_temperature = None
         self._lqi = None
         self._voltage = None
         self._state = None
@@ -339,6 +348,7 @@ class GatewayLockSensor(GatewaySensor):
         }
         if self._features & WITH_LI_BATTERY:
             attrs[ATTR_LI_BATTERY] = self._li_battery
+            attrs[ATTR_LI_BATTERY_TEMP] = self._li_battery_temperature
         return attrs
 
     def update(self, data: dict = None):
@@ -349,6 +359,8 @@ class GatewayLockSensor(GatewaySensor):
                 self._battery = value
             if key == LI_BATTERY:
                 self._li_battery = value
+            if key == LI_BATTERY_TEMP:
+                self._li_battery_temperature = value / 10
             if key == LQI:
                 self._lqi = value
             if key == VOLTAGE:
@@ -414,5 +426,5 @@ class GatewayLockEventSensor(GatewaySensor):
                 notify = LOCK_NOTIFICATIOIN[key]
                 self._state = notify.get(str(value), None) if notify.get(
                     str(value), None) else notify.get("default")
-        self.debug(f"wbz {self._state}")
+
         self.async_write_ha_state()

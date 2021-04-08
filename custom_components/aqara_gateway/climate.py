@@ -48,7 +48,7 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
         self._fan_mode = None
         self._hvac_mode = None
         self._is_on = None
-        self._state: Optional[bytearray] = None
+        self._state = None
         self._target_temp = 0
         super().__init__(device, name, config_entry)
 
@@ -142,7 +142,7 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
         except Exception:
             _LOGGER.exception("Can't read climate data: %s", data)
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
     def set_temperature(self, **kwargs) -> None:
         """ set temperature """

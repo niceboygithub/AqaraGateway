@@ -104,7 +104,7 @@ class GatewayBinarySensor(GatewayGenericDevice, BinarySensorEntity):
             else:
                 self._state = not data[self._attr]
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
 
 class GatewayNatgasSensor(GatewayBinarySensor, BinarySensorEntity):
@@ -183,7 +183,7 @@ class GatewayMotionSensor(GatewayBinarySensor):
         self._timeout_pos = 0
         self._unsub_set_no_motion = None
         self._state = False
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
     def update(self, data: dict = None):
         """ update motion sensor """
@@ -199,7 +199,7 @@ class GatewayMotionSensor(GatewayBinarySensor):
         # check only motion=1
         if data.get(self._attr) != 1:
             # handle available change
-            self.async_write_ha_state()
+            self.schedule_update_ha_state()
             return
 
         # check only motion=1
@@ -215,7 +215,7 @@ class GatewayMotionSensor(GatewayBinarySensor):
         self._last_on = time_now
 
         # handle available change
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
         if self._unsub_set_no_motion:
             self._unsub_set_no_motion()
@@ -309,7 +309,7 @@ class GatewayDoorSensor(GatewayBinarySensor, BinarySensorEntity):
                 else:
                     self._state = not value
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
 
 class GatewaWaterLeakSensor(GatewayBinarySensor, BinarySensorEntity):
@@ -371,7 +371,7 @@ class GatewaWaterLeakSensor(GatewayBinarySensor, BinarySensorEntity):
                     self._state = not value
                 self._should_poll = True
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
 
 class GatewaySmokeSensor(GatewayBinarySensor, BinarySensorEntity):
@@ -427,7 +427,7 @@ class GatewaySmokeSensor(GatewayBinarySensor, BinarySensorEntity):
                 else:
                     self._state = not value
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
 
 class GatewayButtonSwitch(GatewayBinarySensor, BinarySensorEntity):
@@ -518,7 +518,7 @@ class GatewayButtonSwitch(GatewayBinarySensor, BinarySensorEntity):
 
             self._state = ''
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
 
 class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
@@ -625,4 +625,4 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
 
             self._state = ''
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()

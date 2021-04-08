@@ -46,6 +46,8 @@ LOCK_NOTIFICATIOIN = {
         "default": "Away mode changed",
         "0": "Away-from-home mode is removed",
         "1": "Away-from-home mode is enabled"},
+    "nfc added": {"default": "Added NFC card or Tag"},
+    "verification failed": {"default": "door lock verifications failed"},
     "user_1": {"default": "Unlocked with Keypad by user 1"},
     "user_2": {"default": "Unlocked with Keypad by user 2"},
 }

@@ -217,8 +217,10 @@ ATTR_LATCH_STATUS = "latch_status"
 ATTR_CODE_SLOT = "code_slot"
 ATTR_USERCODE = "usercode"
 ATTR_LI_BATTERY = "Li Battery Level"
+ATTR_LI_BATTERY_TEMP = "Li Battery Temperature"
 CONFIG_ADVANCED = "Advanced"
 LI_BATTERY = "li battery"
+LI_BATTERY_TEMP = "li battery temperature"
 LATCH_STATUS = "latch_state"
 
 LOCK_STATUS = {
