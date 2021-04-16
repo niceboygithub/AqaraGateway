@@ -14,8 +14,6 @@ from homeassistant.const import (
     PERCENTAGE,
     POWER_WATT,
     PRESSURE_HPA,
-    STATE_CLOSING,
-    STATE_OPENING,
     TEMP_CELSIUS,
     CONCENTRATION_PARTS_PER_BILLION,
     STATE_OPEN,
@@ -237,13 +235,14 @@ LOCK_STATE = {
 }
 
 LOCK_STATUS_TYPE = {
-    "0": "Door Unlock",
-    "1": "Door Lock",
-    "2": "Door is not closed",
-    "3": "Door Bell",
+    "0": STATE_UNLOCKED,
+    "1": STATE_LOCKED,
+    "2": STATE_OPEN,
+    "3": "door_bell",
 }
 
 LATCH_STATUS_TYPE = {
-    "0": "Latch Unlock",
-    "1": "Latch Lock",
+    "0": STATE_UNLOCKED,
+    "1": STATE_LOCKED,
 }
+
