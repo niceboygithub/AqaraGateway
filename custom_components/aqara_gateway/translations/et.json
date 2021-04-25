@@ -3,7 +3,7 @@
         "abort": {
             "already_configured": "Seade on juba h\u00e4\u00e4lestatud"        },
         "error": {
-            "connection_error": "Aqara Gateway-ga ei saa \u00fchendust luua. Veendu.",
+            "connection_error": "Aqara Gateway-ga ei saa \u00fchendust luua. Veendu."
         },
         "flow_title": "Aqara Gateway: {name}",
         "step": {

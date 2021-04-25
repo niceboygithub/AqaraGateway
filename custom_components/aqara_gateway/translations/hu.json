@@ -4,7 +4,7 @@
             "already_configured": "Az Aqara Gateway-t m\u00e1r konfigur\u00e1ltad."
         },
         "error": {
-            "connection_error": "Nem lehet csatlakozni az Aqara Gateway-hez.",
+            "connection_error": "Nem lehet csatlakozni az Aqara Gateway-hez."
         },
         "flow_title": "Aqara Gateway: {name}",
         "step": {

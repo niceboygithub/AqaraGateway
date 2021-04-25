@@ -4,7 +4,7 @@
             "already_configured": "Aqara Gateway est d\u00e9j\u00e0 configur\u00e9"
         },
         "error": {
-            "connection_error": "Impossible de se connecter \u00e0 Aqara Gateway.",
+            "connection_error": "Impossible de se connecter \u00e0 Aqara Gateway."
         },
         "flow_title": "Aqara Gateway: {name}",
         "step": {

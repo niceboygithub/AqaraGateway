@@ -1,10 +1,10 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Aqara Gateway ist bereits konfiguriert",
+            "already_configured": "Aqara Gateway ist bereits konfiguriert"
         },
         "error": {
-            "connection_error": "Keine Verbindung zum Aqara Gateway m\u00f6glich. ",
+            "connection_error": "Keine Verbindung zum Aqara Gateway m\u00f6glich. "
         },
         "flow_title": "Aqara Gateway: {name}",
         "step": {

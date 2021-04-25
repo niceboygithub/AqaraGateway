@@ -4,7 +4,7 @@
             "already_configured": "Aqara Gateway er allerede konfigureret"
         },
         "error": {
-            "connection_error": "Kan ikke oprette forbindelse til Aqara Gateway.",
+            "connection_error": "Kan ikke oprette forbindelse til Aqara Gateway."
         },
         "flow_title": "Aqara Gateway: {name}",
         "step": {
