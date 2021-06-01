@@ -35,9 +35,9 @@ Then restart gateway by reboot command.
 cd /tmp
 wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
 chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/M1S/3.2.4_0014.0520/linux_3.2.4_0014.0520.bin
+/tmp/curl -s -k -L -o /tmp/linux.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/rootfs_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011_modification.bin
 fw_update /tmp/linux.bin
-/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M1S/3.2.4_0014.0520/rootfs_3.2.4_0014.0520_modified.bin
+/tmp/curl -s -k -L -o /tmp/rootfs.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/rootfs_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011_modification.bin
 fw_update /tmp/rootfs.bin
 ```
 Then restart gateway by reboot command.
@@ -50,6 +50,18 @@ chmod a+x /tmp/curl
 /tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/P3/3.0.7_0007.0515/linux_3.0.7_0007.0515.bin
 fw_update /tmp/linux.bin
 /tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/P3/3.0.7_0007.0515/rootfs_3.0.7_0007.0515_modified.bin
+fw_update /tmp/rootfs.bin
+```
+Then restart gateway by reboot command.
+
+## Flash H1 Custom firmware method
+```shell
+cd /tmp
+wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
+chmod a+x /tmp/curl
+/tmp/curl -s -k -L -o /tmp/linux.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/original/H1/3.0.8_0001.0512/linux_3.0.8_0001.0512.bin
+fw_update /tmp/linux.bin
+/tmp/curl -s -k -L -o /tmp/rootfs.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/H1/3.0.8_0001.0512/rootfs_3.0.8_0001.0512_modified.bin
 fw_update /tmp/rootfs.bin
 ```
 Then restart gateway by reboot command.
