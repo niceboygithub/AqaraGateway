@@ -10,7 +10,7 @@ from homeassistant.config_entries import (
     OptionsFlow,
     ConfigEntry
     )
-from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PASSWORD
+from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PASSWORD, CONF_TOKEN
 from homeassistant.core import callback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from homeassistant.util.network import is_ip_address
@@ -33,6 +33,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         """Initialize flow."""
         self._host: Optional[str] = None
         self._password: Optional[str] = None
+        self._token: Optional[str] = None
         self._model: Optional[str] = None
         self._device_info: Optional[str] = None
 
@@ -52,6 +53,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             self._set_user_input(user_input)
             if not is_ip_address(self._host):
                 return self.async_abort(reason="connection_error")
+            if self._token and self._model in ('m1s', 'p3', 'h1'):
+                Utils.enable_telnet(self._host, self._token)
             ret = gateway.is_aqaragateway(self._host,
                                           self._password,
                                           self._model)
@@ -71,6 +74,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                             default=self._host or vol.UNDEFINED)] = str
         fields[vol.Optional(CONF_PASSWORD,
                             default=self._password or vol.UNDEFINED)] = str
+        fields[vol.Optional(CONF_TOKEN,
+                            default=self._token or vol.UNDEFINED)] = str
         fields[vol.Optional(CONF_MODEL,
                             default=self._model or 'm1s')] = vol.In(
                                 OPT_DEVICE_NAME)
@@ -100,6 +105,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             return
         self._host = user_input.get(CONF_HOST, "")
         self._password = user_input.get(CONF_PASSWORD, "")
+        self._token = user_input.get(CONF_TOKEN, "")
         self._model = user_input.get(CONF_MODEL, "")
 
     async def _async_add(self, user_input):
@@ -110,6 +116,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             data={
                 CONF_HOST: self._host,
                 CONF_PASSWORD: self._password,
+                CONF_TOKEN: self._token,
                 CONF_MODEL: self._model,
                 CONF_NOFFLINE: True
             },

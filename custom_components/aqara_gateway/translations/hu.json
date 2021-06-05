@@ -16,6 +16,7 @@
                 "data": {
                     "host": "Hoszt",
                     "password": "Password",
+                    "token": "Hozz\u00e1f\u00e9r\u00e9si token",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "Hoszt",
                     "password": "Password",
+                    "token": "Hozz\u00e1f\u00e9r\u00e9si token",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

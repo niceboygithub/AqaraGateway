@@ -16,6 +16,7 @@
                 "data": {
                     "host": "Apparat",
                     "password": "Password",
+                    "token": "Jeton",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "Apparat",
                     "password": "Password",
+                    "token": "Jeton",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

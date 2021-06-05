@@ -16,6 +16,7 @@
                 "data": {
                     "host": "Host",
                     "password": "Password",
+                    "token": "Zugangstoken",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "Host",
                     "password": "Password",
+                    "token": "Zugangstoken",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

@@ -5,11 +5,11 @@ Gateway support **Zigbee 3**.
 
 This integration was based on the development of <a href=https://github.com/AlexxIT/XiaomiGateway3/>@AlexxIT</a>, Thanks Alex.
 
-**ATTENTION:** The component **only works on modified firmware (M2) or the gateway which enabled telnet . **
+**ATTENTION:** The component **only works on modified firmware (M2) or the gateway which enabled telnet.**
 
-To flash modified firmware to M2, please use <a href="https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe"> AqaraGateway.exe </a> to flash. Need to open the case of gateway and wired out the UART.
+For Gateway M2, to flash modified firmware to M2, please use <a href="https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe"> AqaraGateway.exe </a> to flash customize firmware. Need to open the case of gateway and wired out the UART.
 
-For M1S CN and AirCondition P3, you can use <a href="https://gist.github.com/zvldz/1bd6b21539f84339c218f9427e022709"> custom open telnet command </a> way 2 or way 3 to enable telnet in *Mi Home mode*, then flash modification firmwares to <a href="https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/M1S"> M1S </a>, <a href="https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/P3/3.0.7_0007.0515"> P3 </a> or copy pubic mosquitto to /data/bin. No need to open the case of gateway.
+For Gateway M1S CN, AirCondition P3, Smart Hub H1, please switch to **Mija Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor). Then install this integration by HACS. After installation, add this componment via GUI integration of Home Assistant. Or you can use <a href="https://gist.github.com/zvldz/1bd6b21539f84339c218f9427e022709"> custom open telnet command </a> way 2 or way 3 to enable telnet in *Mija Home mode*, then flash modification firmwares to <a href="https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/M1S"> M1S </a>, <a href="https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/P3"> P3 </a> if you want use them in Aqara Home.No need to open the case of gateway.
 
 After telnet to gateway via putty, there are two methods (Flash or Not) to enable telnet and public mqtt.
 
@@ -35,7 +35,7 @@ Then restart gateway by reboot command.
 cd /tmp
 wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
 chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/linux.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/rootfs_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011_modification.bin
+/tmp/curl -s -k -L -o /tmp/linux.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/original/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/linux_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011.bin
 fw_update /tmp/linux.bin
 /tmp/curl -s -k -L -o /tmp/rootfs.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/rootfs_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011_modification.bin
 fw_update /tmp/rootfs.bin

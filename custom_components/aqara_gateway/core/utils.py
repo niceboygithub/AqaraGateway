@@ -7,9 +7,11 @@ from datetime import datetime
 from typing import Optional
 
 from aiohttp import web
+from miio import Device, DeviceException
 from homeassistant.components.http import HomeAssistantView
 from homeassistant.helpers.device_registry import DeviceRegistry
 from homeassistant.helpers.typing import HomeAssistantType
+from homeassistant.exceptions import PlatformNotReady
 
 
 # https://github.com/Koenkk/zigbee-herdsman-converters/blob/master/devices.js#L390
@@ -295,7 +297,6 @@ DEVICES = [{
 }, {
     # motion sensor
     'lumi.sensor_motion': ["Xiaomi", "Motion Sensor", "RTCGQ01LM"],
-    'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
     'params': [
         ['3.1.85', None, 'motion', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
@@ -469,6 +470,33 @@ DEVICES = [{
         ['2.1', '2.1', 'switch', 'switch'],
         ['3.2', '3.2', 'power', 'sensor'],
         # ['5.7', '5.7', 'voltage', 'sensor'],
+    ]
+ }, {
+    'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
+    'mi_spec': [
+        [None, None, 'motion', 'binary_sensor'],
+        ['3.1', '3.1', 'battery', 'sensor'],
+        ['4.1', None, 'motion: 1', None],
+    ]
+}, {
+    'lumi.switch.b1lc04': ["Aqara", "Single Wall Switch E1", "QBKG38LM"],
+    'mi_spec': [
+        ['2.1', '2.1', 'switch', 'switch'],
+        ['6.1', None, 'button: 1', None],
+        ['6.2', None, 'button: 2', None],
+        [None, None, 'action', 'sensor'],
+    ]
+}, {
+    'lumi.switch.b2lc04': ["Aqara", "Double Wall Switch E1", "QBKG39LM"],
+    'mi_spec': [
+        ['2.1', '2.1', 'channel 1', 'switch'],
+        ['3.1', '3.1', 'channel 2', 'switch'],
+        ['7.1', None, 'button_1: 1', None],
+        ['7.2', None, 'button_1: 2', None],
+        ['8.1', None, 'button_2: 1', None],
+        ['8.2', None, 'button_2: 2', None],
+        ['9.1', None, 'button_both: 4', None],
+        [None, None, 'action', 'sensor'],
     ]
 }]
 
@@ -669,6 +697,29 @@ class Utils:
         if model.startswith('lumi.camera.'):
             return '/mnt/config'
         return '/data'
+
+    @staticmethod
+    def enable_telnet(host, token):
+        """ enable telnet in gateway which using miot """
+        try:
+            miio_device = Device(host, token)
+            device_info = miio_device.info()
+            if device_info.model:
+                model = device_info.model
+            _LOGGER.info(
+                "%s %s %s detected",
+                model,
+                device_info.firmware_version,
+                device_info.hardware_version,
+            )
+            ret = miio_device.raw_command(
+                "set_ip_info",
+                {"ssid":"\"\"","pswd":"123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
+            )
+            if 'ok' not in ret:
+                raise PlatformNotReady
+        except DeviceException:
+            raise PlatformNotReady
 
 
 class AqaraGatewayDebug(logging.Handler, HomeAssistantView):

@@ -16,6 +16,7 @@
                 "data": {
                     "host": "V\u00e4rddatorn",
                     "password": "Password",
+                    "token": "API  Token",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "V\u00e4rddatorn",
                     "password": "Password",
+                    "token": "API  Token",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

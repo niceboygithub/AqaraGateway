@@ -15,6 +15,7 @@
                 "data": {
                     "host": "\u0425\u043e\u0441\u0442",
                     "password": "Password",
+                    "token": "\u0422\u043e\u043a\u0435\u043d",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -30,6 +31,7 @@
                 "data": {
                     "host": "\u0425\u043e\u0441\u0442",
                     "password": "Password",
+                    "token": "\u0422\u043e\u043a\u0435\u043d",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug"

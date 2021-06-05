@@ -16,6 +16,7 @@
                 "data": {
                     "host": "Gostitelj",
                     "password": "Password",
+                    "token": "\u017eeton",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "Gostitelj",
                     "password": "Password",
+                    "token": "\u017eeton",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

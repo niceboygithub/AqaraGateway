@@ -15,6 +15,7 @@
                 "data": {
                     "host": "Host",
                     "password": "Password",
+                    "token": "Juurdep\u00e4\u00e4sut\u00f5end",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -30,6 +31,7 @@
                 "data": {
                     "host": "Host",
                     "password": "Password",
+                    "token": "Juurdep\u00e4\u00e4sut\u00f5end",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

@@ -16,6 +16,7 @@
                 "data": {
                     "host": "Hostitel",
                     "password": "Password",
+                    "token": "P\u0159\u00edstupov\u00fd token",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "Hostitel",
                     "password": "Password",
+                    "token": "P\u0159\u00edstupov\u00fd token",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

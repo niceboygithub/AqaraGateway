@@ -9,6 +9,7 @@
                 "data": {
                     "host": "Palvelin",
                     "password": "Password",
+                    "token": "API-tunnus",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -24,6 +25,7 @@
                 "data": {
                     "host": "Palvelin",
                     "password": "Password",
+                    "token": "API-tunnus",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

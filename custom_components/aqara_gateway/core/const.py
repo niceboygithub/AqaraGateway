@@ -57,6 +57,7 @@ OPT_DEBUG = {
 
 OPT_DEVICE_NAME = {
     'g2h': "Aqara Camera Hub G2H",
+    'h1': "Aqara Smart Hub H1",
     'p3': "Aqara AirCondition P3",
     'm1s': "Aqara Gateway M1S",
     'm2': "Aqara Gateway M2"

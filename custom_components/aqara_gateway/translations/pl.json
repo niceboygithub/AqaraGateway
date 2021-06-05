@@ -16,6 +16,7 @@
                 "data": {
                     "host": "Nazwa hosta lub adres IP",
                     "password": "Password",
+                    "token": "Token dost\u0119pu",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "Nazwa hosta lub adres IP",
                     "password": "Password",
+                    "token": "Token dost\u0119pu",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

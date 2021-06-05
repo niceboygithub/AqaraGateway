@@ -16,6 +16,7 @@
                 "data": {
                     "host": "Servidor",
                     "password": "Password",
+                    "token": "Token",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "Servidor",
                     "password": "Password",
+                    "token": "Token",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

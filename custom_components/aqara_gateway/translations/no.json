@@ -16,6 +16,7 @@
                 "data": {
                     "host": "Vert",
                     "password": "Password",
+                    "token": "Tilgangstoken",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "Vert",
                     "password": "Password",
+                    "token": "Tilgangstoken",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

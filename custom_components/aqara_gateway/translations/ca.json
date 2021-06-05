@@ -16,6 +16,7 @@
                 "data": {
                     "host": "Amfitri\u00f3",
                     "password": "Password",
+                    "token": "Token d'acc\u00e9s",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "Amfitri\u00f3",
                     "password": "Password",
+                    "token": "Token d'acc\u00e9s",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",

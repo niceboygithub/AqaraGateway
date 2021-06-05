@@ -16,11 +16,12 @@
                 "data": {
                     "host": "Host",
                     "password": "Password",
+                    "token": "Access Token",
                     "model": "Model",
                     "debug": "Debug",
                     "noffline": "Ignore Offline message"
                 },
-                "description": "Please enter connection settings of your Aqara Gateway."
+                "description": "Please enter connection settings of your Aqara Gateway. If you are first time to use gateway or telnet is not eanbled, the telnet of gateway need to be enabled. To enable telnet, please configure the gateway (for M1S, P3, H1) to Mijia home mode and obtain the token. For the method of obtaining the token, please refer to [this website](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor). If telnet is enabled, there is no need to enter the token."
             }
         }
     },
@@ -31,6 +32,7 @@
                 "data": {
                     "host": "Host",
                     "password": "Password",
+                    "token": "Access Token",
                     "model": "Model",
                     "stats": "Stats",
                     "debug": "Debug",
