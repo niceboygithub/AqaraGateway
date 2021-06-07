@@ -139,7 +139,6 @@ DEVICES = [{
     ]
 }, {
     'lumi.switch.b2lacn02': ["Aqara", "Double Wall Switch D1", "QBKG22LM"],
-    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 PRO", "QBKG31LM"],  # @miniknife88
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
@@ -471,7 +470,7 @@ DEVICES = [{
         ['3.2', '3.2', 'power', 'sensor'],
         # ['5.7', '5.7', 'voltage', 'sensor'],
     ]
- }, {
+}, {
     'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
     'mi_spec': [
         [None, None, 'motion', 'binary_sensor'],
@@ -491,6 +490,88 @@ DEVICES = [{
     'mi_spec': [
         ['2.1', '2.1', 'channel 1', 'switch'],
         ['3.1', '3.1', 'channel 2', 'switch'],
+        ['7.1', None, 'button_1: 1', None],
+        ['7.2', None, 'button_1: 2', None],
+        ['8.1', None, 'button_2: 1', None],
+        ['8.2', None, 'button_2: 2', None],
+        ['9.1', None, 'button_both: 4', None],
+        [None, None, 'action', 'sensor'],
+    ]
+}]
+
+DEVICES_AIOT = [{
+    'lumi.switch.b1laus01': ["Aqara", "Single Wall Switch US", "WS-USC01"],
+    'params': [
+        ['4.1.85', 'channel_0', 'switch', 'switch'],  # or neutral_0?
+        ['13.1.85', None, 'button', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
+    'params': [
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['13.1.85', None, 'button_1', None],
+        ['13.2.85', None, 'button_2', None],
+        ['13.5.85', None, 'button_both', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    'lumi.switch.b1naus01': ["Aqara", "Single Wall Switch US", "WS-USC03"],
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'neutral_0', 'switch', 'switch'],  # or channel_0?
+        ['13.1.85', None, 'button', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    'lumi.switch.b2naus01': ["Aqara", "Double Wall Switch US", "WS-USC04"],
+    'params': [
+        ['0.11.85', 'load_voltage', 'power', None],
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['13.1.85', None, 'button_1', None],
+        ['13.2.85', None, 'button_2', None],
+        ['13.5.85', None, 'button_both', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}]
+
+DEVICES_MIOT = [{
+    'lumi.switch.b1laus01': ["Aqara", "Single Wall Switch US", "WS-USC01"],
+    'mi_spec': [
+        ['2.1', '2.1', 'switch', 'switch'],
+        ['13.1.85', None, 'button', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    'lumi.switch.b2laus01': ["Aqara", "Single Wall Switch US", "WS-USC02"],
+    'mi_spec': [
+        ['2.1', '2.1', 'switch', 'switch'],
+        ['6.1', None, 'button: 1', None],
+        ['6.2', None, 'button: 2', None],
+        [None, None, 'action', 'sensor'],
+    ]
+}, {
+    'lumi.switch.b1naus01': ["Aqara", "Single Wall Switch US", "WS-USC03"],
+    'mi_spec': [
+        ['2.1', '2.1', 'switch', 'switch'],
+        ['4.1', None, 'consumption', None],
+        ['4.2', 'load_power', 'power', 'sensor'],
+        ['6.1', None, 'button: 1', None],
+        ['6.2', None, 'button: 2', None],
+        [None, None, 'action', 'sensor'],
+    ]
+}, {
+    'lumi.switch.b2naus01': ["Aqara", "Double Wall Switch US", "WS-USC04"],
+    'mi_spec': [
+        ['2.1', '2.1', 'channel 1', 'switch'],
+        ['3.1', '3.1', 'channel 2', 'switch'],
+        ['4.1', None, 'consumption', None],
+        ['4.2', 'load_power', 'power', 'sensor'],
         ['7.1', None, 'button_1: 1', None],
         ['7.2', None, 'button_1: 2', None],
         ['8.1', None, 'button_2: 1', None],
@@ -588,13 +669,20 @@ HTML = (f'<!DOCTYPE html><html><head><title>{TITLE}</title>'
 class Utils:
     """ gateway utils """
     @staticmethod
-    def get_device(zigbee_model: str) -> Optional[dict]:
+    def get_device(zigbee_model: str, cloud: str) -> Optional[dict]:
         """ get device """
         # the model has an extra tail when added
         if re.match(r'\.v(\d)', zigbee_model[-3:]):
             zigbee_model = zigbee_model[:-3]
 
-        for device in DEVICES:
+        devices = []
+        devices.extend(DEVICES)
+        if cloud and cloud == "aiot":
+            devices.extend(DEVICES_AIOT)
+        elif cloud and cloud == "miot":
+            devices.extend(DEVICES_MIOT)
+
+        for device in devices:
             if zigbee_model in device:
                 desc = device[zigbee_model]
                 return {

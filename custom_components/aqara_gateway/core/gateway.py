@@ -53,6 +53,7 @@ class Gateway(Thread):
         self._info_ts = None
         self._gateway_did = ''
         self._model = None  # for fast access
+        self._cloud = 'aiot'  # for fast access
 
     @property
     def device(self):
@@ -249,9 +250,11 @@ class Gateway(Thread):
 
             value = json.loads(raw)
             dev_info = value.get("devInfo", 'null') or []
+            self._cloud = shell.get_prop("persist.sys.cloud")
+
             for dev in dev_info:
                 model = dev['model']
-                desc = Utils.get_device(model)
+                desc = Utils.get_device(model, self._cloud)
                 # skip unknown model
                 if desc is None:
                     self.debug("{} has an unsupported model: {}".format(
@@ -279,7 +282,7 @@ class Gateway(Thread):
         for device in devices:
             timeout = 300
             if device['type'] in ('gateway', 'zigbee'):
-                desc = Utils.get_device(device['model'])
+                desc = Utils.get_device(device['model'], self._cloud)
                 if not desc:
                     self.debug("Unsupported model: {}".format(device))
                     continue
@@ -458,7 +461,7 @@ class Gateway(Thread):
             dev_info = value.get("devInfo", 'null') or []
             for dev in dev_info:
                 model = dev['model']
-                desc = Utils.get_device(model)
+                desc = Utils.get_device(model, self._cloud)
                 # skip unknown model
                 if desc is None:
                     self.debug("{} has an unsupported modell: {}".format(
@@ -661,8 +664,9 @@ class Gateway(Thread):
                             val = bool(val)
                         key = next(
                             p[0] for p in device['mi_spec'] if p[2] == key)
-                        params.append(
-                            {'siid': key[0], 'piid': key[1], 'value': val})
+                        params.append({
+                            'siid': int(key[0]), 'piid': int(key[2]), 'value': val
+                        })
 
                     payload['mi_spec'] = params
                 else:

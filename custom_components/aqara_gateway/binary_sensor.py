@@ -154,7 +154,7 @@ class GatewayNatgasSensor(GatewayBinarySensor, BinarySensorEntity):
                 else:
                     self._state = not value
 
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
 
 class GatewayMotionSensor(GatewayBinarySensor):
