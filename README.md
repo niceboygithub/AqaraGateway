@@ -13,6 +13,8 @@ For Gateway M1S CN, AirCondition P3, Smart Hub H1, please switch to **Mija Home 
 
 After telnet to gateway via putty, there are two methods (Flash or Not) to enable telnet and public mqtt.
 
+[More detail instructions](https://gist.github.com/InsaneWookie/1221cd6267745ea3c16f6a2a83ba3a44) from [@InsaneWookie](https://gist.github.com/InsaneWookie)
+
 ## Not Flash Custom firmware method
 
 ```shell
