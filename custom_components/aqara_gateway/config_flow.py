@@ -53,11 +53,11 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             self._set_user_input(user_input)
             if not is_ip_address(self._host):
                 return self.async_abort(reason="connection_error")
-            if self._token and self._model in ('m1s', 'p3', 'h1'):
+            if self._token and self._model in ('m1s', 'p3', 'h1', 'e1'):
                 Utils.enable_telnet(self._host, self._token)
             ret = gateway.is_aqaragateway(self._host,
-                                          self._password,
-                                          self._model)
+                                            self._password,
+                                            self._model)
             if "error" in ret['status']:
                 return self.async_abort(reason="connection_error")
             self._name = ret.get('name', '')

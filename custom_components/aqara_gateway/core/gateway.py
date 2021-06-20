@@ -128,7 +128,7 @@ class Gateway(Thread):
                 continue
 
             telnetshell = True
-            devices = self._prepeare_gateway(get_devices=True)
+            devices = self._prepare_gateway(get_devices=True)
             if isinstance(devices, list):
                 self._gw_topic = "gw/{}/".format(devices[0]['mac'][2:].upper())
                 self.setup_devices(devices)
@@ -139,7 +139,7 @@ class Gateway(Thread):
                 self.hass.data[DOMAIN]["telnet"].append(self.host)
 
         while not self.available:
-            if not self._mqtt_connect() or not self._prepeare_gateway():
+            if not self._mqtt_connect() or not self._prepare_gateway():
                 if self.host in self.hass.data[DOMAIN]["mqtt"]:
                     self.hass.data[DOMAIN]["mqtt"].remove(self.host)
                 time.sleep(60)
@@ -168,7 +168,7 @@ class Gateway(Thread):
         finally:
             skt.close()
 
-    def _prepeare_gateway(self, get_devices: bool = False):
+    def _prepare_gateway(self, get_devices: bool = False):
         """Launching the required utilities on the hub, if they are not already
         running.
         """
@@ -215,7 +215,7 @@ class Gateway(Thread):
                 did = shell.get_prop("persist.sys.did")
                 model = shell.get_prop("ro.sys.model")
             elif 'lumi.gateway' in model or 'lumi.aircondition' in model:
-                raw = shell.read_file('/data/zigbee/coordinator.info')
+                raw = shell.read_file('/data/zigbee/coordinator.info', with_newline=False)
                 did = shell.get_prop("persist.sys.did")
                 model = shell.get_prop("ro.sys.model")
             else:
@@ -224,8 +224,7 @@ class Gateway(Thread):
                 did = data.group(1) if data else ''
                 data = re.search(r"model=([a-zA-Z0-9.-]+).+", raw)
                 model = data.group(1) if data else ''
-                raw = shell.read_file('/mnt/config/zigbee/coordinator.info')
-
+                raw = shell.read_file('/mnt/config/zigbee/coordinator.info', with_newline=False)
             value = json.loads(raw)
             devices = [{
                 'coordinator': 'lumi.0',
@@ -246,7 +245,7 @@ class Gateway(Thread):
                 raw = shell.read_file(zb_device)
             else:
                 raw = shell.read_file('{}/zigbee/device.info'.format(
-                    Utils.get_info_store_path(self._model)))
+                    Utils.get_info_store_path(self._model)), with_newline=False)
 
             value = json.loads(raw)
             dev_info = value.get("devInfo", 'null') or []
@@ -379,7 +378,7 @@ class Gateway(Thread):
                                 Utils.get_device_name(self.options.get(
                                     CONF_MODEL, '')))
             raw = shell.read_file('{}/zigbee/networkBak.info'.format(
-                    Utils.get_info_store_path(self._model)))
+                    Utils.get_info_store_path(self._model)), with_newline=False)
             shell.close()
             if len(raw) >= 1:
                 value = json.loads(raw)
@@ -454,7 +453,7 @@ class Gateway(Thread):
                 raw = shell.read_file(zb_device)
             else:
                 raw = shell.read_file('{}/zigbee/device.info'.format(
-                    Utils.get_info_store_path(self._model)))
+                    Utils.get_info_store_path(self._model)), with_newline=False)
 
             shell.close()
             value = json.loads(raw)
@@ -721,7 +720,8 @@ def is_aqaragateway(host: str,
     """return name if is supported gateway"""
     result = {}
     result['status'] = 'error'
-    if host is not None:
+    token = None
+    if host:
         try:
             socket.inet_aton(host)
             if device_name and 'g2h' in device_name:
@@ -735,10 +735,11 @@ def is_aqaragateway(host: str,
                 data = re.search(r"mac=([a-zA-Z0-9:]+).+", raw)
                 mac = data.group(1) if data else ''
             else:
-                shell = TelnetShell(host)
+                shell = TelnetShell(host, password, device_name)
                 model = shell.get_prop("persist.sys.model")
                 name = shell.get_prop("ro.sys.name")
                 mac = shell.get_prop("persist.sys.miio_mac")
+                token = shell.get_token()
             shell.close()
         except (ConnectionError, EOFError, socket.error):
             result['status'] = "connection_error"
@@ -749,4 +750,5 @@ def is_aqaragateway(host: str,
                 name, mac[-5:].upper().replace(":", ""))
             result['model'] = model
             result['status'] = 'ok'
+            result['token'] = token
     return result

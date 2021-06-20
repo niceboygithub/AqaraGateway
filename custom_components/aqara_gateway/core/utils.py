@@ -13,6 +13,7 @@ from homeassistant.helpers.device_registry import DeviceRegistry
 from homeassistant.helpers.typing import HomeAssistantType
 from homeassistant.exceptions import PlatformNotReady
 
+_LOGGER = logging.getLogger(__name__)
 
 # https://github.com/Koenkk/zigbee-herdsman-converters/blob/master/devices.js#L390
 # https://slsys.io/action/devicelists.html
@@ -31,6 +32,7 @@ DEVICES = [{
     # 'lumi.gateway.iragl7': ["Aqara", "Gateway M2", "HM2-G01"],
     'lumi.gateway.iragl5': ["Aqara", "Gateway M2", "ZHWG12LM"],  # tested
     'lumi.gateway.sacn01': ["Aqara", "Smart Hub H1", "QBCZWG11LM"],
+    'lumi.gateway.aqcn02': ["Aqara", "Hub E1", "ZHWG16LM"],  # tested
     'lumi.camera.gwagl02': ["Aqara", "Camera Hub G2H", "ZNSXJ12LM"],  # tested
     'params': [
         ['8.0.2012', None, 'power_tx', None],
@@ -759,7 +761,7 @@ class Utils:
     def gateway_alarm_mode_supported(model: str) -> Optional[bool]:
         """ return the gateway alarm mode supported """
         #  basic_cli not support
-        if 'lumi.camera.gwagl02' not in model:
+        if model not in ('lumi.camera.gwagl02', 'lumi.gateway.aqcn02'):
             return True
         return False
 
@@ -767,7 +769,7 @@ class Utils:
     def gateway_infrared_supported(model: str) -> Optional[bool]:
         """ return the gateway infrared supported """
         if model in ('lumi.aircondition.acn05', 'lumi.gateway.iragl5',
-                     'lumi.gateway.iragl7', 'lumi.gateway.iragl01'):
+                    'lumi.gateway.iragl7', 'lumi.gateway.iragl01'):
             return True
         return False
 
@@ -775,8 +777,7 @@ class Utils:
     def get_device_name(model: str) -> Optional[str]:
         """ return the device name """
         if model in DEVICES[0]:
-            value = DEVICES[0][model][1].lower()
-            return value
+            return DEVICES[0][model][1].lower()
         return ''
 
     @staticmethod
@@ -792,20 +793,28 @@ class Utils:
         try:
             miio_device = Device(host, token)
             device_info = miio_device.info()
+
             if device_info.model:
                 model = device_info.model
             _LOGGER.info(
-                "%s %s %s detected",
+                "{} {} {} detected".format(
                 model,
                 device_info.firmware_version,
-                device_info.hardware_version,
+                device_info.hardware_version)
             )
-            ret = miio_device.raw_command(
-                "set_ip_info",
-                {"ssid":"\"\"","pswd":"123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
-            )
+            if "lumi.gateway.aqcn02" in model:
+                ret = miio_device.raw_command(
+                    "set_ip_info",
+                    {"ssid":"\"\"","pswd":"123123 ;  /bin/riu_w 101e 53 3012 ; telnetd"}
+                )
+            else:
+                ret = miio_device.raw_command(
+                    "set_ip_info",
+                    {"ssid":"\"\"","pswd":"123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
+                )
             if 'ok' not in ret:
                 raise PlatformNotReady
+
         except DeviceException:
             raise PlatformNotReady
 

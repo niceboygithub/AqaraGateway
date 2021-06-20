@@ -19,13 +19,19 @@ HA_BLE2MQTT = "(ha_ble | awk '{print $0;fflush();}' | mosquitto_pub -t log/ha_bl
 class TelnetShell(Telnet):
     """ Telnet Shell """
     _aqara_property = False
+    _suffix = "# "
     # pylint: disable=unsubscriptable-object
 
     def __init__(self, host: str, password=None, device_name=None):
         super().__init__(host, timeout=5)
+        login_name = 'admin'
+        if (device_name and ('g2h' in device_name or 'e1' in device_name)):
+            self._aqara_property = True
+            login_name = 'root'
         self.read_until(b"login: ", timeout=10)
-        login_name = 'root' if (
-            device_name and 'g2h' in device_name) else 'admin'
+        if device_name and 'e1' in device_name:
+            password = '\n'
+            self._suffix = "/ # "
         if password:
             command = '{}\n'.format(login_name)
             self.write(command.encode())
@@ -33,15 +39,19 @@ class TelnetShell(Telnet):
             self.run_command(password)
         else:
             self.run_command(login_name)
-        if self.file_exist("/tmp/out/agetprop"):
-            self._aqara_property = True
+        if device_name and 'e1' in device_name:
+            self.read_until(b"\r\n/ # ", timeout=30)
+        self.run_command("stty -echo")
+#        self._suffix = "# "
+#        self.run_command("export PS1='# '")
 
     def run_command(self, command: str, as_bytes=False) -> Union[str, bytes]:
         """Run command and return it result."""
         # pylint: disable=broad-except
         try:
             self.write(command.encode() + b"\n")
-            raw = self.read_until(b"\r\n# ", timeout=30)
+            suffix = "\r\n{}".format(self._suffix)
+            raw = self.read_until(suffix.encode(), timeout=30)
         except Exception:
             raw = b''
         return raw if as_bytes else raw.decode()
@@ -49,15 +59,15 @@ class TelnetShell(Telnet):
     def run_basis_cli(self, command: str, as_bytes=False) -> Union[str, bytes]:
         """Run command and return it result."""
         command = "basis_cli " + command
-        self.run_command(command, as_bytes)
-        self.read_until(b"#", timeout=1)
-        self.read_until(b"#", timeout=1)
+        self.write(command.encode() + b"\n")
+        self.read_until(self._suffix.encode())
+        self.read_until(self._suffix.encode())
 
     def file_exist(self, filename: str) -> bool:
         """ check file exit """
         raw = self.run_command("ls -al {}".format(filename))
         time.sleep(.1)
-        if "No such" not in raw:
+        if "No such" not in str(raw):
             return True
         return False
 
@@ -92,20 +102,24 @@ class TelnetShell(Telnet):
         time.sleep(.1)
         self.run_command(HA_BLE2MQTT)
 
-    def read_file(self, filename: str, as_base64=False):
+    def read_file(self, filename: str, as_base64=False, with_newline=True):
         """ read file content """
         # pylint: disable=broad-except
         try:
             if as_base64:
                 command = "cat {} | base64\n".format(filename)
                 self.write(command.encode())
-                self.read_until(b"\n")
-                raw = self.read_until(b"# ")
+                self.read_until(self._suffix.encode())
+                raw = self.read_until(self._suffix.encode()).decode()
                 return base64.b64decode(raw)
             command = "cat {}\n".format(filename)
             self.write(command.encode())
-            self.read_until(b"\n")
-            return self.read_until(b"# ")[:-2]
+            ret = self.read_until(self._suffix.encode()).decode()
+            if not with_newline:
+                ret = self.read_until(self._suffix.encode()).decode()
+            if ret.endswith(self._suffix):
+                ret = "".join(ret.rsplit(self._suffix, 1))
+            return ret.strip("\n")
         except Exception:
             return b''
 
@@ -117,10 +131,12 @@ class TelnetShell(Telnet):
                 command = "agetprop {}\n".format(property_value)
             else:
                 command = "getprop {}\n".format(property_value)
-            self.write(command.encode())
-            self.read_until(b"\r")
-            return str(self.read_until(
-                b"# ")[:-2], encoding="utf-8").strip().rstrip()
+            ret = self.run_command(command)
+            if ret.endswith(self._suffix):
+                ret = "".join(ret.rsplit(self._suffix, 1))
+            if ret.startswith(self._suffix):
+                ret = ret.replace(self._suffix, "", 1)
+            return ret.replace("\r", "").replace("\n", "")
         except Exception:
             return ''
 
@@ -130,7 +146,9 @@ class TelnetShell(Telnet):
             command = "asetprop {} {}\n".format(property_value, value)
         else:
             command = "setprop {} {}\n".format(property_value, value)
-        self.run_command(command)
+        self.write(command.encode() + b"\n")
+        self.read_until(self._suffix.encode())
+        self.read_until(self._suffix.encode())
 
     def get_version(self):
         """ get gateway version """
@@ -143,3 +161,10 @@ class TelnetShell(Telnet):
         command = "-sys -v {}".format(value)
         raw = self.run_basis_cli(command)
         return raw[raw.find(">>>") + 4:]
+
+    def get_token(self):
+        """ get gateway token """
+        filename = "/data/miio/device.token"
+        if self.file_exist(filename):
+            return self.read_file(filename).rstrip().encode().hex()
+        return None
