@@ -121,16 +121,16 @@ class TelnetShell(Telnet):
                 ret = "".join(ret.rsplit(self._suffix, 1))
             return ret.strip("\n")
         except Exception:
-            return b''
+            return ''
 
     def get_prop(self, property_value: str):
         """ get property """
         # pylint: disable=broad-except
         try:
             if self._aqara_property:
-                command = "agetprop {}\n".format(property_value)
+                command = "agetprop {}\n\r".format(property_value)
             else:
-                command = "getprop {}\n".format(property_value)
+                command = "getprop {}\n\r".format(property_value)
             ret = self.run_command(command)
             if ret.endswith(self._suffix):
                 ret = "".join(ret.rsplit(self._suffix, 1))

@@ -9,7 +9,9 @@ This integration was based on the development of <a href=https://github.com/Alex
 
 For Gateway M2, to flash modified firmware to M2, please use <a href="https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe"> AqaraGateway.exe </a> to flash customize firmware. Need to open the case of gateway and wired out the UART.
 
-For Gateway M1S CN, AirCondition P3, Smart Hub H1, please switch to **Mija Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor). Then install this integration by HACS. After installation, add this componment via GUI integration of Home Assistant. Or you can use <a href="https://gist.github.com/zvldz/1bd6b21539f84339c218f9427e022709"> custom open telnet command </a> way 2 or way 3 to enable telnet in *Mija Home mode*, then flash modification firmwares to <a href="https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/M1S"> M1S </a>, <a href="https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/P3"> P3 </a> if you want use them in Aqara Home.No need to open the case of gateway.
+For Gateway M1S CN, AirCondition P3, Smart Hub H1, please switch to **Mija Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor). Then install this integration by HACS. After installation, add this componment via GUI integration of Home Assistant.
+
+**Or** you can use <a href="https://gist.github.com/zvldz/1bd6b21539f84339c218f9427e022709"> custom open telnet command </a> way 2 or way 3 to enable telnet in *Mija Home mode*, then flash modification firmwares to <a href="https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/M1S"> M1S </a>, <a href="https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/P3"> P3 </a> if you want use them in Aqara Home.No need to open the case of gateway.
 
 After telnet to gateway via putty, there are two methods (Flash or Not) to enable telnet and public mqtt.
 
@@ -42,7 +44,7 @@ fw_update /tmp/linux.bin
 /tmp/curl -s -k -L -o /tmp/rootfs.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/rootfs_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011_modification.bin
 fw_update /tmp/rootfs.bin
 ```
-Then restart gateway by reboot command.
+If there is no any error generated, then restart gateway by reboot command.
 
 ## Flash P3 Custom firmware method
 ```shell
@@ -54,7 +56,7 @@ fw_update /tmp/linux.bin
 /tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/P3/3.0.7_0007.0515/rootfs_3.0.7_0007.0515_modified.bin
 fw_update /tmp/rootfs.bin
 ```
-Then restart gateway by reboot command.
+If there is no any error generated, then restart gateway by reboot command.
 
 ## Flash H1 Custom firmware method
 ```shell
@@ -66,7 +68,21 @@ fw_update /tmp/linux.bin
 /tmp/curl -s -k -L -o /tmp/rootfs.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/H1/3.0.8_0001.0512/rootfs_3.0.8_0001.0512_modified.bin
 fw_update /tmp/rootfs.bin
 ```
-Then restart gateway by reboot command.
+If there is no any error generated, then restart gateway by reboot command.
+
+## Flash E1 Custom firmware method
+
+```shell
+cd /tmp
+wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"
+chmod a+x /tmp/curl
+/tmp/curl -s -k -L -o /tmp/kernel https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/original/E1/3.1.3_0042/kernel_3.1.3_0042
+[ "$(md5sum /tmp/kernel)" = "a91ededc2603ef757bc8bd6a93eadf2d  /tmp/kernel" ] && fw_update.sh /tmp/kernel
+/tmp/curl -s -k -L -o /tmp/rootfs.sqfs https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/modified/E1/3.1.3_0042/rootfs_3.1.3_0042_modified.sqfs
+[ "$(md5sum rootfs.sqfs)" = "58446507ed65f5690a897ab7b3c4740b  rootfs.sqfs" ] && fw_update.sh /tmp/rootfs.sqfs
+```
+If there is no any error generated, then restart gateway by reboot command.
+Note: It does updating firmware only if the checksum of the downloaded file is correct
 
 For G2H, there is way to <a href="https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/binutils/README.md#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils">enable telnetd</a>.
 

@@ -1,6 +1,7 @@
 """Config flow to configure aqara gateway component."""
 from collections import OrderedDict
 from typing import Optional
+import socket
 
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
@@ -55,6 +56,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                 return self.async_abort(reason="connection_error")
             if self._token and self._model in ('m1s', 'p3', 'h1', 'e1'):
                 Utils.enable_telnet(self._host, self._token)
+            if not self._check_port(23):
+                return self.async_abort(reason="connection_error")
             ret = gateway.is_aqaragateway(self._host,
                                             self._password,
                                             self._model)
@@ -62,6 +65,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                 return self.async_abort(reason="connection_error")
             self._name = ret.get('name', '')
             self._model = ret.get('model', '')
+            if ret['token']:
+                self._token = ret['token']
             return self._async_get_entry()
 
         for name, _ in OPT_DEVICE_NAME.items():
@@ -121,6 +126,14 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                 CONF_NOFFLINE: True
             },
         )
+
+    def _check_port(self, port: int):
+        """Check if gateway port open."""
+        skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            return skt.connect_ex((self._host, port)) == 0
+        finally:
+            skt.close()
 
     async def async_step_discovery_confirm(self, user_input=None):
         """Handle user-confirmation of discovered node."""
@@ -196,6 +209,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             data={
                 CONF_HOST: self._host,
                 CONF_PASSWORD: self._password,
+                CONF_TOKEN: self._token,
                 CONF_MODEL: self._model,
                 CONF_NOFFLINE: True
             },
@@ -207,6 +221,7 @@ class OptionsFlowHandler(OptionsFlow):
     """Handle options flow changes."""
     _host = None
     _password = None
+    _token = None
     _model = None
 
     def __init__(self, config_entry):
@@ -226,6 +241,7 @@ class OptionsFlowHandler(OptionsFlow):
                 data={
                     CONF_HOST: self._host,
                     CONF_PASSWORD: self._password,
+                    CONF_TOKEN: self._token,
                     CONF_MODEL: self._model,
                     # CONF_STATS: user_input.get(CONF_STATS, False),
                     CONF_DEBUG: user_input.get(CONF_DEBUG, []),
@@ -234,6 +250,7 @@ class OptionsFlowHandler(OptionsFlow):
             )
         self._host = self.config_entry.options[CONF_HOST]
         self._password = self.config_entry.options.get(CONF_PASSWORD, '')
+        self._token = self.config_entry.options.get(CONF_TOKEN, '')
         self._model = self.config_entry.options.get(CONF_MODEL, '')
         # stats = self.config_entry.options.get(CONF_STATS, False)
         debug = self.config_entry.options.get(CONF_DEBUG, [])
@@ -245,6 +262,7 @@ class OptionsFlowHandler(OptionsFlow):
                 {
                     vol.Required(CONF_HOST, default=self._host): str,
                     vol.Optional(CONF_PASSWORD, default=self._password): str,
+                    vol.Optional(CONF_TOKEN, default=self._token): str,
                     # vol.Required(CONF_STATS, default=stats): bool,
                     vol.Optional(CONF_DEBUG, default=debug): cv.multi_select(
                         OPT_DEBUG
