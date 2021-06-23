@@ -26,7 +26,7 @@ chmod a+x /data/bin/mosquitto
 mkdir /data/scripts
 cd /data/scripts
 /data/bin/curl -s -k -L -o /data/scripts/post_init.sh https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/binutils/post_init.sh
-chmod +x /data/scritps/post_init.sh
+chmod +x /data/scripts/post_init.sh
 ```
 Then restart gateway by reboot command.
 
