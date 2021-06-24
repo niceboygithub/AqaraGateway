@@ -1,5 +1,5 @@
 """ device info and utils """
-# pylint: disable=broad-except
+# pylint: disable=broad-except, E501
 import logging
 import re
 import uuid
@@ -769,7 +769,7 @@ class Utils:
     def gateway_infrared_supported(model: str) -> Optional[bool]:
         """ return the gateway infrared supported """
         if model in ('lumi.aircondition.acn05', 'lumi.gateway.iragl5',
-                    'lumi.gateway.iragl7', 'lumi.gateway.iragl01'):
+                     'lumi.gateway.iragl7', 'lumi.gateway.iragl01'):
             return True
         return False
 
@@ -798,19 +798,19 @@ class Utils:
                 model = device_info.model
             _LOGGER.info(
                 "{} {} {} detected".format(
-                model,
-                device_info.firmware_version,
-                device_info.hardware_version)
+                    model,
+                    device_info.firmware_version,
+                    device_info.hardware_version)
             )
             if "lumi.gateway.aqcn02" in model:
                 ret = miio_device.raw_command(
                     "set_ip_info",
-                    {"ssid":"\"\"","pswd":"123123 ;  /bin/riu_w 101e 53 3012 ; telnetd"}
+                    {"ssid": "\"\"", "pswd": "123123 ;  /bin/riu_w 101e 53 3012 ; telnetd"}
                 )
             else:
                 ret = miio_device.raw_command(
                     "set_ip_info",
-                    {"ssid":"\"\"","pswd":"123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
+                    {"ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
                 )
             if 'ok' not in ret:
                 raise PlatformNotReady

@@ -1,8 +1,8 @@
 """Constants of the Xiaomi Aqara component."""
 
 from homeassistant.const import (
-    ATTR_BATTERY_LEVEL,
-    ATTR_TEMPERATURE,
+    # ATTR_BATTERY_LEVEL,
+    # ATTR_TEMPERATURE,
     DEVICE_CLASS_BATTERY,
     DEVICE_CLASS_HUMIDITY,
     DEVICE_CLASS_ILLUMINANCE,
@@ -10,15 +10,15 @@ from homeassistant.const import (
     DEVICE_CLASS_PRESSURE,
     DEVICE_CLASS_TEMPERATURE,
     ENERGY_WATT_HOUR,
-    LIGHT_LUX,
-    PERCENTAGE,
+    # LIGHT_LUX,
+    # PERCENTAGE,
     POWER_WATT,
-    PRESSURE_HPA,
+    # PRESSURE_HPA,
     TEMP_CELSIUS,
     CONCENTRATION_PARTS_PER_BILLION,
     STATE_OPEN,
     STATE_OPENING,
-    STATE_CLOSED,
+    # STATE_CLOSED,
     STATE_CLOSING,
     STATE_LOCKED,
     STATE_UNLOCKED
@@ -26,19 +26,19 @@ from homeassistant.const import (
 
 from homeassistant.components.climate.const import (
     FAN_AUTO,
-    FAN_DIFFUSE,
-    FAN_FOCUS,
+    # FAN_DIFFUSE,
+    # FAN_FOCUS,
     FAN_HIGH,
     FAN_LOW,
     FAN_MEDIUM,
-    FAN_MIDDLE,
-    FAN_OFF,
-    FAN_ON,
+    # FAN_MIDDLE,
+    # FAN_OFF,
+    # FAN_ON,
     HVAC_MODE_COOL,
-    HVAC_MODE_DRY,
-    HVAC_MODE_FAN_ONLY,
+    # HVAC_MODE_DRY,
+    # HVAC_MODE_FAN_ONLY,
     HVAC_MODE_HEAT,
-    HVAC_MODE_HEAT_COOL,
+    # HVAC_MODE_HEAT_COOL,
     HVAC_MODE_OFF
     )
 
@@ -167,8 +167,8 @@ BUTTON = {
     16: 'hold',
     17: 'release',
     18: 'shake',
-#    20: 'rotate',
-#    21: 'hold_rotate',
+    # 20: 'rotate',
+    # 21: 'hold_rotate',
     22: 'clockwise',
     23: 'counterclockwise',
     24: 'hold_clockwise',
@@ -247,4 +247,3 @@ LATCH_STATUS_TYPE = {
     "0": STATE_UNLOCKED,
     "1": STATE_LOCKED,
 }
-

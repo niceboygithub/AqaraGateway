@@ -39,9 +39,21 @@ Then restart gateway by reboot command.
 cd /tmp
 wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
 chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/linux.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/original/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/linux_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011.bin
+/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/blob/main/original/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/linux_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011.bin
 fw_update /tmp/linux.bin
-/tmp/curl -s -k -L -o /tmp/rootfs.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/rootfs_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011_modification.bin
+/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/rootfs_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011_modification.bin
+fw_update /tmp/rootfs.bin
+```
+If there is no any error generated, then restart gateway by reboot command.
+
+## Flash M2 Custom firmware method
+```shell
+cd /tmp
+wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
+chmod a+x /tmp/curl
+/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/M2/3.2.7_0018_0524/linux_3.2.7_0018_0524.bin
+fw_update /tmp/linux.bin
+/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M2/3.2.7_0018_0524/rootfs_3.2.7_0018_0524_modification.bin
 fw_update /tmp/rootfs.bin
 ```
 If there is no any error generated, then restart gateway by reboot command.
@@ -63,9 +75,9 @@ If there is no any error generated, then restart gateway by reboot command.
 cd /tmp
 wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
 chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/linux.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/original/H1/3.0.8_0001.0512/linux_3.0.8_0001.0512.bin
+/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/blob/main/original/H1/3.0.8_0001.0512/linux_3.0.8_0001.0512.bin
 fw_update /tmp/linux.bin
-/tmp/curl -s -k -L -o /tmp/rootfs.bin https://github.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/H1/3.0.8_0001.0512/rootfs_3.0.8_0001.0512_modified.bin
+/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/H1/3.0.8_0001.0512/rootfs_3.0.8_0001.0512_modified.bin
 fw_update /tmp/rootfs.bin
 ```
 If there is no any error generated, then restart gateway by reboot command.
@@ -76,9 +88,9 @@ If there is no any error generated, then restart gateway by reboot command.
 cd /tmp
 wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"
 chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/kernel https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/original/E1/3.1.3_0042/kernel_3.1.3_0042
+/tmp/curl -s -k -L -o /tmp/kernel https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/blob/main/original/E1/3.1.3_0042/kernel_3.1.3_0042
 [ "$(md5sum /tmp/kernel)" = "a91ededc2603ef757bc8bd6a93eadf2d  /tmp/kernel" ] && fw_update.sh /tmp/kernel
-/tmp/curl -s -k -L -o /tmp/rootfs.sqfs https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/modified/E1/3.1.3_0042/rootfs_3.1.3_0042_modified.sqfs
+/tmp/curl -s -k -L -o /tmp/rootfs.sqfs https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/blob/main/modified/E1/3.1.3_0042/rootfs_3.1.3_0042_modified.sqfs
 [ "$(md5sum rootfs.sqfs)" = "58446507ed65f5690a897ab7b3c4740b  rootfs.sqfs" ] && fw_update.sh /tmp/rootfs.sqfs
 ```
 If there is no any error generated, then restart gateway by reboot command.
