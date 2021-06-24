@@ -109,8 +109,9 @@ class TelnetShell(Telnet):
             if as_base64:
                 command = "cat {} | base64\n".format(filename)
                 self.write(command.encode())
-                self.read_until(self._suffix.encode())
                 raw = self.read_until(self._suffix.encode()).decode()
+                if not with_newline:
+                    raw = self.read_until(self._suffix.encode()).decode()
                 return base64.b64decode(raw)
             command = "cat {}\n".format(filename)
             self.write(command.encode())
