@@ -21,6 +21,8 @@ from .const import CONF_MODEL, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+MD5_MOSQUITTO_ARMV7L = '0422c48517dc464a2e986a1038dc448a'
+MD5_MOSQUITTO_MIPSEL = 'e0ce4757cfcccb079d89134381fd11b0'
 
 class Gateway(Thread):
     # pylint: disable=too-many-instance-attributes, unused-argument
@@ -714,6 +716,30 @@ class Gateway(Thread):
             return False
 
 
+def prepare_aqaragateway(shell, model):
+    """ Prepare supported Aqara Gateway """
+    command = "mkdir -p /data/scripts"
+    shell.write(command.encode() + b"\n")
+    time.sleep(1)
+    if model in ('lumi.gateway.aqcn02', 'lumi.camera.gwpagl01'):
+        command = "echo -e '#!/bin/sh\r\n\r\nfw_manager.sh -r\r\n" \
+            "/bin/riu_w 101e 53 3012\r\ntelnetd' > /data/scripts/post_init.sh"
+    else:
+        command = "echo -e '#!/bin/sh\r\n\r\nfw_manager.sh -r\r\n" \
+            "echo enable > /sys/class/tty/tty/enable\r\ntelnetd' "\
+                "> /data/scripts/post_init.sh"
+    shell.run_command(command)
+    command = "chmod a+x /data/scripts/post_init.sh"
+    shell.run_command(command)
+    command = "mkdir -p /data/bin"
+    shell.write(command.encode() + b"\n")
+    time.sleep(1)
+    if model in ('lumi.gateway.aqcn02', 'lumi.camera.gwpagl01'):
+        shell.check_bin('mosquitto', MD5_MOSQUITTO_ARMV7L , 'bin/armv7l/mosquitto')
+    else:
+        shell.check_bin('mosquitto', MD5_MOSQUITTO_MIPSEL, 'bin/mipsel/mosquitto')
+
+
 def is_aqaragateway(host: str,
                     password: str,
                     device_name: str) -> Optional[dict]:
@@ -721,6 +747,7 @@ def is_aqaragateway(host: str,
     result = {}
     result['status'] = 'error'
     token = None
+
     if host:
         try:
             socket.inet_aton(host)
@@ -740,7 +767,7 @@ def is_aqaragateway(host: str,
                 name = shell.get_prop("ro.sys.name")
                 mac = shell.get_prop("persist.sys.miio_mac")
                 token = shell.get_token()
-            shell.close()
+
         except (ConnectionError, EOFError, socket.error):
             result['status'] = "connection_error"
             return result
@@ -751,4 +778,13 @@ def is_aqaragateway(host: str,
             result['model'] = model
             result['status'] = 'ok'
             result['token'] = token
+
+            if model in ('lumi.gateway.acn01', 'lumi.aircondition.acn05',
+                         'lumi.gateway.sacn01', 'lumi.gateway.iragl5',
+                          'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
+                          'lumi.gateway.aqcn02'
+                          ):
+                prepare_aqaragateway(shell, model)
+        if shell:
+            shell.close()
     return result

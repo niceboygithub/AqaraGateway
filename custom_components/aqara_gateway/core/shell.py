@@ -7,6 +7,9 @@ from typing import Union
 from telnetlib import Telnet
 
 
+WGET = "(wget http://master.dl.sourceforge.net/project/aqarahub/{0}?viasf=1 " \
+       "-O /data/bin/{1} && chmod +x /data/bin/{1})"
+
 CHECK_SOCAT = "(md5sum /data/socat | grep 92b77e1a93c4f4377b4b751a5390d979)"
 DOWNLOAD_SOCAT = "(wget -O /data/socat http://pkg.simple-ha.ru/mipsel/socat && chmod +x /data/socat)"
 RUN_SOCAT_BT_IRDA = "/data/socat tcp-l:8888,reuseaddr,fork /dev/ttyS2"
@@ -55,6 +58,17 @@ class TelnetShell(Telnet):
         except Exception:
             raw = b''
         return raw if as_bytes else raw.decode()
+
+    def check_bin(self, filename: str, md5: str, url=None) -> bool:
+        """Check binary md5 and download it if needed."""
+        # used * for development purposes
+        if url:
+            self.run_command(WGET.format(url, filename))
+            return self.check_bin(filename, md5)
+        elif md5 in self.run_command("md5sum /data/bin/{}".format(filename)):
+            return True
+        else:
+            return False
 
     def run_basis_cli(self, command: str, as_bytes=False) -> Union[str, bytes]:
         """Run command and return it result."""
