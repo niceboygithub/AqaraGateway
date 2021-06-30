@@ -143,10 +143,27 @@ DEVICES = [{
     # cube action, no retain
     'lumi.sensor_cube': ["Aqara", "Cube", "MFKZQ01LM"],
     'lumi.sensor_cube.aqgl01': ["Aqara", "Cube", "MFKZQ01LM"],  # tested
+    'lumi.remote.cagl01': ["Aqara", "Cube T1", "MFKZQ11LM"],  # @Kris
     'params': [
         ['0.2.85', None, 'duration', None],
         ['0.3.85', None, 'angle', None],
+        ['0.21.85', None, 'duration', None],
+        ['0.30.85', None, 'angle', None],
         ['13.1.85', None, 'action', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
+}, {
+    # cube action, no retain
+    'lumi.remote.cagl02': ["Aqara", "Cube T1 Pro", "MFKZQ12LM"],  # @Kris
+    'params': [
+        ['0.2.85', None, 'angle', None],
+        ['0.3.85', None, 'duration', None],
+        ['0.21.85', None, 'angle', None],
+        ['0.30.85', None, 'duration', None],
+        ['13.1.85', None, 'action', 'binary_sensor'],
+        ['13.101.85', None, 'scense_up', None],
+        ['13.103.85', None, 'scenes_to', None],
+        ['14.35.85', None, 'mode', None],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
 }, {
@@ -261,7 +278,6 @@ DEVICES = [{
 }, {
     # motion sensor with illuminance
     'lumi.sensor_motion.aq2': ["Aqara", "Motion Sensor", "RTCGQ11LM"],
-    'lumi.motion.agl02': ["Aqara", "Motion Sensor T1", "RTCGQ12LM"],  # @miniknife88
     'params': [
         ['0.3.85', 'lux', 'illuminance_lux', None],
         ['0.4.85', 'illumination', 'illuminance', 'sensor'],
@@ -271,6 +287,7 @@ DEVICES = [{
 }, {
     # water leak sensor
     'lumi.sensor_wleak.aq1': ["Aqara", "Water Leak Sensor", "SJCGQ11LM"],
+    'lumi.flood.agl02': ["Aqara", "Water Leak Sensor T1", "SJCGQ12LM"],  # @Kris
     'params': [
         ['3.1.85', 'alarm', 'moisture', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
@@ -429,13 +446,6 @@ DEVICES = [{
         # ['5.7', '5.7', 'voltage', 'sensor'],
     ]
 }, {
-    'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
-    'mi_spec': [
-        [None, None, 'motion', 'binary_sensor'],
-        ['3.1', '3.1', 'battery', 'sensor'],
-        ['4.1', None, 'motion: 1', None],
-    ]
-}, {
     'lumi.switch.b1lc04': ["Aqara", "Single Wall Switch E1", "QBKG38LM"],
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],
@@ -554,6 +564,15 @@ DEVICES_AIOT = [{
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
+    'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
+    'params': [
+        ['3.1.85', None, 'motion', None],
+        ['14.1.85', None, 'detect_level', None],
+        ['8.0.2115', None, 'detect_interval', None],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+        [None, None, 'motion', 'binary_sensor'],
+    ]
+}, {
     # multi button switch, no retain
     'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
     'params': [
@@ -562,6 +581,43 @@ DEVICES_AIOT = [{
         ['13.5.85', None, 'button_both', None],
         [None, None, 'switch', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
+}, {
+    # door window sensor
+    'lumi.magnet.agl02': ["Aqara", "Door Sensor T1", "MCCGQ12LM"],  # @Kris
+    'params': [
+        ['3.1.85', 'status', 'contact', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
+}, {
+    # motion sensor with illuminance
+    'lumi.motion.agl02': ["Aqara", "Motion Sensor T1", "RTCGQ12LM"],  # @miniknife88
+    'params': [
+        ['0.3.85', 'lux', 'illuminance_lux', None],
+        ['0.4.85', 'illumination', 'illuminance', 'sensor'],
+        ['3.1.85', None, 'motion', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
+}, {
+    # button switch, no retain
+    'lumi.remote.b1acn02': ["Aqara", "Button T1", "WXKG13LM"],  # @Kris
+    'params': [
+        ['13.1.85', None, 'button', None],
+        [None, None, 'switch', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
+}, {
+    # vibration sensor
+    'lumi.vibration.agl01': ["Aqara", "Vibration Sensor T1", "DJT12LM"],  # @Kris
+    'params': [
+        ['0.1.85', None, 'bed_activity', None],
+        ['0.2.85', None, 'tilt_angle', None],
+        ['0.3.85', None, 'vibrate_intensity', None],
+        ['13.3.85', None, 'triple_click', None],
+        ['13.7.85', None, 'vibration', None],
+        ['14.1.85', None, 'vibration_level', None],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+        [None, None, 'action', 'binary_sensor']
     ]
 }]
 
@@ -668,6 +724,15 @@ DEVICES_MIOT = [{
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
+    'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
+    'mi_spec': [
+        ['2.1', None, 'motion', None],
+        ['4.1', None, 'motion', None],
+        ['6.1', None, 'elapsed_time', None],
+        [None, None, 'motion', 'binary_sensor'],
+        ['3.1', '3.1', 'battery', 'sensor'],
+    ]
+}, {
     # multi button switch, no retain
     'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
     'mi_spec': [
@@ -677,13 +742,43 @@ DEVICES_MIOT = [{
         ['5.1', 'battery', 'battery', 'sensor'],
     ]
 }, {
-    'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
+    # door window sensor
+    'lumi.magnet.agl02': ["Aqara", "Door Sensor T1", "MCCGQ12LM"],  # @Kris
     'mi_spec': [
-        ['2.1', None, 'motion', None],
-        ['4.1', None, 'motion', None],
+        ['2.1', 'status', 'contact', 'binary_sensor'],
+        ['5.1', None, 'elapsed_time', None],
+        ['6.1', 'battery', 'battery', 'sensor'],
+    ]
+}, {
+    # motion sensor with illuminance
+    'lumi.motion.agl02': ["Aqara", "Motion Sensor T1", "RTCGQ12LM"],  # @miniknife88
+    'mi_spec': [
+        ['1.4', None, 'back_version', None],
+        ['2.1', 'lux', 'illuminance_lux', None],
+        ['3.1', 'illumination', 'illuminance', 'sensor'],
+        ['4.1', None, 'motion', 'binary_sensor'],
+        ['5.1', 'battery', 'battery', 'sensor'],
         ['6.1', None, 'elapsed_time', None],
-        [None, None, 'motion', 'binary_sensor'],
-        ['3.1', '3.1', 'battery', 'sensor'],
+    ]
+}, {
+    # button switch, no retain
+    'lumi.remote.b1acn02': ["Aqara", "Button T1", "WXKG13LM"],  # @Kris
+    'mi_spec': [
+        ['2.1', None, 'load_voltage', None],
+        ['3.1', None, 'button: 1', None],
+        ['3.2', None, 'button: 2', None],
+        ['3.3', None, 'button: 16', None],
+        [None, None, 'switch', 'binary_sensor'],
+        ['5.1', 'battery', 'battery', 'sensor'],
+    ]
+}, {
+    # vibration sensor
+    'lumi.vibration.agl01': ["Aqara", "Vibration Sensor T1", "DJT12LM"],  # @Kris
+    'mi_spec': [
+        ['3.2', None, 'load_voltage', None],
+        ['6.2', None, 'vibration', None],
+        ['5.1', 'battery', 'battery', 'sensor'],
+        [None, None, 'action', 'binary_sensor']
     ]
 }]
 
@@ -724,6 +819,8 @@ GLOBAL_PROP = {
     '8.0.2080': 'zgb_ver',
     '8.0.2082': 'removed_did',
     '8.0.2084': 'added_device',
+    '8.1.2087': '8.1.2087',
+    '8.1.2088': '8.1.2088',
     '8.0.2089': 'dfu',
     '8.0.2091': 'dfu_status',
     '8.0.2101': 'nl_invert',  # ctrl_86plug
@@ -734,6 +831,9 @@ GLOBAL_PROP = {
     '8.0.2151': 'zigbee_pa',
     '8.0.2156': '8.0.2156',
     '8.0.2171': '8.0.2171',
+    '8.0.2173': '8.0.2173',
+    '8.0.2174': '8.0.2174',
+    '8.0.2175': '8.0.2175',
     '8.0.2223': 'back_version',
     '8.0.2230': '8.0.2230',
     '8.0.9001': 'battery_end_of_life',

@@ -21,6 +21,7 @@ from .core.gateway import Gateway
 from .core.const import (
     ATTR_ANGLE,
     ATTR_CHIP_TEMPERATURE,
+    ATTR_ELAPSED_TIME,
     ATTR_FW_VER,
     ATTR_DENSITY,
     ATTR_LQI,
@@ -31,6 +32,7 @@ from .core.const import (
     CHIP_TEMPERATURE,
     CONF_INVERT_STATE,
     CONF_OCCUPANCY_TIMEOUT,
+    CUBE,
     FW_VER,
     GAS_DENSITY,
     NO_CLOSE,
@@ -78,6 +80,7 @@ class GatewayBinarySensor(GatewayGenericDevice, BinarySensorEntity):
     _lqi = None
     _voltage = None
     _should_poll = False
+    is_metric = False
 
     @property
     def should_poll(self):
@@ -165,6 +168,11 @@ class GatewayMotionSensor(GatewayBinarySensor):
     _timeout_pos = 0
     _unsub_set_no_motion = None
     _state = None
+    _state = False
+    _battery = None
+    _chip_temperature = None
+    _lqi = None
+    _voltage = None
 
     async def async_added_to_hass(self):
         """ add to hass """
@@ -175,6 +183,17 @@ class GatewayMotionSensor(GatewayBinarySensor):
         custom.setdefault(CONF_OCCUPANCY_TIMEOUT, self._default_delay)
 
         await super().async_added_to_hass()
+
+    @property
+    def device_state_attributes(self):
+        """Return the state attributes."""
+        attrs = {
+            ATTR_BATTERY_LEVEL: self._battery,
+            ATTR_CHIP_TEMPERATURE: self._chip_temperature,
+            ATTR_LQI: self._lqi,
+            ATTR_VOLTAGE: self._voltage,
+        }
+        return attrs
 
     @callback
     def _set_no_motion(self, *args):
@@ -198,6 +217,25 @@ class GatewayMotionSensor(GatewayBinarySensor):
 
         if 'elapsed_time' in data:
             self._attrs[ATTR_ELAPSED_TIME] = data['elapsed_time']
+
+        for key, value in data.items():
+            if key == BATTERY:
+                self._battery = value
+            if key == CHIP_TEMPERATURE:
+                if self.is_metric:
+                    self._chip_temperature = format(
+                        (int(value) - 32) * 5 / 9, '.2f') if isinstance(
+                        value, (int, float)) else None
+                else:
+                    self._chip_temperature = value
+            if key == NO_CLOSE:  # handle push from the hub
+                self._open_since = value
+            if key == LQI:
+                self._lqi = value
+            if key == VOLTAGE:
+                self._voltage = format(
+                    float(value) / 1000, '.3f') if isinstance(
+                    value, (int, float)) else None
 
         # check only motion=1
         if data.get(self._attr) != 1:
@@ -266,7 +304,7 @@ class GatewayDoorSensor(GatewayBinarySensor, BinarySensorEntity):
         self._open_since = None
         self.is_metric = True
         self.has_since = False
-        if device['model'] == 'lumi.sensor_magnet.aq2':
+        if device['model'] in ('lumi.sensor_magnet.aq2', 'lumi.magnet.agl02'):
             self.is_metric = False
             self.has_since = True
         super().__init__(gateway, device, attr)
@@ -306,6 +344,8 @@ class GatewayDoorSensor(GatewayBinarySensor, BinarySensorEntity):
                     float(value) / 1000, '.3f') if isinstance(
                     value, (int, float)) else None
             if key == self._attr:
+                if self.device['model'] == 'lumi.magnet.agl02':
+                    value = not value
                 custom = self.hass.data[DATA_CUSTOMIZE].get(self.entity_id)
                 if not custom.get(CONF_INVERT_STATE):
                     self._state = bool(value)
@@ -367,6 +407,8 @@ class GatewaWaterLeakSensor(GatewayBinarySensor, BinarySensorEntity):
                     float(value) / 1000, '.3f') if isinstance(
                     value, (int, float)) else None
             if key == self._attr:
+                if self.device['model'] == 'lumi.flood.agl02':
+                    value = not value
                 custom = self.hass.data[DATA_CUSTOMIZE].get(self.entity_id)
                 if not custom.get(CONF_INVERT_STATE):
                     self._state = bool(value)
@@ -547,9 +589,11 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
         self._voltage = None
         self._rotate_angle = None
         self.with_rotation = False
-        if (device['model'] == 'lumi.remote.rkba01' or
-                device['model'] == 'lumi.switch.rkna01'):
+        if (device['model'] in ('lumi.remote.rkba01', 'lumi.switch.rkna01',
+                'lumi.remote.cagl01', 'lumi.remote.cagl02')):
             self.with_rotation = True
+        if device['model'] == 'lumi.motion.agl04':
+            self.is_metric = True
         super().__init__(gateway, device, attr)
 
     @property
@@ -584,9 +628,12 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
             if key == BATTERY:
                 self._battery = value
             if key == CHIP_TEMPERATURE:
-                self._chip_temperature = format(
-                    (int(value) - 32) * 5 / 9, '.2f') if isinstance(
-                    value, (int, float)) else None
+                if self.is_metric:
+                    self._chip_temperature = format(
+                        (int(value) - 32) * 5 / 9, '.2f') if isinstance(
+                        value, (int, float)) else None
+                else:
+                    self._chip_temperature = value
             if key == VOLTAGE:
                 self._voltage = format(
                     float(value) / 1000, '.3f') if isinstance(
@@ -608,17 +655,22 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
                             'angle': value, self._attr: rotation}
                 self._rotate_angle = value
                 break
-            if key == 'button':
+            if key == 'triple_click':
+                data = {'triple_click': value, self._attr: 'triple'}
+                break
+            if key == 'action':
                 if 'voltage' in data:
                     return
-                data[self._attr] = BUTTON.get(value, 'unknown')
+                data[self._attr] = CUBE.get(value, 'unknown')
                 break
-            if key.startswith('button_both'):
-                data[self._attr] = key + '_' + BUTTON_BOTH.get(
-                    value, 'unknown')
+            if key.startswith('action'):
+                data[self._attr] = key + '_' + CUBE.get(value, 'unknown')
                 break
-            if key.startswith('button'):
-                data[self._attr] = key + '_' + BUTTON.get(value, 'unknown')
+            if key == 'mode':
+                self._attrs[key] = value
+                break
+            if key.startswith('scense'):
+                data[self._attr] = key + '_' + str(value)
                 break
 
         if self._attr in data:
