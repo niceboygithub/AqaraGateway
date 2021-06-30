@@ -140,50 +140,6 @@ DEVICES = [{
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
-    'lumi.switch.b2lacn02': ["Aqara", "Double Wall Switch D1", "QBKG22LM"],
-    'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 PRO", "QBKG31LM"],  # @miniknife88
-    'params': [
-        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
-        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
-        ['13.1.85', None, 'button_1', None],
-        ['13.2.85', None, 'button_2', None],
-        ['13.5.85', None, 'button_both', None],
-        [None, None, 'switch', 'binary_sensor'],
-    ]
-}, {
-    # triple channel on/off, no neutral wire
-    'lumi.switch.l3acn3': ["Aqara", "Triple Wall Switch D1", "QBKG25LM"],
-    'params': [
-        ['4.1.85', 'neutral_0', 'channel 1', 'switch'],  # @to4ko
-        ['4.2.85', 'neutral_1', 'channel 2', 'switch'],  # @to4ko
-        ['4.3.85', 'neutral_2', 'channel 3', 'switch'],  # @to4ko
-        ['13.1.85', None, 'button_1', None],
-        ['13.2.85', None, 'button_2', None],
-        ['13.3.85', None, 'button_3', None],
-        ['13.5.85', None, 'button_both_12', None],
-        ['13.6.85', None, 'button_both_13', None],
-        ['13.7.85', None, 'button_both_23', None],
-        [None, None, 'switch', 'binary_sensor'],
-    ]
-}, {
-    # with neutral wire, thanks @Mantoui
-    'lumi.switch.n3acn3': ["Aqara", "Triple Wall Switch D1", "QBKG26LM"],
-    'lumi.switch.n4acn4': ["Aqara", "Scene Panel", "ZNCJMB14LM"],  # @miniknife88
-    'params': [
-        ['0.12.85', 'load_power', 'power', 'sensor'],
-        ['0.13.85', None, 'consumption', 'sensor'],
-        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
-        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
-        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
-        ['13.1.85', None, 'button_1', None],
-        ['13.2.85', None, 'button_2', None],
-        ['13.3.85', None, 'button_3', None],
-        ['13.5.85', None, 'button_both_12', None],
-        ['13.6.85', None, 'button_both_13', None],
-        ['13.7.85', None, 'button_both_23', None],
-        [None, None, 'switch', 'binary_sensor'],
-    ]
-}, {
     # cube action, no retain
     'lumi.sensor_cube': ["Aqara", "Cube", "MFKZQ01LM"],
     'lumi.sensor_cube.aqgl01': ["Aqara", "Cube", "MFKZQ01LM"],  # tested
@@ -485,7 +441,7 @@ DEVICES = [{
         ['2.1', '2.1', 'switch', 'switch'],
         ['6.1', None, 'button: 1', None],
         ['6.2', None, 'button: 2', None],
-        [None, None, 'action', 'sensor'],
+        [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
     'lumi.switch.b2lc04': ["Aqara", "Double Wall Switch E1", "QBKG39LM"],
@@ -497,11 +453,68 @@ DEVICES = [{
         ['8.1', None, 'button_2: 1', None],
         ['8.2', None, 'button_2: 2', None],
         ['9.1', None, 'button_both: 4', None],
-        [None, None, 'action', 'sensor'],
+        [None, None, 'switch', 'binary_sensor'],
     ]
 }]
 
 DEVICES_AIOT = [{
+    # with neutral wire
+    'lumi.switch.n1acn1': ["Aqara", "Single Wall Switch H1 Pro", "QBKG30LM"],  # @Kris
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['13.1.85', None, 'button_1', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # with neutral wire
+    'lumi.switch.b2lacn02': ["Aqara", "Double Wall Switch D1", "QBKG22LM"],
+#    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
+    'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 Pro", "QBKG31LM"],  # @miniknife88
+    'params': [
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['13.1.85', None, 'button_1', None],
+        ['13.2.85', None, 'button_2', None],
+        ['13.5.85', None, 'button_both', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # triple channel on/off, no neutral wire
+    'lumi.switch.l3acn3': ["Aqara", "Triple Wall Switch D1", "QBKG25LM"],
+    'params': [
+        ['4.1.85', 'neutral_0', 'channel 1', 'switch'],  # @to4ko
+        ['4.2.85', 'neutral_1', 'channel 2', 'switch'],  # @to4ko
+        ['4.3.85', 'neutral_2', 'channel 3', 'switch'],  # @to4ko
+        ['13.1.85', None, 'button_1', None],
+        ['13.2.85', None, 'button_2', None],
+        ['13.3.85', None, 'button_3', None],
+        ['13.5.85', None, 'button_both_12', None],
+        ['13.6.85', None, 'button_both_13', None],
+        ['13.7.85', None, 'button_both_23', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # with neutral wire, thanks @Mantoui
+    'lumi.switch.n3acn3': ["Aqara", "Triple Wall Switch D1", "QBKG26LM"],
+    'lumi.switch.n4acn4': ["Aqara", "Scene Panel", "ZNCJMB14LM"],  # @miniknife88
+    'lumi.switch.n3acn1': ["Aqara", "Triple Wall Switch H1 Pro", "QBKG32LM"],  # @Kris
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        ['13.1.85', None, 'button_1', None],
+        ['13.2.85', None, 'button_2', None],
+        ['13.3.85', None, 'button_3', None],
+        ['13.5.85', None, 'button_both_12', None],
+        ['13.6.85', None, 'button_both_13', None],
+        ['13.7.85', None, 'button_both_23', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
     'lumi.switch.b1laus01': ["Aqara", "Single Wall Switch US", "WS-USC01"],
     'params': [
         ['4.1.85', 'channel_0', 'switch', 'switch'],  # or neutral_0?
@@ -540,9 +553,82 @@ DEVICES_AIOT = [{
         ['13.5.85', None, 'button_both', None],
         [None, None, 'switch', 'binary_sensor'],
     ]
+}, {
+    # multi button switch, no retain
+    'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
+    'params': [
+        ['13.1.85', None, 'button_1', None],
+        ['13.2.85', None, 'button_2', None],
+        ['13.5.85', None, 'button_both', None],
+        [None, None, 'switch', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
 }]
 
 DEVICES_MIOT = [{
+    # with neutral wire
+    'lumi.switch.n1acn1': ["Aqara", "Single Wall Switch H1 Pro", "QBKG30LM"],  # @Kris
+    'params': [
+        ['2.1', 'channel_0', 'channel 1', 'switch'],
+        ['4.1', None, 'consumption', None],
+        ['4.2', 'load_power', 'power', 'sensor'],
+        ['8.1', None, 'button_1: 1', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # with neutral wire,
+    'lumi.switch.b2lacn02': ["Aqara", "Double Wall Switch D1", "QBKG22LM"],
+#    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
+    'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 Pro", "QBKG31LM"],
+    'mi_spec': [
+        ['2.1', 'channel_0', 'channel 1', 'switch'],
+        ['3.1', 'channel_1', 'channel 2', 'switch'],
+        ['4.1', None, 'consumption', None],
+        ['4.2', 'load_power', 'power', 'sensor'],
+        ['8.1', None, 'button_1: 1', None],
+        ['8.2', None, 'button_1: 2', None],
+        ['9.1', None, 'button_2: 1', None],
+        ['9.2', None, 'button_2: 2', None],
+        ['10.1', None, 'button_both: 4', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # triple channel on/off, no neutral wire
+    'lumi.switch.l3acn3': ["Aqara", "Triple Wall Switch D1", "QBKG25LM"],
+    'mi_spec': [
+        ['2.1', '2.1', 'channel 1', 'switch'],
+        ['3.1', '3.1', 'channel 2', 'switch'],
+        ['4.1', '4.1', 'channel 3', 'switch'],
+        ['9.1', None, 'button_1: 1', None],
+        ['10.1', None, 'button_2: 1', None],
+        ['11.1', None, 'button_3: 1', None],
+        ['12.1', None, 'button_both_12: 4', None],
+        ['13.1', None, 'button_both_13: 4', None],
+        ['14.1', None, 'button_both_23: 4', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # with neutral wire
+    'lumi.switch.n3acn3': ["Aqara", "Triple Wall Switch D1", "QBKG26LM"],
+    'lumi.switch.n3acn1': ["Aqara", "Double Wall Switch H1 Pro", "QBKG32LM"],  # @Kris
+    'mi_spec': [
+        ['2.1', '2.1', 'channel 1', 'switch'],
+        ['3.1', '3.1', 'channel 2', 'switch'],
+        ['4.1', '4.1', 'channel 3', 'switch'],
+        ['5.1', None, 'consumption', None],
+        ['5.2', 'load_power', 'power', 'sensor'],
+        ['9.1', None, 'button_1: 1', None],
+        ['9.2', None, 'button_both: 4', None],
+        ['10.1', None, 'button_2: 1', None],
+        ['10.2', None, 'button_both: 4', None],
+        ['11.1', None, 'button_3: 4', None],
+        ['11.2', None, 'button_both_23: 4', None],
+        ['12.1', None, 'button_both_12: 4', None],
+        ['13.1', None, 'button_both_13: 4', None],
+        ['14.1', None, 'button_both_23: 4', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
     'lumi.switch.b1laus01': ["Aqara", "Single Wall Switch US", "WS-USC01"],
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],
@@ -555,7 +641,7 @@ DEVICES_MIOT = [{
         ['2.1', '2.1', 'switch', 'switch'],
         ['6.1', None, 'button: 1', None],
         ['6.2', None, 'button: 2', None],
-        [None, None, 'action', 'sensor'],
+        [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
     'lumi.switch.b1naus01': ["Aqara", "Single Wall Switch US", "WS-USC03"],
@@ -565,7 +651,7 @@ DEVICES_MIOT = [{
         ['4.2', 'load_power', 'power', 'sensor'],
         ['6.1', None, 'button: 1', None],
         ['6.2', None, 'button: 2', None],
-        [None, None, 'action', 'sensor'],
+        [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
     'lumi.switch.b2naus01': ["Aqara", "Double Wall Switch US", "WS-USC04"],
@@ -579,7 +665,25 @@ DEVICES_MIOT = [{
         ['8.1', None, 'button_2: 1', None],
         ['8.2', None, 'button_2: 2', None],
         ['9.1', None, 'button_both: 4', None],
-        [None, None, 'action', 'sensor'],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # multi button switch, no retain
+    'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
+    'mi_spec': [
+        ['3.1', None, 'button_1: 1', None],
+        ['4.1', None, 'button_2: 1', None],
+        [None, None, 'switch', 'binary_sensor'],
+        ['5.1', 'battery', 'battery', 'sensor'],
+    ]
+}, {
+    'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
+    'mi_spec': [
+        ['2.1', None, 'motion', None],
+        ['4.1', None, 'motion', None],
+        ['6.1', None, 'elapsed_time', None],
+        [None, None, 'motion', 'binary_sensor'],
+        ['3.1', '3.1', 'battery', 'sensor'],
     ]
 }]
 

@@ -158,7 +158,7 @@ class GatewayNatgasSensor(GatewayBinarySensor, BinarySensorEntity):
 
 
 class GatewayMotionSensor(GatewayBinarySensor):
-    """Representation of a Xiaomi/Aqara Montion Sensor."""
+    """Representation of a Xiaomi/Aqara Motion Sensor."""
     _default_delay = None
     _last_on = 0
     _last_off = 0
@@ -195,6 +195,9 @@ class GatewayMotionSensor(GatewayBinarySensor):
         if 'illuminance' in data and ('lumi.sensor_motion.aq2' in
                                       self.device['device_model']):
             data[self._attr] = 1
+
+        if 'elapsed_time' in data:
+            self._attrs[ATTR_ELAPSED_TIME] = data['elapsed_time']
 
         # check only motion=1
         if data.get(self._attr) != 1:
@@ -492,17 +495,23 @@ class GatewayButtonSwitch(GatewayBinarySensor, BinarySensorEntity):
                 self._lqi = value
 
         for key, value in data.items():
+            if ":" in key:
+                value = int(key.split(":")[1])
+                key = key.split(":")[0]
+
             if key == 'button':
                 if 'voltage' in data:
                     return
-                data[self._attr] = BUTTON.get(value, 'unknown')
+                data[self._attr] = BUTTON.get(
+                    value, 'unknown')
                 break
             if key.startswith('button_both'):
                 data[self._attr] = key + '_' + BUTTON_BOTH.get(
                     value, 'unknown')
                 break
             if key.startswith('button'):
-                data[self._attr] = key + '_' + BUTTON.get(value, 'unknown')
+                data[self._attr] = key + '_' + BUTTON.get(
+                    value, 'unknown')
                 break
 
         if self._attr in data:

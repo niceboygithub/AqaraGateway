@@ -75,6 +75,7 @@ ATTR_FW_VER = "firmware_version"
 ATTR_IN_USE = "in_use"
 ATTR_LQI = "lqi"
 ATTR_POWER_CONSUMED = "power_consumed"
+ATTR_ELAPSED_TIME = "elapsed_time"
 
 BATTERY = "battery"
 CHIP_TEMPERATURE = "chip_temperature"
