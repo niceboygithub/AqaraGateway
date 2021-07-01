@@ -176,7 +176,7 @@ BUTTON = {
     25: 'hold_counterclockwise',
     26: 'rotate',
     27: 'hold_rotate',
-    128: 'many',
+    128: 'many'
 }
 
 BUTTON_BOTH = {
@@ -191,6 +191,22 @@ VIBRATION = {
     1: 'vibration',
     2: 'tilt',
     3: 'drop',
+}
+
+CUBE = {
+    0: 'flip90',
+    1: 'flip180',
+    2: 'move',
+    3: 'knock',
+    4: 'quadruple',
+    16: 'rotate',
+    20: 'shock',
+    28: 'hold',
+    'move': 'move',
+    'flip90': 'flip90',
+    'flip180': 'flip180',
+    'rotate': 'rotate',
+    'alert': 'alert',
 }
 
 ATTR_DENSITY = "density"

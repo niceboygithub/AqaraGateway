@@ -609,15 +609,14 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        attrs = {
-            ATTR_BATTERY_LEVEL: self._battery,
-            ATTR_CHIP_TEMPERATURE: self._chip_temperature,
-            ATTR_LQI: self._lqi,
-            ATTR_VOLTAGE: self._voltage,
-        }
+        self._attrs[ATTR_BATTERY_LEVEL] = self._battery
+        self._attrs[ATTR_CHIP_TEMPERATURE] = self._chip_temperature
+        self._attrs[ATTR_LQI] = self._lqi
+        self._attrs[ATTR_VOLTAGE] = self._voltage
+
         if self.with_rotation:
-            attrs[ATTR_ANGLE] = self._rotate_angle
-        return attrs
+            self._attrs[ATTR_ANGLE] = self._rotate_angle
+        return self._attrs
 
     def update(self, data: dict = None):
         # pylint: disable=too-many-branches
@@ -640,6 +639,7 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
                     value, (int, float)) else None
             if key == LQI:
                 self._lqi = value
+
             # skip tilt and wait tilt_angle
             if key == 'vibration' and value != 2:
                 data[self._attr] = VIBRATION.get(value, 'unknown')
@@ -666,7 +666,8 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
             if key.startswith('action'):
                 data[self._attr] = key + '_' + CUBE.get(value, 'unknown')
                 break
-            if key == 'mode':
+            if key in ('mode', 'vibration_level', 'detect_interval',
+                    'vibrate_intensity', 'report_interval'):
                 self._attrs[key] = value
                 break
             if key.startswith('scense'):

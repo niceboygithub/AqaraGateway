@@ -316,6 +316,7 @@ DEVICES = [{
     'mi_spec': [
         ['0.3.85', None, 'illuminance', 'sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['8.0.2097', None, 'detect_interval', None],
     ]
 }, {
     'lumi.sensor_smoke': ["Honeywell", "Smoke Sensor", "JTYJ-GD-01LM/BW"],
@@ -571,8 +572,8 @@ DEVICES_AIOT = [{
     'params': [
         ['3.1.85', None, 'motion', None],
         ['14.1.85', None, 'detect_level', None],
-        ['8.0.2115', None, 'detect_interval', None],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['8.0.2115', None, 'detect_interval', None],
         [None, None, 'motion', 'binary_sensor'],
     ]
 }, {
@@ -580,6 +581,7 @@ DEVICES_AIOT = [{
     'lumi.remote.b286acn03': ["Aqara", "Double Wall Button T1", "WXKG04LM"],   # @darkbao
     'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
     'params': [
+        ['4.13.85', None, 'mode', None],
         ['13.1.85', None, 'button_1', None],
         ['13.2.85', None, 'button_2', None],
         ['13.5.85', None, 'button_both', None],
@@ -601,6 +603,7 @@ DEVICES_AIOT = [{
         ['0.4.85', 'illumination', 'illuminance', 'sensor'],
         ['3.1.85', None, 'motion', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['8.0.2115', None, 'detect_interval', None],
     ]
 }, {
     # button switch, no retain
@@ -620,6 +623,8 @@ DEVICES_AIOT = [{
         ['13.3.85', None, 'triple_click', None],
         ['13.7.85', None, 'vibration', None],
         ['14.1.85', None, 'vibration_level', None],
+        ['14.2.85', None, 'vibrate_intensity', None],
+        ['14.4.85', None, 'report_interval', None],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
         [None, None, 'action', 'binary_sensor']
     ]
