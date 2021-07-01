@@ -213,6 +213,7 @@ DEVICES = [{
     'lumi.sensor_switch': ["Xiaomi", "Button", "WXKG01LM"],
     'lumi.sensor_switch.aq2': ["Aqara", "Button", "WXKG11LM"],
     'lumi.remote.b1acn01': ["Aqara", "Button", "WXKG11LM"],
+    'lumi.remote.b1acn02': ["Aqara", "Button", "WXKG12LM"],  # @darkbao
     'lumi.sensor_switch.aq3': ["Aqara", "Shake Button", "WXKG12LM"],
     'lumi.sensor_86sw1': ["Aqara", "Single Wall Button", "WXKG03LM"],
     'lumi.remote.b186acn01': ["Aqara", "Single Wall Button", "WXKG03LM"],
@@ -332,6 +333,7 @@ DEVICES = [{
 }, {
     'lumi.curtain': ["Aqara", "Curtain", "ZNCLDJ11LM"],
     'lumi.curtain.aq2': ["Aqara", "Roller Shade", "ZNGZDJ11LM"],
+    'lumi.curtain.hagl07': ["Aqara", "Curtain C2", "ZNCLDJ11LM"],   # @darkbao
     'params': [
         ['1.1.85', 'curtain_level', 'position', None],
         ['14.2.85', None, 'motor', 'cover'],
@@ -489,6 +491,7 @@ DEVICES_AIOT = [{
         ['13.2.85', None, 'button_2', None],
         ['13.5.85', None, 'button_both', None],
         [None, None, 'switch', 'binary_sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'], # @darkbao
     ]
 }, {
     # triple channel on/off, no neutral wire
@@ -574,6 +577,7 @@ DEVICES_AIOT = [{
     ]
 }, {
     # multi button switch, no retain
+    'lumi.remote.b286acn03': ["Aqara", "Double Wall Button T1", "WXKG04LM"],   # @darkbao
     'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
     'params': [
         ['13.1.85', None, 'button_1', None],
@@ -734,6 +738,7 @@ DEVICES_MIOT = [{
     ]
 }, {
     # multi button switch, no retain
+    'lumi.remote.b286acn03': ["Aqara", "Double Wall Button T1", "WXKG04LM"],   # @darkbao
     'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
     'mi_spec': [
         ['3.1', None, 'button_1: 1', None],
