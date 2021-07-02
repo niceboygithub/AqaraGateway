@@ -655,11 +655,11 @@ class Gateway(Thread):
             if device['type'] == 'zigbee' or 'paring' in data:
                 did = data.get('did', device['did'])
                 data.pop('did', '')
+                params = []
 
                 # convert hass prop to lumi prop
                 if device['mi_spec']:
                     payload = {'cmd': 'write', 'did': did, 'id': 5}
-                    params = []
                     for key, val in data.items():
                         if key == 'switch':
                             val = bool(val)
@@ -680,6 +680,7 @@ class Gateway(Thread):
                     payload = {
                         'cmd': 'write',
                         'did': did,
+                        'id': randint(0, 65535),
                         'params': params,
                     }
 

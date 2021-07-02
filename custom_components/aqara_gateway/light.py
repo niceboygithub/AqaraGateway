@@ -33,11 +33,29 @@ async def async_unload_entry(hass, entry):
 
 class GatewayLight(GatewayGenericDevice, LightEntity):
     """Representation of a Xiaomi/Aqara Light."""
-    _brightness = 1
-    _color_temp = 0
-    _rgb_color = 0
-    _hs = (0, 0)
+    _brightness = None
+    _color_temp = None
+    _rgb_color = None
+    _hs = None
     _state = None
+
+    def __init__(
+        self,
+        gateway,
+        device,
+        attr,
+    ):
+        """Initialize the Xiaomi/Aqara Light."""
+        super().__init__(gateway, device, attr)
+        for p in device['params']:
+            if p[2] == "brightness":
+                self._brightness = 0
+            if p[2] == "color_temp":
+                self._color_temp = 0
+            if p[2] == "rgb_color":
+                self._rgb_color = 0
+            if p[2] == "hs_color":
+                self._hs = (0, 0)
 
     @property
     def is_on(self) -> bool:
@@ -83,6 +101,16 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             self._color_temp = data[ATTR_COLOR_TEMP]
         if ATTR_RGB_COLOR in data:
             self._rgb_color = data[ATTR_RGB_COLOR]
+        if ATTR_HS_COLOR in data:
+            if self.device['type'] == 'zigbee':
+                if isinstance(data[ATTR_HS_COLOR], int):
+                    value = hex(data[ATTR_HS_COLOR] & 0xFFFFFF).replace('0x', '')
+                else:
+                    value = data[ATTR_HS_COLOR].replace('0x', '')
+            else:
+                value = data[ATTR_HS_COLOR]
+            rgb = color_util.rgb_hex_to_rgb_list(value)
+            self._hs = color_util.color_RGB_to_hs(*rgb)
 
         self.schedule_update_ha_state()
 
@@ -107,16 +135,18 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
 
         if (ATTR_HS_COLOR in kwargs or ATTR_BRIGHTNESS in kwargs or
                 self._attr == ATTR_RGB_COLOR):
-            rgb = color_util.color_hs_to_RGB(*self._hs)
-            rgba = (self._brightness,) + rgb
-            if isinstance(self._brightness, int):
-                rgbhex = binascii.hexlify(
-                    struct.pack("BBBB", *rgba)).decode("ASCII")
-                rgbhex = int(rgbhex, 16)
-                if self.device['type'] == 'zigbee':
-                    payload[ATTR_HS_COLOR] = rgbhex * 150
-                else:
-                    payload[ATTR_HS_COLOR] = rgbhex
+            if self._hs:
+                payload[ATTR_HS_COLOR] = self._color_temp
+                rgb = color_util.color_hs_to_RGB(*self._hs)
+                rgba = (self._brightness,) + rgb
+                if isinstance(self._brightness, int):
+                    rgbhex = binascii.hexlify(
+                        struct.pack("BBBB", *rgba)).decode("ASCII")
+                    rgbhex = int(rgbhex, 16)
+                    if self.device['type'] == 'zigbee':
+                        payload[ATTR_HS_COLOR] = rgbhex
+                    else:
+                        payload[ATTR_HS_COLOR] = rgbhex
 
         if not payload:
             payload[self._attr] = 1

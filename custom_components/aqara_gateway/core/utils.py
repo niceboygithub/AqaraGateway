@@ -1,5 +1,5 @@
 """ device info and utils """
-# pylint: disable=broad-except, E501
+# pylint: disable=broad-except, too-many-lines
 import logging
 import re
 import uuid
@@ -8,10 +8,16 @@ from typing import Optional
 
 from aiohttp import web
 from miio import Device, DeviceException
+
 from homeassistant.components.http import HomeAssistantView
 from homeassistant.helpers.device_registry import DeviceRegistry
 from homeassistant.helpers.typing import HomeAssistantType
 from homeassistant.exceptions import PlatformNotReady
+
+
+SOFT_HACK_REALTEK = 'ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; ' \
+                    'echo enable > /sys/class/tty/tty/enable; telnetd'
+SOFT_HACK_SIGMASTAR = 'ssid": "\"\"", "pswd": "123123 ;  /bin/riu_w 101e 53 3012 ; telnetd'
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -48,6 +54,8 @@ DEVICES = [{
         ['8.0.2157', None, 'panId', None],
         ['8.0.2155', None, 'cloud', None],  # {"cloud_link":0}
         ['0.3.85', 'illumination', 'illuminance', 'sensor'],
+        [None, 'light_level', 'brightness', None],
+        [None, 'hs_color', 'hs_color', None],
         [None, 'rgb_color', 'rgb_color', 'light'],
         [None, None, 'alarm', 'alarm_control_panel'],
         [None, None, 'pair', 'remote'],
@@ -189,6 +197,7 @@ DEVICES = [{
         ['14.1.85', 'light_level', 'brightness', None],
         ['14.2.85', 'colour_temperature', 'color_temp', None],
         ['14.8.85', 'rgb_color', 'hs_color', None],
+        [None, 'hs_color', 'hs_color', None],
     ]
 }, {
     # light with brightness
@@ -201,12 +210,13 @@ DEVICES = [{
         ['14.1.85', 'light_level', 'brightness', None],
     ]
 }, {
-    # light with brightness
+    # light with brightness and color temp
     'lumi.light.cwacn1': ["Aqara", "0-10V Dimmer", "ZNTGMK12LM"],  # @miniknife88
+    'lumi.light.cwjwcn01': ["Aqara", "Jiawen 0-12V Dimmer", "Z204"],  # @Kris
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
-        ['14.2.85', 'colour_temperature', 'color_temp', None],
+        ['14.2.85', 'colour_temperature', 'color_temp', None]
     ]
 }, {
     # button switch, no retain
@@ -530,6 +540,7 @@ DEVICES_AIOT = [{
     ]
 }, {
     'lumi.switch.b1laus01': ["Aqara", "Single Wall Switch US", "WS-USC01"],
+    'lumi.switch.l1aeu1': ["Aqara", "Single Wall Switch EU H1", "WS-EUK01"],
     'params': [
         ['4.1.85', 'channel_0', 'switch', 'switch'],  # or neutral_0?
         ['13.1.85', None, 'button', None],
@@ -537,6 +548,7 @@ DEVICES_AIOT = [{
     ]
 }, {
     'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
+    'lumi.switch.l2aeu1': ["Aqara", "Double Wall Switch EU H1", "WS-EUK02"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -547,6 +559,7 @@ DEVICES_AIOT = [{
     ]
 }, {
     'lumi.switch.b1naus01': ["Aqara", "Single Wall Switch US", "WS-USC03"],
+    'lumi.switch.n1aeu1': ["Aqara", "Single Wall Switch EU H1", "WS-EUK03"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -556,6 +569,7 @@ DEVICES_AIOT = [{
     ]
 }, {
     'lumi.switch.b2naus01': ["Aqara", "Double Wall Switch US", "WS-USC04"],
+    'lumi.switch.n2aeu1': ["Aqara", "Double Wall Switch EU H1", "WS-EUK04"],
     'params': [
         ['0.11.85', 'load_voltage', 'power', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
@@ -695,13 +709,17 @@ DEVICES_MIOT = [{
     ]
 }, {
     'lumi.switch.b1laus01': ["Aqara", "Single Wall Switch US", "WS-USC01"],
+    'lumi.switch.l1aeu1': ["Aqara", "Single Wall Switch EU H1", "WS-EUK01"],
     'mi_spec': [
+        ['1.2', None, 'model', None],
+        ['1.4', None, 'back_version', None],
         ['2.1', '2.1', 'switch', 'switch'],
         ['13.1.85', None, 'button', None],
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
-    'lumi.switch.b2laus01': ["Aqara", "Single Wall Switch US", "WS-USC02"],
+    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
+    'lumi.switch.l2aeu1': ["Aqara", "Double Wall Switch EU H1", "WS-EUK02"],
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],
         ['6.1', None, 'button: 1', None],
@@ -710,6 +728,7 @@ DEVICES_MIOT = [{
     ]
 }, {
     'lumi.switch.b1naus01': ["Aqara", "Single Wall Switch US", "WS-USC03"],
+    'lumi.switch.n1aeu1': ["Aqara", "Single Wall Switch EU H1", "WS-EUK03"],
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],
         ['4.1', None, 'consumption', None],
@@ -720,6 +739,7 @@ DEVICES_MIOT = [{
     ]
 }, {
     'lumi.switch.b2naus01': ["Aqara", "Double Wall Switch US", "WS-USC04"],
+    'lumi.switch.n2aeu1': ["Aqara", "Double Wall Switch EU H1", "WS-EUK04"],
     'mi_spec': [
         ['2.1', '2.1', 'channel 1', 'switch'],
         ['3.1', '3.1', 'channel 2', 'switch'],
@@ -1019,18 +1039,18 @@ class Utils:
             if "lumi.gateway.aqcn02" in model:
                 ret = miio_device.raw_command(
                     "set_ip_info",
-                    {"ssid": "\"\"", "pswd": "123123 ;  /bin/riu_w 101e 53 3012 ; telnetd"}
+                    {SOFT_HACK_SIGMASTAR}
                 )
             else:
                 ret = miio_device.raw_command(
                     "set_ip_info",
-                    {"ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
+                    {SOFT_HACK_REALTEK}
                 )
             if 'ok' not in ret:
                 raise PlatformNotReady
 
-        except DeviceException:
-            raise PlatformNotReady
+        except DeviceException as err:
+            raise PlatformNotReady from err
 
 
 class AqaraGatewayDebug(logging.Handler, HomeAssistantView):
