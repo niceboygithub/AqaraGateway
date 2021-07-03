@@ -10,6 +10,16 @@ from homeassistant.components.light import LightEntity, SUPPORT_BRIGHTNESS, \
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
 from .core.utils import Utils
+from .core.const import (
+    ATTR_FW_VER,
+    ATTR_HW_VER,
+    ATTR_LQI,
+    ATTR_CHIP_TEMPERATURE,
+    CHIP_TEMPERATURE,
+    FW_VER,
+    HW_VER,
+    LQI
+)
 
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
@@ -47,14 +57,18 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
     ):
         """Initialize the Xiaomi/Aqara Light."""
         super().__init__(gateway, device, attr)
-        for p in device['params']:
-            if p[2] == "brightness":
+        self._chip_temperature = None
+        self._fw_ver = None
+        self._hw_ver = None
+        self._lqi = None
+        for parm in device['params']:
+            if parm[2] == "brightness":
                 self._brightness = 0
-            if p[2] == "color_temp":
+            if parm[2] == "color_temp":
                 self._color_temp = 0
-            if p[2] == "rgb_color":
+            if parm[2] == "rgb_color":
                 self._rgb_color = 0
-            if p[2] == "hs_color":
+            if parm[2] == "hs_color":
                 self._hs = (0, 0)
 
     @property
@@ -91,26 +105,48 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             features = SUPPORT_COLOR | SUPPORT_BRIGHTNESS
         return features
 
+    @property
+    def device_state_attributes(self):
+        """Return the state attributes."""
+        if self.device['type'] == 'zigbee':
+            self._attrs[ATTR_CHIP_TEMPERATURE] = self._chip_temperature
+            self._attrs[ATTR_HW_VER] = self._hw_ver
+            self._attrs[ATTR_FW_VER] = self._fw_ver
+            self._attrs[ATTR_LQI] = self._lqi
+
+        return self._attrs
+
     def update(self, data: dict = None):
         """ update attribue in data """
-        if self._attr in data:
-            self._state = data[self._attr] == 1
-        if ATTR_BRIGHTNESS in data:
-            self._brightness = data[ATTR_BRIGHTNESS] / 100.0 * 255.0
-        if ATTR_COLOR_TEMP in data:
-            self._color_temp = data[ATTR_COLOR_TEMP]
-        if ATTR_RGB_COLOR in data:
-            self._rgb_color = data[ATTR_RGB_COLOR]
-        if ATTR_HS_COLOR in data:
-            if self.device['type'] == 'zigbee':
-                if isinstance(data[ATTR_HS_COLOR], int):
-                    value = hex(data[ATTR_HS_COLOR] & 0xFFFFFF).replace('0x', '')
+        for key, value in data.items():
+            if key == CHIP_TEMPERATURE:
+                self._chip_temperature = value
+            if key == HW_VER:
+                self._hw_ver = value
+            if key == FW_VER or key == 'back_version':
+                self._fw_ver = value
+            if key == LQI:
+                self._lqi = value
+
+            if self._attr in data:
+                self._state = data[self._attr] == 1
+            if ATTR_BRIGHTNESS in data:
+                self._brightness = data[ATTR_BRIGHTNESS] / 100.0 * 255.0
+            if ATTR_COLOR_TEMP in data:
+                self._color_temp = data[ATTR_COLOR_TEMP]
+            if ATTR_RGB_COLOR in data:
+                self._rgb_color = data[ATTR_RGB_COLOR]
+            if ATTR_HS_COLOR in data:
+                if self.device['type'] == 'zigbee':
+                    self.debug(data[ATTR_HS_COLOR])
+                    if isinstance(data[ATTR_HS_COLOR], int):
+                        value = hex(data[ATTR_HS_COLOR] & 0xFFFFFF).replace('0x', '')
+                    else:
+                        value = data[ATTR_HS_COLOR].replace('0x', '')
                 else:
-                    value = data[ATTR_HS_COLOR].replace('0x', '')
-            else:
-                value = data[ATTR_HS_COLOR]
-            rgb = color_util.rgb_hex_to_rgb_list(value)
-            self._hs = color_util.color_RGB_to_hs(*rgb)
+                    value = data[ATTR_HS_COLOR]
+                rgb = color_util.rgb_hex_to_rgb_list(value)
+                self._hs = color_util.color_RGB_to_hs(*rgb)
 
         self.schedule_update_ha_state()
 

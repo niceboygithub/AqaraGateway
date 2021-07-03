@@ -72,6 +72,7 @@ ATTR_LOAD_POWER = "load_power"
 # Total (lifetime) power consumption in watts
 ATTR_CHIP_TEMPERATURE = "chip_temperature"
 ATTR_FW_VER = "firmware_version"
+ATTR_HW_VER = "hardware_version"
 ATTR_IN_USE = "in_use"
 ATTR_LQI = "lqi"
 ATTR_POWER_CONSUMED = "power_consumed"
@@ -80,6 +81,7 @@ ATTR_ELAPSED_TIME = "elapsed_time"
 BATTERY = "battery"
 CHIP_TEMPERATURE = "chip_temperature"
 ENERGY_CONSUMED = "consumption"
+HW_VER = "hw_ver"
 FW_VER = "fw_ver"
 IN_USE = "plug_detection"
 LOAD_POWER = "load_power"
@@ -264,3 +266,23 @@ LATCH_STATUS_TYPE = {
     "0": STATE_UNLOCKED,
     "1": STATE_LOCKED,
 }
+
+SWITCH_ATTRIBUTES = (
+    'channel_1_decoupled',
+    'channel_2_decoupled',
+    'channel_3_decoupled',
+    'channel_1_loading_type',
+    'channel_1_pulse_interval',
+    'channel_2_loading_type',
+    'channel_2_pulse_interval',
+    'channel_3_loading_type',
+    'channel_3_pulse_interval',
+    'charge_protect',
+    'en_night_tip_light',
+    'led_inverted',
+    'max_power',
+    'nl_invert',
+    'plug_detection',
+    'poweroff_memory',
+    )
+

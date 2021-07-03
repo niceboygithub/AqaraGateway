@@ -20,6 +20,7 @@ from .core.const import (
     LOAD_POWER,
     LQI,
     LOAD_VOLTAGE,
+    SWITCH_ATTRIBUTES,
 )
 
 from .core.utils import Utils
@@ -79,27 +80,25 @@ class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        attrs = {}
+        self._attrs[ATTR_CHIP_TEMPERATURE] = self._chip_temperature
+        self._attrs[ATTR_FW_VER] = self._fw_ver
+        self._attrs[ATTR_LQI] = self._lqi
         if self.feature.get('support_power_consumption', False):
-            attrs = {
-                ATTR_CHIP_TEMPERATURE: self._chip_temperature,
-                ATTR_FW_VER: self._fw_ver,
-                ATTR_LOAD_POWER: self._load_power,
-                ATTR_LQI: self._lqi,
-                ATTR_POWER_CONSUMED: self._power_consumed,
-            }
+            self._attrs[ATTR_LOAD_POWER] = self._load_power
+            self._attrs[ATTR_POWER_CONSUMED] = self._power_consumed
+
         if self.feature.get('support_in_use', False):
-            attrs[ATTR_IN_USE] = self._in_use
+            self._attrs[ATTR_IN_USE] = self._in_use
         if self.feature.get('support_load_voltage', False):
-            attrs[ATTR_VOLTAGE] = self._voltage
-        return attrs
+            self._attrs[ATTR_VOLTAGE] = self._voltage
+        return self._attrs
 
     def update(self, data: dict = None):
         """update switch."""
         for key, value in data.items():
             if key == CHIP_TEMPERATURE:
                 self._chip_temperature = value
-            if key == FW_VER:
+            if key == FW_VER or key == 'back_version':
                 self._fw_ver = value
             if key == LOAD_POWER:
                 self._load_power = value
@@ -113,6 +112,8 @@ class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
                 self._voltage = format(
                     float(value) / 1000, '.3f') if isinstance(
                     value, (int, float)) else None
+            if key in SWITCH_ATTRIBUTES:
+                self._attrs[key] = value
             if key == self._attr:
                 self._state = bool(value)
         self.async_write_ha_state()

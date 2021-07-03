@@ -591,6 +591,14 @@ DEVICES_AIOT = [{
         [None, None, 'motion', 'binary_sensor'],
     ]
 }, {
+    # button switch, no retain
+    'lumi.remote.b18ac1': ["Aqara", "Single Wall Button H1", "WXKG14LM"],
+    'params': [
+        ['13.1.85', None, 'button', None],
+        [None, None, 'switch', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
+}, {
     # multi button switch, no retain
     'lumi.remote.b286acn03': ["Aqara", "Double Wall Button T1", "WXKG04LM"],   # @darkbao
     'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
@@ -599,6 +607,7 @@ DEVICES_AIOT = [{
         ['13.1.85', None, 'button_1', None],
         ['13.2.85', None, 'button_2', None],
         ['13.5.85', None, 'button_both', None],
+        ['13.7.85', None, 'button_both', None],
         [None, None, 'switch', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
@@ -637,8 +646,8 @@ DEVICES_AIOT = [{
         ['13.3.85', None, 'triple_click', None],
         ['13.7.85', None, 'vibration', None],
         ['14.1.85', None, 'vibration_level', None],
-        ['14.2.85', None, 'vibrate_intensity', None],
-        ['14.4.85', None, 'report_interval', None],
+        ['14.2.85', None, 'vibrate_intensity_level', None],
+        ['14.4.85', None, 'report_interval_level', None],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
         [None, None, 'action', 'binary_sensor']
     ]
@@ -689,7 +698,7 @@ DEVICES_MIOT = [{
 }, {
     # with neutral wire
     'lumi.switch.n3acn3': ["Aqara", "Triple Wall Switch D1", "QBKG26LM"],
-    'lumi.switch.n3acn1': ["Aqara", "Double Wall Switch H1 Pro", "QBKG32LM"],  # @Kris
+    'lumi.switch.n3acn1': ["Aqara", "Triple Wall Switch H1 Pro", "QBKG32LM"],  # @Kris
     'mi_spec': [
         ['2.1', '2.1', 'channel 1', 'switch'],
         ['3.1', '3.1', 'channel 2', 'switch'],
@@ -762,6 +771,14 @@ DEVICES_MIOT = [{
         ['3.1', '3.1', 'battery', 'sensor'],
     ]
 }, {
+    # button switch, no retain
+    'lumi.remote.b18ac1': ["Aqara", "Single Wall Button H1", "WXKG14LM"],
+    'params': [
+        ['3.1', None, 'button', None],
+        [None, None, 'switch', 'binary_sensor'],
+        ['5.1', 'battery', 'battery', 'sensor'],
+    ]
+}, {
     # multi button switch, no retain
     'lumi.remote.b286acn03': ["Aqara", "Double Wall Button T1", "WXKG04LM"],   # @darkbao
     'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
@@ -817,6 +834,9 @@ GLOBAL_PROP = {
     '0.12.85': 'load_power',
     '0.13.85': 'consumption',
     '0.14.85': 'load_current',
+    '4.10.85': 'channel_1_decoupled',
+    '4.11.85': 'channel_2_decoupled',
+    '4.12.85': 'channel_3_decoupled',
     '8.0.2001': 'battery',  # battery voltage
     '8.0.2002': 'reset_cnt',
     '8.0.2003': 'send_all_cnt',
@@ -843,6 +863,10 @@ GLOBAL_PROP = {
     '8.0.2034': 'load_s0',  # ctrl_dualchn
     '8.0.2035': 'load_s1',  # ctrl_dualchn
     '8.0.2036': 'parent',
+    '8.0.2037': '8.0.2037',  # remote
+    '8.0.2038': '8.0.2038',  # remote
+    '8.0.2039': '8.0.2039',  # remote
+    '8.0.2040': '8.0.2040',  # remote
     '8.0.2041': 'model',  # identify
     '8.0.2042': 'max_power',
     '8.0.2044': 'plug_detection',
@@ -857,17 +881,28 @@ GLOBAL_PROP = {
     '8.0.2102': 'alive',
     '8.0.2109': 'paring',
     '8.0.2111': 'pair_command',
-    '8.0.2114': '8.0.2114',
+    '8.0.2114': 'led_inverted',
     '8.0.2151': 'zigbee_pa',
     '8.0.2156': '8.0.2156',
+    '8.0.2158': 'prevent_delete',
+    '8.0.2162': 'channel_1_loading_type',
+    '8.0.2164': 'channel_1_pulse_interval',
     '8.0.2171': '8.0.2171',
     '8.0.2173': '8.0.2173',
     '8.0.2174': '8.0.2174',
     '8.0.2175': '8.0.2175',
     '8.0.2223': 'back_version',
+    '8.0.2215': '8.0.2215',
+    '8.0.2228': '8.0.2228',
+    '8.0.2229': '8.0.2229',
     '8.0.2230': '8.0.2230',
+    '8.0.2231': '8.0.2231',
     '8.0.9001': 'battery_end_of_life',
+    '8.1.2162': 'channel_2_loading_type',
+    '8.1.2164': 'channel_2_pulse_interval',
     '8.1.2222': '8.1.2222',
+    '8.2.2162': 'channel_3_loading_type',
+    '8.2.2164': 'channel_3_pulse_interval',
     '20.4.85': 'control',
     '200.1.11': '200.1.11',
     '200.1.12': '200.1.12'
@@ -956,7 +991,12 @@ class Utils:
             'support_load_voltage': False,
             'support_load_power': False,
             }
-        for device in DEVICES:
+
+        devices = []
+        devices.extend(DEVICES)
+        devices.extend(DEVICES_AIOT)
+
+        for device in devices:
             if zigbee_model in device:
                 params = device.get('params', '')
                 for param in params:
