@@ -107,7 +107,7 @@ class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
         self._set_state(2)
 
     def _set_state(self, state):
-        if state in range(0, 2):
+        if state in range(0, 3):
             self._shell.set_prop('persist.app.arming_state', str(state))
             value = 'true'
             command = "-arm -g"
