@@ -268,6 +268,8 @@ LATCH_STATUS_TYPE = {
 }
 
 SWITCH_ATTRIBUTES = (
+    'channel_decoupled',
+    'channel_loading_type',
     'channel_1_decoupled',
     'channel_2_decoupled',
     'channel_3_decoupled',

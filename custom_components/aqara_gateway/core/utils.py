@@ -445,20 +445,6 @@ DEVICES = [{
         ['14.1.85', None, 'unit', None],
     ]
 }, {
-    # no N, https://www.aqara.com/en/single_switch_T1_no-neutral.html
-    'lumi.switch.l0agl1': ["Aqara", "Relay T1", "SSM-U02"],
-    'mi_spec': [
-        ['2.1', '2.1', 'switch', 'switch'],
-    ]
-}, {
-    # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
-    'lumi.switch.n0agl1': ["Aqara", "Relay T1", "SSM-U01"],
-    'mi_spec': [
-        ['2.1', '2.1', 'switch', 'switch'],
-        ['3.2', '3.2', 'power', 'sensor'],
-        # ['5.7', '5.7', 'voltage', 'sensor'],
-    ]
-}, {
     'lumi.switch.b1lc04': ["Aqara", "Single Wall Switch E1", "QBKG38LM"],
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],
@@ -522,7 +508,6 @@ DEVICES_AIOT = [{
 }, {
     # with neutral wire, thanks @Mantoui
     'lumi.switch.n3acn3': ["Aqara", "Triple Wall Switch D1", "QBKG26LM"],
-    'lumi.switch.n4acn4': ["Aqara", "Scene Panel", "ZNCJMB14LM"],  # @miniknife88
     'lumi.switch.n3acn1': ["Aqara", "Triple Wall Switch H1 Pro", "QBKG32LM"],  # @Kris
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
@@ -536,6 +521,37 @@ DEVICES_AIOT = [{
         ['13.5.85', None, 'button_both_12', None],
         ['13.6.85', None, 'button_both_13', None],
         ['13.7.85', None, 'button_both_23', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # with neutral wire
+    'lumi.switch.n4acn4': ["Aqara", "Scene Panel", "ZNCJMB14LM"],  # @miniknife88
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['1.1.85', None, 'brightness', None],
+        ['1.2.85', None, 'standby_brightness', None],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        ['4.9.85', None, 'auto_brightness', None],
+        ['13.1.85', None, 'button_1', None],
+        ['13.2.85', None, 'button_2', None],
+        ['13.3.85', None, 'button_3', None],
+        ['13.4.85', None, 'scenes', None],
+        ['13.5.85', None, 'button_both_12', None],
+        ['13.6.85', None, 'button_both_13', None],
+        ['13.7.85', None, 'button_both_23', None],
+        ['14.6.85', None, 'language', None],
+        ['14.7.85', None, 'prompt_voice', None],
+        ['14.8.85', None, 'screen_saver_styles', None],
+        ['14.9.85', None, 'theme', None],
+        ['14.10.85', None, 'standby_times', None],
+        ['14.11.85', None, 'font_size', None],
+        ['14.12.85', None, 'homepage', None],
+        ['14.13.85', None, 'screen_saver', None],
+        ['14.21.85', None, 'channel_number', None],
+        ['20.4.85', None, 'sync', None],
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
@@ -580,6 +596,23 @@ DEVICES_AIOT = [{
         ['13.2.85', None, 'button_2', None],
         ['13.5.85', None, 'button_both', None],
         [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # no N, https://www.aqara.com/en/single_switch_T1_no-neutral.html
+    'lumi.switch.l0agl1': ["Aqara", "Relay T1", "SSM-U02"],
+    'lumi.switch.l0acn1': ["Aqara", "Relay T1", "DLKZMK12LM"],  # @Kris
+    'params': [
+        ['4.1.85', 'switch', 'switch', 'switch'],
+        ['14.5.85', None, 'channel_loading_type', None]
+    ]
+}, {
+    # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
+    'lumi.switch.n0agl1': ["Aqara", "Relay T1", "SSM-U01"],
+    'lumi.switch.n0acn1': ["Aqara", "Relay T1", "DLKZMK12LM"],
+    'params': [
+        ['4.1.85', '4.1.85', 'switch', 'switch'],
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        # ['5.7', '5.7', 'voltage', 'sensor'],
     ]
 }, {
     'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
@@ -760,6 +793,22 @@ DEVICES_MIOT = [{
         ['8.2', None, 'button_2: 2', None],
         ['9.1', None, 'button_both: 4', None],
         [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # no N, https://www.aqara.com/en/single_switch_T1_no-neutral.html
+    'lumi.switch.l0agl1': ["Aqara", "Relay T1", "SSM-U02"],
+    'lumi.switch.l0acn1': ["Aqara", "Relay T1", "DLKZMK12LM"],  # @Kris
+    'mi_spec': [
+        ['2.1', '2.1', 'switch', 'switch'],
+    ]
+}, {
+    # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
+    'lumi.switch.n0agl1': ["Aqara", "Relay T1", "SSM-U01"],
+    'lumi.switch.n0acn1': ["Aqara", "Relay T1", "DLKZMK11LM"],
+    'mi_spec': [
+        ['2.1', '2.1', 'switch', 'switch'],
+        ['3.2', '3.2', 'power', 'sensor'],
+        # ['5.7', '5.7', 'voltage', 'sensor'],
     ]
 }, {
     'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
@@ -950,7 +999,7 @@ class Utils:
         devices.extend(DEVICES)
         if cloud and cloud == "aiot":
             devices.extend(DEVICES_AIOT)
-        elif cloud and cloud == "miot":
+        else:
             devices.extend(DEVICES_MIOT)
 
         for device in devices:

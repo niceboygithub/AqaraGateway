@@ -62,9 +62,9 @@ Then restart gateway by reboot command.
 cd /tmp
 wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
 chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/blob/main/original/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/linux_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011.bin
+/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/blob/main/original/M1S/3.2.7_0020.0524/linux_3.2.7_0020.0524.bin
 fw_update /tmp/linux.bin
-/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/M1S/3.2.4_0014.0520_mi_fw_ver_3.1.3_0011/rootfs_3.2.4_0014.0520_mi_fw_ver_3.1.3_0011_modification.bin
+/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/blob/main/modified/M1S/3.2.7_0020.0524/rootfs_3.2.7_0020.0524_modified.bin
 fw_update /tmp/rootfs.bin
 ```
 If there is no any error generated, then restart gateway by reboot command.
@@ -74,9 +74,9 @@ If there is no any error generated, then restart gateway by reboot command.
 cd /tmp
 wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
 chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/M2/3.2.7_0018_0524/linux_3.2.7_0018_0524.bin
+/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/M2/3.2.8_0006.0526/linux_3.2.8_0006.0526.bin
 fw_update /tmp/linux.bin
-/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M2/3.2.7_0018_0524/rootfs_3.2.7_0018_0524_modification.bin
+/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M2/3.2.8_0006.0526/rootfs_3.2.8_0006.0526_modified.bin
 fw_update /tmp/rootfs.bin
 ```
 If there is no any error generated, then restart gateway by reboot command.
