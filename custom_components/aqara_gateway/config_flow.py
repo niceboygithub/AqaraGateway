@@ -236,6 +236,7 @@ class OptionsFlowHandler(OptionsFlow):
             self._host = user_input.get(CONF_HOST)
             if len(user_input.get(CONF_PASSWORD, "")) >= 1:
                 self._password = user_input.get(CONF_PASSWORD)
+            self._token = user_input.get(CONF_TOKEN, "")
             return self.async_create_entry(
                 title='',
                 data={

@@ -667,7 +667,7 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
                 data[self._attr] = key + '_' + CUBE.get(value, 'unknown')
                 break
             if key in ('mode', 'vibration_level', 'detect_interval',
-                    'vibrate_intensity', 'report_interval'):
+                    'vibrate_intensity_level', 'report_interval_level'):
                 self._attrs[key] = value
                 break
             if key.startswith('scense'):

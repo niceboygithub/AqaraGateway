@@ -17,11 +17,13 @@ from .core.const import (
     ATTR_CHIP_TEMPERATURE,
     ATTR_LQI,
     BATTERY,
+    BACK_VERSION,
     CHIP_TEMPERATURE,
     LQI,
     LOAD_POWER,
     POWER,
     VOLTAGE,
+    ATTR_FW_VER,
     ATTR_NOTIFICATION,
     ATTR_LOCK_STATUS,
     ATTR_LATCH_STATUS,
@@ -316,6 +318,7 @@ class GatewayLockSensor(GatewaySensor):
         super().__init__(gateway, device, attr)
         self._features = DEVICE_MAPPINGS[self.device['model']]
         self._battery = None
+        self._fw_ver = None
         self._li_battery = None
         self._li_battery_temperature = None
         self._lqi = None
@@ -340,6 +343,7 @@ class GatewayLockSensor(GatewaySensor):
         """Return the state attributes."""
         attrs = {
             ATTR_BATTERY_LEVEL: self._battery,
+            ATTR_FW_VER: self._fw_ver,
             ATTR_LQI: self._lqi,
             ATTR_VOLTAGE: self._voltage,
             ATTR_LOCK_STATUS: self._lock_status,
@@ -357,6 +361,8 @@ class GatewayLockSensor(GatewaySensor):
         for key, value in data.items():
             if key == BATTERY:
                 self._battery = value
+            if key == BACK_VERSION:
+                self._fw_ver = value
             if key == LI_BATTERY:
                 self._li_battery = value
             if key == LI_BATTERY_TEMP:

@@ -15,9 +15,8 @@ from homeassistant.helpers.typing import HomeAssistantType
 from homeassistant.exceptions import PlatformNotReady
 
 
-SOFT_HACK_REALTEK = 'ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; ' \
-                    'echo enable > /sys/class/tty/tty/enable; telnetd'
-SOFT_HACK_SIGMASTAR = 'ssid": "\"\"", "pswd": "123123 ;  /bin/riu_w 101e 53 3012 ; telnetd'
+SOFT_HACK_REALTEK = {"ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
+SOFT_HACK_SIGMASTAR = {"ssid": "\"\"", "pswd": "123123 ; /bin/riu_w 101e 53 3012 ; telnetd"}
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -451,13 +450,14 @@ DEVICES = [{
         ['13.31.85', 'voltage', 'voltage', None],
         ['13.32.85', 'li battery', 'li battery', 'sensor'],
         ['13.33.85', 'temperature', 'li battery temperature', None],
-        ['13.43.85', None, 'nfc added', None],
         ['13.37.85', 'battery', 'battery', 'sensor'],
         ['13.40.85', None, 'password number', None],
-        ['13.60.85', None, 'verification failed', None],
-        ['14.1.85', None, 'camera connected', None],
+        ['13.43.85', None, 'nfc added', None],
         ['13.50.85', None, 'wifi_info', None],
         ['13.51.85', None, 'wifi_connect', None],
+        ['13.60.85', None, 'verification failed', None],
+        ['14.1.85', None, 'camera connected', None],
+        ['14.83.85', None, 'bluetooth', None],
         [None, None, 'lock_event', 'sensor'],
     ]
 }, {
@@ -489,18 +489,6 @@ DEVICES = [{
         ['0.30.85', 'action_duration', 'rotate_angle', None],  # while hold
         [None, None, 'action', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor']
-    ]
-}, {
-    'lumi.airmonitor.acn01': ["Aqara", "Smart TVOC Air Quality Monitor", "VOCKQJK11LM"],
-    'params': [
-        ['0.1.85', 'temperature', 'temperature', 'sensor'],
-        ['0.2.85', 'humidity', 'humidity', 'sensor'],
-        ['0.3.85', 'tvoc', 'tvoc', 'sensor'],
-        ['8.0.2001', 'battery', 'battery', 'sensor'],
-        ['8.0.2041', None, 'identify', None],
-        ['8.0.2175', None, 'level', None],
-        ['13.1.85', 'alarm', 'tvoc_level', 'air_quality'],
-        ['14.1.85', None, 'unit', None],
     ]
 }]
 
@@ -632,9 +620,11 @@ DEVICES_AIOT = [{
     # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
     'lumi.switch.n0agl1': ["Aqara", "Relay T1", "SSM-U01"],
     'lumi.switch.n0acn1': ["Aqara", "Relay T1", "DLKZMK12LM"],
+    'lumi.plug.maeu01': ["Aqara", "Plug", "SP-EUC01"],
     'params': [
         ['4.1.85', '4.1.85', 'switch', 'switch'],
         ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
         # ['5.7', '5.7', 'voltage', 'sensor'],
     ]
 }, {
@@ -706,6 +696,18 @@ DEVICES_AIOT = [{
         ['14.4.85', None, 'report_interval_level', None],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
         [None, None, 'action', 'binary_sensor']
+    ]
+}, {
+    'lumi.airmonitor.acn01': ["Aqara", "Smart TVOC Air Quality Monitor", "VOCKQJK11LM"],
+    'params': [
+        ['0.1.85', 'temperature', 'temperature', 'sensor'],
+        ['0.2.85', 'humidity', 'humidity', 'sensor'],
+        ['0.3.85', 'tvoc', 'tvoc', 'sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['8.0.2041', None, 'identify', None],
+        ['8.0.2175', None, 'level', None],
+        ['13.1.85', 'alarm', 'tvoc_level', 'air_quality'],
+        ['14.1.85', None, 'unit', None],
     ]
 }]
 
@@ -818,8 +820,10 @@ DEVICES_MIOT = [{
     # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
     'lumi.switch.n0agl1': ["Aqara", "Relay T1", "SSM-U01"],
     'lumi.switch.n0acn1': ["Aqara", "Relay T1", "DLKZMK11LM"],
+    'lumi.plug.maeu01': ["Aqara", "Plug", "SP-EUC01"],
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],
+        ['3.1', '3.1', 'consumption', 'sensor'],
         ['3.2', '3.2', 'power', 'sensor'],
         # ['5.7', '5.7', 'voltage', 'sensor'],
     ]
@@ -1141,12 +1145,12 @@ class Utils:
             if "lumi.gateway.aqcn02" in model:
                 ret = miio_device.raw_command(
                     "set_ip_info",
-                    {SOFT_HACK_SIGMASTAR}
+                    SOFT_HACK_SIGMASTAR
                 )
             else:
                 ret = miio_device.raw_command(
                     "set_ip_info",
-                    {SOFT_HACK_REALTEK}
+                    SOFT_HACK_REALTEK
                 )
             if 'ok' not in ret:
                 raise PlatformNotReady

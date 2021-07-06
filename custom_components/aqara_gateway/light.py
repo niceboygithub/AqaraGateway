@@ -138,7 +138,6 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                 self._rgb_color = data[ATTR_RGB_COLOR]
             if ATTR_HS_COLOR in data:
                 if self.device['type'] == 'zigbee':
-                    self.debug(data[ATTR_HS_COLOR])
                     if isinstance(data[ATTR_HS_COLOR], int):
                         value = hex(data[ATTR_HS_COLOR] & 0xFFFFFF).replace('0x', '')
                     else:
