@@ -502,26 +502,6 @@ DEVICES = [{
         ['13.1.85', 'alarm', 'tvoc_level', 'air_quality'],
         ['14.1.85', None, 'unit', None],
     ]
-}, {
-    'lumi.switch.b1lc04': ["Aqara", "Single Wall Switch E1", "QBKG38LM"],
-    'mi_spec': [
-        ['2.1', '2.1', 'switch', 'switch'],
-        ['6.1', None, 'button: 1', None],
-        ['6.2', None, 'button: 2', None],
-        [None, None, 'switch', 'binary_sensor'],
-    ]
-}, {
-    'lumi.switch.b2lc04': ["Aqara", "Double Wall Switch E1", "QBKG39LM"],
-    'mi_spec': [
-        ['2.1', '2.1', 'channel 1', 'switch'],
-        ['3.1', '3.1', 'channel 2', 'switch'],
-        ['7.1', None, 'button_1: 1', None],
-        ['7.2', None, 'button_1: 2', None],
-        ['8.1', None, 'button_2: 1', None],
-        ['8.2', None, 'button_2: 2', None],
-        ['9.1', None, 'button_both: 4', None],
-        [None, None, 'switch', 'binary_sensor'],
-    ]
 }]
 
 DEVICES_AIOT = [{
@@ -596,6 +576,7 @@ DEVICES_AIOT = [{
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
+    'lumi.switch.b1lc04': ["Aqara", "Single Wall Switch E1", "QBKG38LM"],
     'lumi.switch.b1laus01': ["Aqara", "Single Wall Switch US", "WS-USC01"],
     'lumi.switch.l1aeu1': ["Aqara", "Single Wall Switch EU H1", "WS-EUK01"],
     'params': [
@@ -604,6 +585,7 @@ DEVICES_AIOT = [{
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
+    'lumi.switch.b2lc04': ["Aqara", "Double Wall Switch E1", "QBKG39LM"],
     'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.l2aeu1': ["Aqara", "Double Wall Switch EU H1", "WS-EUK02"],
     'params': [
@@ -774,22 +756,29 @@ DEVICES_MIOT = [{
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
+    'lumi.switch.b1lc04': ["Aqara", "Single Wall Switch E1", "QBKG38LM"],
     'lumi.switch.b1laus01': ["Aqara", "Single Wall Switch US", "WS-USC01"],
     'lumi.switch.l1aeu1': ["Aqara", "Single Wall Switch EU H1", "WS-EUK01"],
     'mi_spec': [
         ['1.2', None, 'model', None],
         ['1.4', None, 'back_version', None],
         ['2.1', '2.1', 'switch', 'switch'],
-        ['13.1.85', None, 'button', None],
+        ['6.1', None, 'button: 1', None],
+        ['6.2', None, 'button: 2', None],
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
+    'lumi.switch.b2lc04': ["Aqara", "Double Wall Switch E1", "QBKG39LM"],
     'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.l2aeu1': ["Aqara", "Double Wall Switch EU H1", "WS-EUK02"],
     'mi_spec': [
-        ['2.1', '2.1', 'switch', 'switch'],
-        ['6.1', None, 'button: 1', None],
-        ['6.2', None, 'button: 2', None],
+        ['2.1', '2.1', 'channel 1', 'switch'],
+        ['3.1', '3.1', 'channel 2', 'switch'],
+        ['7.1', None, 'button_1: 1', None],
+        ['7.2', None, 'button_1: 2', None],
+        ['8.1', None, 'button_2: 1', None],
+        ['8.2', None, 'button_2: 2', None],
+        ['9.1', None, 'button_both: 4', None],
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
