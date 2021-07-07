@@ -588,10 +588,14 @@ class Gateway(Thread):
                 # sometimes voltage and battery came in one payload
                 if prop == 'voltage' and 'battery' in payload:
                     continue
-                payload['battery'] = (
-                    param['value'] if param['value'] < 1000
-                    else round((min(param['value'], 3200) - 2500) / 7)
-                )
+                # not using coin cell battery
+                if device['model'] in ('aqara.lock.wbzac1'):
+                    payload[prop] = param['value']
+                else:
+                    payload[prop] = (
+                        param['value'] if param['value'] < 1000
+                        else round((min(param['value'], 3200) - 2500) / 7)
+                    )
             elif prop == 'alive' and param['value']['status'] == 'offline':
                 if not self.options.get('noffline', False):
                     device['online'] = False

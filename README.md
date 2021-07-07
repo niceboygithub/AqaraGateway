@@ -1,24 +1,24 @@
-# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, E1 CN) integration for Home Assistant
+# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN) integration for Home Assistant
 
 Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM)**.
 Gateway support **Zigbee 3**.
 
 This integration was based on the development of <a href=https://github.com/AlexxIT/XiaomiGateway3/>@AlexxIT</a>, Thanks Alex.
 
-**ATTENTION:** The component **only works on modified firmware (M2) or the gateway which enabled telnet.**
+**ATTENTION:** The component **only works on modified firmware (M2) or the gateway which was enabled telnet.**
 
 For Gateway M2, to flash modified firmware to M2, please use <a href="https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe"> AqaraGateway.exe </a> to flash customize firmware. Need to open the case of gateway and wired out the UART.
 
-For Gateway M1S CN, AirCondition P3, Smart Hub H1, Hub E1, please switch to **Mija Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor).
+For Gateway M1S CN, AirCondition P3 CN, Smart Hub H1 CN, Hub E1 CN, please switch to **Mi Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor).
 
-## Installing
+## Installation
 
 you can install component with [HACS](https://hacs.xyz),  custom repo: HACS > Integrations > 3 dots (upper top corner) > Custom repositories > URL: `niceboygithub/AqaraGateway` > Category: Integration
 
 Or Download and copy `custom_components/aqara_gateway` folder to `custom_components` folder in your HomeAssistant config folder
 
 
-## Config
+## Configuration
 
 1. [⚙️ Configuration](https://my.home-assistant.io/redirect/config) > [🧩 Integrations](https://my.home-assistant.io/redirect/integrations) > [➕ Add Integration](https://my.home-assistant.io/redirect/config_flow_start?domain=aqara_gateway) > 🔍 Search `Aqara Gateway`
 
@@ -123,7 +123,7 @@ If there is no any error generated, then restart gateway by reboot command.
 *Note: It updates firmware only if the checksum of the downloaded file is correct.*
 
 ## For G2H
-There is way to <a href="https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/binutils/README.md#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils">enable telnetd</a>.
+There is a way to <a href="https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/binutils/README.md#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils">enable telnetd</a>.
 
 ## How to check this component is working properly.
 Go to Configuration->Info->system_health

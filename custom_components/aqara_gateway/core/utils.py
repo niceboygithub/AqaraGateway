@@ -893,6 +893,15 @@ DEVICES_MIOT = [{
         ['5.1', 'battery', 'battery', 'sensor'],
         [None, None, 'action', 'binary_sensor']
     ]
+}, {
+    'lumi.airmonitor.acn01': ["Aqara", "Smart TVOC Air Quality Monitor", "VOCKQJK11LM"],
+    'params': [
+        ['3.1', '3.1', 'temperature', 'sensor'],
+        ['3.2', '3.2', 'humidity', 'sensor'],
+        ['3.3', '3.3', 'tvoc', 'sensor'],
+        ['4.1', '4.1', 'tvoc_level', 'air_quality'],
+        ['4.2', '4.2', 'battery', 'sensor'],
+    ]
 }]
 
 GLOBAL_PROP = {

@@ -18,8 +18,8 @@ DEVICE_MAPPINGS = {
 LOCK_NOTIFICATIOIN = {
     "latch_state": {
         "default": "Latch state changed",
-        "0": "Latch unlock",
-        "1": "Latch lock"},
+        "0": "Remove the locking from inside",
+        "1": "Reverse locked"},
     "lock": {
         "default": "Lock state changed",
         "0": "Door is open",
