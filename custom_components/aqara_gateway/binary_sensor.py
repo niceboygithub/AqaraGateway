@@ -187,36 +187,42 @@ class GatewayMotionSensor(GatewayBinarySensor):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        attrs = {
-            ATTR_BATTERY_LEVEL: self._battery,
-            ATTR_CHIP_TEMPERATURE: self._chip_temperature,
-            ATTR_LQI: self._lqi,
-            ATTR_VOLTAGE: self._voltage,
-        }
-        return attrs
+        if self.device['model'] != 'lumi.sensor_motion':
+            self._attrs[ATTR_BATTERY_LEVEL] = self._battery
+            self._attrs[ATTR_CHIP_TEMPERATURE] = self._chip_temperature
+            self._attrs[ATTR_LQI] = self._lqi
+            self._attrs[ATTR_VOLTAGE] = self._voltage
+        return self._attrs
 
-    @callback
-    def _set_no_motion(self, *args):
-        # pylint: disable=unused-argument
+    async def _start_no_motion_timer(self, delay: float):
+        if self._unsub_set_no_motion:
+            self._unsub_set_no_motion()
+
+        self._unsub_set_no_motion = async_call_later(
+            self.hass, abs(delay), self._set_no_motion)
+
+    async def _set_no_motion(self, *args):
         self._last_off = time.time()
         self._timeout_pos = 0
         self._unsub_set_no_motion = None
         self._state = False
         self.schedule_update_ha_state()
 
+        # repeat event from Aqara integration
+        self.hass.bus.fire('xiaomi_aqara.motion', {
+            'entity_id': self.entity_id
+        })
+
     def update(self, data: dict = None):
         """ update motion sensor """
         # fix 1.4.7_0115 heartbeat error (has motion in heartbeat)
-        if 'voltage' in data:
+        if 'battery' in data:
             return
 
         # https://github.com/AlexxIT/XiaomiGateway3/issues/135
         if 'illuminance' in data and ('lumi.sensor_motion.aq2' in
                                       self.device['device_model']):
             data[self._attr] = 1
-
-        if 'elapsed_time' in data:
-            self._attrs[ATTR_ELAPSED_TIME] = data['elapsed_time']
 
         for key, value in data.items():
             if key == BATTERY:
@@ -236,6 +242,8 @@ class GatewayMotionSensor(GatewayBinarySensor):
                 self._voltage = format(
                     float(value) / 1000, '.3f') if isinstance(
                     value, (int, float)) else None
+            if key == 'elapsed_time':
+                self._attrs[ATTR_ELAPSED_TIME] = data['elapsed_time']
 
         # check only motion=1
         if data.get(self._attr) != 1:
@@ -276,11 +284,10 @@ class GatewayMotionSensor(GatewayBinarySensor):
             if delay < 0 and time_now + delay < self._last_off:
                 delay *= 2
 
-            self._unsub_set_no_motion = async_call_later(
-                self.hass, abs(delay), self._set_no_motion)
+            self.hass.add_job(self._start_no_motion_timer, delay)
 
         # repeat event from Aqara integration
-        self.hass.bus.async_fire('xiaomi_aqara.motion', {
+        self.hass.bus.fire('xiaomi_aqara.motion', {
             'entity_id': self.entity_id
         })
 
