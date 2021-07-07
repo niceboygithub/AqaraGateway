@@ -1110,7 +1110,7 @@ class Utils:
     def gateway_alarm_mode_supported(model: str) -> Optional[bool]:
         """ return the gateway alarm mode supported """
         #  basic_cli not support
-        if model not in ('lumi.camera.gwagl02', 'lumi.gateway.aqcn02'):
+        if model not in ('lumi.camera.gwagl02'):
             return True
         return False
 

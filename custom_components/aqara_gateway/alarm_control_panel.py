@@ -52,7 +52,8 @@ class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
         attr
     ):
         """Initialize the Alarm Panel."""
-        self._shell = TelnetShell(gateway.host)
+        self._shell = TelnetShell(
+            gateway.host, None, Utils.get_device_name(device['model']))
         self._get_state()
         super().__init__(gateway, device, attr)
 
