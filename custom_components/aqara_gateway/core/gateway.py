@@ -54,7 +54,7 @@ class Gateway(Thread):
         self._device_state_attributes = {}
         self._info_ts = None
         self._gateway_did = ''
-        self._model = None  # for fast access
+        self._model = self.options.get(CONF_MODEL, '')  # for fast access
         self._cloud = 'aiot'  # for fast access
 
     @property
@@ -177,8 +177,7 @@ class Gateway(Thread):
         try:
             shell = TelnetShell(self.host,
                                 self.options.get(CONF_PASSWORD, ''),
-                                Utils.get_device_name(
-                                    self.options.get(CONF_MODEL, '')))
+                                Utils.get_device_name(self._model))
 
             processes = shell.get_running_ps()
             public_mosquitto = shell.check_public_mosquitto()
@@ -377,8 +376,7 @@ class Gateway(Thread):
                         data.update(dict(zip(stat, stat)))
             shell = TelnetShell(self.host,
                                 self.options.get(CONF_PASSWORD, ''),
-                                Utils.get_device_name(self.options.get(
-                                    CONF_MODEL, '')))
+                                Utils.get_device_name(self._model))
             raw = shell.read_file('{}/zigbee/networkBak.info'.format(
                     Utils.get_info_store_path(self._model)), with_newline=False)
             shell.close()
@@ -447,9 +445,7 @@ class Gateway(Thread):
         if prop == 'paring' and value == 0:
             shell = TelnetShell(self.host,
                                 self.options.get(CONF_PASSWORD, ''),
-                                Utils.get_device_name(
-                                    self.options.get(CONF_MODEL, '')
-                                ))
+                                Utils.get_device_name(self._model))
             zb_device = shell.get_prop("sys.zb_device")
             if len(zb_device) >= 1:
                 raw = shell.read_file(zb_device, with_newline=False)

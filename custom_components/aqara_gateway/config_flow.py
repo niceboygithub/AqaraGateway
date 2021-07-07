@@ -64,6 +64,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             if "error" in ret['status']:
                 return self.async_abort(reason="connection_error")
             self._name = ret.get('name', '')
+            # change to use long model name
             self._model = ret.get('model', '')
             if ret['token']:
                 self._token = ret['token']
@@ -85,6 +86,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                             default=self._model or 'm1s')] = vol.In(
                                 OPT_DEVICE_NAME)
         fields[vol.Optional(CONF_NOFFLINE, default=True)] = bool
+
+        await self.async_set_unique_id(self._name)
 
         return self.async_show_form(
             step_id="user",
@@ -169,7 +172,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         self._host = discovery_info[CONF_HOST]
         self._name = node_name
         self._password = ''
-        self._model = Utils.get_device_name(model).split(" ")[-1]
+        self._token = ''
+        self._model = model
 
         for entry in self._async_current_entries():
             already_configured = False
@@ -198,7 +202,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             updates={CONF_HOST: discovery_info[CONF_HOST]}
         )
 
-        if discovery_info.get('type') == '_aqara-setup._tcp.local.':
+        if (fwcloud == "miot" and
+                discovery_info.get('type') == '_aqara-setup._tcp.local.'):
             return await self.async_step_user()
         return await self.async_step_discovery_confirm()
 
