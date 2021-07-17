@@ -47,6 +47,7 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
     _color_temp = None
     _rgb_color = None
     _hs = None
+    _white = None
     _state = None
 
     def __init__(
@@ -145,6 +146,10 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                 else:
                     value = data[ATTR_HS_COLOR]
                 rgb = color_util.rgb_hex_to_rgb_list(value)
+                if len(rgb) > 3:
+                    self._white = rgb.pop()
+                if len(rgb) > 3:
+                    self._brightness = rgb.pop()
                 self._hs = color_util.color_RGB_to_hs(*rgb)
 
         self.schedule_update_ha_state()

@@ -78,6 +78,8 @@ chmod a+x /tmp/curl
 fw_update /tmp/linux.bin
 /tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M2/3.2.8_0006.0526/rootfs_3.2.8_0006.0526_modified.bin
 fw_update /tmp/rootfs.bin
+/tmp/curl -s -k -L -o /tmp/ControlBridge.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/M2/3.2.8_0006.0526/ControlBridge.bin
+zigbee_msnger zgb_ota /tmp/ControlBridge.bin
 ```
 If there is no any error generated, then restart gateway by reboot command.
 

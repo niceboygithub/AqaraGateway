@@ -33,6 +33,7 @@ from .core.const import (
     CONF_INVERT_STATE,
     CONF_OCCUPANCY_TIMEOUT,
     CUBE,
+    ELAPSED_TIME,
     FW_VER,
     GAS_DENSITY,
     NO_CLOSE,
@@ -173,6 +174,7 @@ class GatewayMotionSensor(GatewayBinarySensor):
     _chip_temperature = None
     _lqi = None
     _voltage = None
+    is_metric = True
 
     async def async_added_to_hass(self):
         """ add to hass """
@@ -187,11 +189,10 @@ class GatewayMotionSensor(GatewayBinarySensor):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        if self.device['model'] != 'lumi.sensor_motion':
-            self._attrs[ATTR_BATTERY_LEVEL] = self._battery
-            self._attrs[ATTR_CHIP_TEMPERATURE] = self._chip_temperature
-            self._attrs[ATTR_LQI] = self._lqi
-            self._attrs[ATTR_VOLTAGE] = self._voltage
+        self._attrs[ATTR_BATTERY_LEVEL] = self._battery
+        self._attrs[ATTR_CHIP_TEMPERATURE] = self._chip_temperature
+        self._attrs[ATTR_LQI] = self._lqi
+        self._attrs[ATTR_VOLTAGE] = self._voltage
         return self._attrs
 
     async def _start_no_motion_timer(self, delay: float):
@@ -215,9 +216,6 @@ class GatewayMotionSensor(GatewayBinarySensor):
 
     def update(self, data: dict = None):
         """ update motion sensor """
-        # fix 1.4.7_0115 heartbeat error (has motion in heartbeat)
-        if 'battery' in data:
-            return
 
         # https://github.com/AlexxIT/XiaomiGateway3/issues/135
         if 'illuminance' in data and ('lumi.sensor_motion.aq2' in
@@ -242,11 +240,17 @@ class GatewayMotionSensor(GatewayBinarySensor):
                 self._voltage = format(
                     float(value) / 1000, '.3f') if isinstance(
                     value, (int, float)) else None
-            if key == 'elapsed_time':
-                self._attrs[ATTR_ELAPSED_TIME] = data['elapsed_time']
+            if key == ELAPSED_TIME:
+                self._attrs[ATTR_ELAPSED_TIME] = data[ELAPSED_TIME]
 
         # check only motion=1
         if data.get(self._attr) != 1:
+            # handle available change
+            self.schedule_update_ha_state()
+            return
+
+        # fix 1.4.7_0115 heartbeat error (has motion in heartbeat)
+        if 'battery' in data:
             # handle available change
             self.schedule_update_ha_state()
             return

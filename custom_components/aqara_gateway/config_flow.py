@@ -68,6 +68,9 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             self._model = ret.get('model', '')
             if ret['token']:
                 self._token = ret['token']
+
+            await self.async_set_unique_id(self._name)
+
             return self._async_get_entry()
 
         for name, _ in OPT_DEVICE_NAME.items():
@@ -86,8 +89,6 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                             default=self._model or 'm1s')] = vol.In(
                                 OPT_DEVICE_NAME)
         fields[vol.Optional(CONF_NOFFLINE, default=True)] = bool
-
-        await self.async_set_unique_id(self._name)
 
         return self.async_show_form(
             step_id="user",

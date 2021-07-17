@@ -495,6 +495,7 @@ DEVICES = [{
 DEVICES_AIOT = [{
     # with neutral wire
     'lumi.switch.n1acn1': ["Aqara", "Single Wall Switch H1 Pro", "QBKG30LM"],  # @Kris
+    'lumi.switch.b1nc01': ["Aqara", "Single Wall Switch E1", "QBKG40LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -506,6 +507,7 @@ DEVICES_AIOT = [{
     # with neutral wire
 #    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 Pro", "QBKG31LM"],  # @miniknife88
+    'lumi.switch.b2nc01': ["Aqara", "Double Wall Switch E1", "QBKG41LM"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -714,6 +716,7 @@ DEVICES_AIOT = [{
 DEVICES_MIOT = [{
     # with neutral wire
     'lumi.switch.n1acn1': ["Aqara", "Single Wall Switch H1 Pro", "QBKG30LM"],  # @Kris
+    'lumi.switch.b1nc01': ["Aqara", "Single Wall Switch E1", "QBKG40LM"],
     'params': [
         ['2.1', 'channel_0', 'channel 1', 'switch'],
         ['4.1', None, 'consumption', None],
@@ -725,6 +728,7 @@ DEVICES_MIOT = [{
     # with neutral wire,
 #    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 Pro", "QBKG31LM"],
+    'lumi.switch.b2nc01': ["Aqara", "Double Wall Switch E1", "QBKG41LM"],
     'mi_spec': [
         ['2.1', 'channel_0', 'channel 1', 'switch'],
         ['3.1', 'channel_1', 'channel 2', 'switch'],
