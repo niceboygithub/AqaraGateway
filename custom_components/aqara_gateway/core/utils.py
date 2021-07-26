@@ -461,6 +461,38 @@ DEVICES = [{
         [None, None, 'lock_event', 'sensor'],
     ]
 }, {
+    'aqara.lock.bzacn3': ["Aqara", "Door Lock N100", "ZNMS16LM"],
+    'aqara.lock.bzacn4': ["Aqara", "Door Lock N100", "ZNMS16LM"],
+    'params': [
+        ['8.0.2148', None, 'timestamp', None],
+        ['13.17.85', 'lock_state', 'lock', 'sensor'],
+        ['13.18.85', None, 'key_type', None],
+        ['13.32.85', None, 'verification failed', None],
+        ['13.33.85', None, 'latch_state', None],
+        ['13.41.85', None, 'unlock from inside', None],
+        ['13.42.85', None, 'unlock by fringprint', None],
+        ['13.43.85', None, 'unlock by password', None],
+        ['13.44.85', None, 'unlock by nfc', None],
+        ['13.45.85', None, 'unlock by homekit', None],
+        ['13.49.85', None, 'open in away mode', None],
+        ['13.54.85', None, 'away mode', None],
+        [None, None, 'key_id', 'sensor'],
+        ['13.55.85', 'voltage', 'voltage', None],
+        ['13.56.85', 'battery', 'battery', 'sensor'],
+        ['13.57.85', None, 'battery notify', None],
+        ['13.60.85', None, 'verification failed', None],
+        ['13.62.85', None, 'timestamp', None],
+        ['13.63.85', None, 'user added', None],
+        ['13.64.85', None, 'user removed', None],
+        ['13.65.85', None, 'all user removed', None],
+        ['13.66.85', None, 'nfc added', None],
+        ['13.67.85', None, 'nfc removed', None],
+        ['13.68.85', None, 'homekit reset', None],
+        ['13.88.85', None, 'door', None],
+        ['14.83.85', None, 'bluetooth', None],
+        [None, None, 'lock_event', 'sensor'],
+    ]
+}, {
     # https://github.com/AlexxIT/XiaomiGateway3/issues/101
     'lumi.airrtc.tcpecn02': ["Aqara", "Thermostat S2", "KTWKQ03ES"],
     'params': [
@@ -935,6 +967,7 @@ GLOBAL_PROP = {
     '8.0.2021': 'report',
     '8.0.2022': 'fw_ver',
     '8.0.2023': 'hw_ver',
+    '8.0.2026': 'wifi_rssi',
     '8.0.2030': 'poweroff_memory',
     '8.0.2031': 'charge_protect',
     '8.0.2032': 'en_night_tip_light',
@@ -954,6 +987,7 @@ GLOBAL_PROP = {
     '8.0.2084': 'added_device',
     '8.1.2087': '8.1.2087',
     '8.1.2088': '8.1.2088',
+    '8.0.2090': '8.0.2090',
     '8.0.2089': 'dfu',
     '8.0.2091': 'dfu_status',
     '8.0.2101': 'nl_invert',  # ctrl_86plug

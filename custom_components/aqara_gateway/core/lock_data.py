@@ -12,7 +12,9 @@ DEVICE_MAPPINGS = {
     "lumi.lock.acn03": SUPPORT_ALARM | SUPPORT_DOORBELL,
     "aqara.lock.wbzac1": (
         WITH_LI_BATTERY | SUPPORT_ALARM |
-        SUPPORT_DOORBELL | SUPPORT_WIFI | SUPPORT_CAMERA)
+        SUPPORT_DOORBELL | SUPPORT_WIFI | SUPPORT_CAMERA),
+    "aqara.lock.bzacn4": (
+        SUPPORT_ALARM | SUPPORT_DOORBELL)
 }
 
 LOCK_NOTIFICATIOIN = {
@@ -25,13 +27,28 @@ LOCK_NOTIFICATIOIN = {
         "0": "Door is open",
         "1": "Door is closed",
         "2": "Door is not close",
-        "3": "Doorbell is ringing"},
+        "3": "Doorbell is ringing",
+        "4": "Lock is damaged",
+        "5": "Door is conceal",
+        "6": "Other 1",
+        "7": "Other 2"},
+    "door": {
+        "default": "door state changed",
+        "0": "Door is open",
+        "1": "Open Door",
+        "2": "Door is not close"},
     "unlock from inside": {"default": "Unlock from Inside"},
     "someone detected": {"default": "Someone is lingering at the door"},
     "li battery notify":
         {"default": "Li Battery notify",
          "0": "Li Battery is abnormal",
          "1": "Li Battery is normal"},
+    "battery notify":
+        {"default": "Battery notify",
+         "0": "Battery is die",
+         "1": "Battery level is low",
+         "2": "Battery level is middle",
+         "3": "Battery level is full"},
     "camera connected": {"default": "Camera is connected"},
     "open in away mode": {
         "default":
@@ -47,7 +64,22 @@ LOCK_NOTIFICATIOIN = {
         "0": "Away-from-home mode is removed",
         "1": "Away-from-home mode is enabled"},
     "nfc added": {"default": "Added NFC card or Tag"},
-    "verification failed": {"default": "door lock verifications failed"},
-    "user_1": {"default": "Unlocked with Keypad by user 1"},
-    "user_2": {"default": "Unlocked with Keypad by user 2"},
+    "nfc removed": {"default": "Removed NFC card or Tag"},
+    "verification failed": {
+        "default": "door lock verifications failed",
+        "3235774464": "Frequent door opening failures due to incorrect passwords",
+        "3235774465": "Frequent door opening failures due to incorrect fingerprints",
+        "3235774469": "Frequent door openings with abnormal keys",
+        "3235774470": "Foreign objects in the keyhole",
+        "3235774471": "Keys not removed",
+        "3235774472": "Frequent door opening failures with incorrect NFC",
+        "3235774473": "Door unlocked after timeout",
+        "3235774474": "Multiple verification failures (advanced protection)",
+        "3235778564": "Automatic lock body abnormal"},
+    "user added": {
+        "default": "Add User"},
+    "user removed": {
+        "default": "Remove User"},
+    "all user removed": {
+        "default": "Remove All User"},
 }
