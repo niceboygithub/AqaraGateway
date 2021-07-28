@@ -135,6 +135,12 @@ ICONS = {
     'ble': 'mdi:bluetooth',
     'tvoc': 'mdi:cloud',
     'li battery': 'mdi:battery',
+    'key_id': 'mdi:lock',
+    'lock': 'mdi:lock',
+    'lock_event': 'mdi:lock',
+    'hear_rate': 'mdi:heart-pulse',
+    'breath_rate': 'mdi:lungs',
+    'body_movements': 'mdi:page-layout-body',
 }
 
 # Binary_sensor

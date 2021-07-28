@@ -71,6 +71,8 @@ async def async_setup_entry(hass, entry, add_entities):
             add_entities([GatewayKeyIDSensor(gateway, device, attr)])
         elif attr == 'lock_event':
             add_entities([GatewayLockEventSensor(gateway, device, attr)])
+        elif attr in ('hear_rate', 'breath_rate', 'body_movements'):
+            add_entities([GatewaySleepMonitorSensor(gateway, device, attr)])
         elif attr == 'illuminance':
             if (device['type'] == 'gateway' and
                     Utils.gateway_illuminance_supported(device['model'])):
@@ -331,7 +333,7 @@ class GatewayLockSensor(GatewaySensor):
     @property
     def icon(self):
         """Return the icon of the sensor."""
-        return "mdi:lock"
+        return ICONS.get(self._attr)
 
     @property
     def device_class(self):
@@ -395,7 +397,7 @@ class GatewayKeyIDSensor(GatewaySensor):
     @property
     def icon(self):
         """Return the icon of the sensor."""
-        return "mdi:lock"
+        return ICONS.get(self._attr)
 
     @property
     def device_class(self):
@@ -417,7 +419,7 @@ class GatewayLockEventSensor(GatewaySensor):
     @property
     def icon(self):
         """Return the icon of the sensor."""
-        return "mdi:lock"
+        return ICONS.get(self._attr)
 
     @property
     def device_class(self):
@@ -432,5 +434,29 @@ class GatewayLockEventSensor(GatewaySensor):
                 notify = LOCK_NOTIFICATIOIN[key]
                 self._state = notify.get(str(value), None) if notify.get(
                     str(value), None) else notify.get("default")
+
+        self.async_write_ha_state()
+
+
+class GatewaySleepMonitorSensor(GatewaySensor):
+    """Representation of a Aqara Sleep Monitor."""
+    # pylint: disable=too-many-instance-attributes
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return ICONS.get(self._attr)
+
+    @property
+    def device_class(self):
+        """Return the class of this device."""
+        return None
+
+    def update(self, data: dict = None):
+        """ update sleep monitor state """
+        # handle available change
+        for key, value in data.items():
+            if key == self._attr:
+                self._state = value
 
         self.async_write_ha_state()

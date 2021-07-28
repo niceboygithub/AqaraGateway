@@ -765,6 +765,13 @@ DEVICES_AIOT = [{
         ['13.1.85', 'alarm', 'tvoc_level', 'air_quality'],
         ['14.1.85', None, 'unit', None],
     ]
+}, {
+    'lumi.lunar.acn01': ["Aqara", "Smart Sleep Monitor", "ZNSMBL11LM"],
+    'params': [
+        ['0.8.85', 'heart rate', 'heart_rate', 'sensor'],
+        ['0.9.85', 'breath rate', 'breath_rate', 'sensor'],
+        ['0.10.85', 'body movements', 'body_movements', 'sensor'],
+    ]
 }]
 
 DEVICES_MIOT = [{
