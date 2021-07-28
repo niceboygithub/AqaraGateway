@@ -103,7 +103,6 @@ DEVICES = [{
 }, {
     # dual channel on/off, power measurement
     'lumi.relay.c2acn01': ["Aqara", "Relay", "LLKZMK11LM"],  # tested
-    # 'lumi.relay.c4acn01': ["Aqara", "Relay", "LLKZMK11LM"],
     'lumi.ctrl_ln2': ["Aqara", "Double Wall Switch", "QBKG12LM"],
     'lumi.ctrl_ln2.aq1': ["Aqara", "Double Wall Switch", "QBKG12LM"],
     'lumi.switch.b2nacn02': ["Aqara", "Double Wall Switch D1", "QBKG24LM"],
@@ -115,6 +114,28 @@ DEVICES = [{
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
         # [?, 'enable_motor_mode', 'interlock', None]
+        ['13.1.85', None, 'button_1', None],
+        ['13.2.85', None, 'button_2', None],
+        ['13.5.85', None, 'button_both', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # four channel on/off, power measurement
+    'lumi.relay.c4acn01': ["Aqara", "Relay", "LLKZMK11LM"],
+    'params': [
+        ['0.11.85', 'load_voltage', 'power', None],
+        ['0.12.85', 'channel_0_load_power', 'power', 'sensor'],
+        ['0.13.85', 'channel_0', 'consumption', 'sensor'],
+        ['0.22.85', 'channel_1_load_power', 'power', 'sensor'],
+        ['0.23.85', 'channel_1', 'consumption', 'sensor'],
+        ['0.32.85', 'channel_2_load_power', 'power', 'sensor'],
+        ['0.33.85', 'channel_2', 'consumption', 'sensor'],
+        ['0.42.85', 'channel_3_load_power', 'power', 'sensor'],
+        ['0.43.85', 'channel_3', 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        ['4.4.85', 'channel_3', 'channel 4', 'switch'],
         ['13.1.85', None, 'button_1', None],
         ['13.2.85', None, 'button_2', None],
         ['13.5.85', None, 'button_both', None],
@@ -249,6 +270,7 @@ DEVICES = [{
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
+        ['14.11.85', None, 'dual_color_temperature_mode', None],
         ['14.7.85', None, 'dynamic', None],
     ]
 }, {
