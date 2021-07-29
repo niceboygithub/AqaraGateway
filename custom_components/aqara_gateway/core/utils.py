@@ -675,7 +675,8 @@ DEVICES_AIOT = [{
 }, {
     # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
     'lumi.switch.n0agl1': ["Aqara", "Relay T1", "SSM-U01"],
-    'lumi.switch.n0acn1': ["Aqara", "Relay T1", "DLKZMK12LM"],
+    'lumi.switch.n0acn1': ["Aqara", "Relay T1", "DLKZMK11LM"],
+    'lumi.switch.n0acn2': ["Aqara", "Relay T1", "DLKZMK11LM"],
     'lumi.plug.maeu01': ["Aqara", "Plug", "SP-EUC01"],
     'params': [
         ['4.1.85', '4.1.85', 'switch', 'switch'],
@@ -885,6 +886,7 @@ DEVICES_MIOT = [{
     # with N, https://www.aqara.com/en/single_switch_T1_with-neutral.html
     'lumi.switch.n0agl1': ["Aqara", "Relay T1", "SSM-U01"],
     'lumi.switch.n0acn1': ["Aqara", "Relay T1", "DLKZMK11LM"],
+    'lumi.switch.n0acn2': ["Aqara", "Relay T1", "DLKZMK11LM"],
     'lumi.plug.maeu01': ["Aqara", "Plug", "SP-EUC01"],
     'mi_spec': [
         ['2.1', '2.1', 'switch', 'switch'],
