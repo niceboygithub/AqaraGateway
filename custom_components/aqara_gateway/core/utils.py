@@ -515,9 +515,22 @@ DEVICES = [{
         [None, None, 'lock_event', 'sensor'],
     ]
 }, {
+    'lumi.airrtc.tcpecn01': ["Aqara", "Thermostat S1", "KTWKQ02ES"],
     # https://github.com/AlexxIT/XiaomiGateway3/issues/101
     'lumi.airrtc.tcpecn02': ["Aqara", "Thermostat S2", "KTWKQ03ES"],
     'params': [
+        ['3.1.85', 'power_status', 'power', None],
+        ['3.2.85', None, 'current_temperature', None],
+        ['14.2.85', 'ac_state', 'climate', 'climate'],
+        ['14.8.85', None, 'mode', None],
+        ['14.9.85', None, 'target_temperature', None],
+        ['14.10.85', None, 'fan_mode', None],
+        ['14.16.85', None, 'reboot', None],
+    ]
+}, {
+    'lumi.airrtc.tcpecn02': ["Aqara", "Thermostat (CO2)", "KTWKQ04ES"],
+    'params': [
+        ['0.1.85', None, 'carbon_dioxide', 'sesor'],
         ['3.1.85', 'power_status', 'power', None],
         ['3.2.85', None, 'current_temperature', None],
         ['14.2.85', 'ac_state', 'climate', 'climate'],
