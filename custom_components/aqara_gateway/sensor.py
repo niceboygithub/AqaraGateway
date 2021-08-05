@@ -7,6 +7,7 @@ from homeassistant.const import (
     ATTR_VOLTAGE,
     STATE_PROBLEM,
 )
+from homeassistant.components.sensor import SensorEntity
 
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
@@ -92,7 +93,7 @@ async def async_unload_entry(hass, entry):
     return True
 
 
-class GatewaySensor(GatewayGenericDevice):
+class GatewaySensor(GatewayGenericDevice, SensorEntity):
     """ Xiaomi/Aqara Sensors """
 
     def __init__(
@@ -114,6 +115,10 @@ class GatewaySensor(GatewayGenericDevice):
             self._lqi = None
             self._voltage = None
 
+        if attr == 'consumption':
+            self._attr_state_class = 'measurement'
+            self._attr_last_reset = None
+
         super().__init__(gateway, device, attr)
 
     @property
@@ -124,6 +129,8 @@ class GatewaySensor(GatewayGenericDevice):
     @property
     def device_class(self):
         """return device class."""
+        if "consumption" == self._attr:
+            return "energy"
         return self._attr
 
     @property
