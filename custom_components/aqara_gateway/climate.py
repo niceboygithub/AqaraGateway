@@ -23,7 +23,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     """Perform the setup for Xiaomi/Aqara devices."""
     def setup(gateway: Gateway, device: dict, attr: str):
         async_add_entities([
-            AqaraGenericClimate(gateway, device, attr, config_entry)
+            AqaraGenericClimate(gateway, device, attr)
         ])
 
     aqara_gateway: Gateway = hass.data[DOMAIN][config_entry.entry_id]
@@ -40,9 +40,9 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
     # pylint: disable=too-many-instance-attributes
     """Initialize the AqaraGenericClimate."""
 
-    def __init__(self, device, name, data_key, config_entry):
+    def __init__(self, device, name, attr):
         """Initialize the AqaraGenericClimate."""
-        self._data_key = data_key
+        self._attr = attr
         self._current_hvac = None
         self._current_temp = None
         self._fan_mode = None
@@ -50,7 +50,7 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
         self._is_on = None
         self._state = None
         self._target_temp = 0
-        super().__init__(device, name, config_entry)
+        super().__init__(device, name, attr)
 
     @property
     def precision(self) -> float:
