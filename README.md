@@ -59,85 +59,42 @@ Then restart gateway by reboot command.
 
 ## Flash M1S Custom firmware method
 ```shell
-cd /tmp
-wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
-chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/ControlBridge.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/M1S/3.2.8_0009.0526/ControlBridge.bin
-[ "$(md5sum /tmp/ControlBridge.bin)" = "799ecb705ce22049566a0d772c93c2b2  /tmp/ControlBridge.bin" ] && zigbee_msnger zgb_ota /tmp/ControlBridge.bin
-[ "$(zigbee_msnger get_zgb_ver | grep coor)" != "coor ver =0526" ] && zigbee_msnger zgb_ota /tmp/ControlBridge.bin
-/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/M1S/3.2.8_0009.0526//linux_3.2.8_0009.0526.bin
-fw_update /tmp/linux.bin
-echo 3 >/proc/sys/vm/drop_caches; sleep 1; sync
-/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M1S/3.2.8_0009.0526/rootfs_3.2.8_0009.0526_modified.bin
-killall homekitserver; fw_update /tmp/rootfs.bin
-sync; sync
+cd /tmp && wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1" && chmod a+x /tmp/curl
+/tmp/curl -s -k -L -o /tmp/m1s_update.sh https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M1S/m1s_update.sh
+chmod a+x /tmp/m1s_update.sh && /tmp/m1s_update.sh
 ```
 If there is no any error generated, then restart gateway by reboot command.
 
 ## Flash M2 Custom firmware method
 ```shell
-cd /tmp
-wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
-chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/ControlBridge.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/M2/3.2.8_0006.0526/ControlBridge.bin
-[ "$(md5sum /tmp/ControlBridge.bin)" = "799ecb705ce22049566a0d772c93c2b2  /tmp/ControlBridge.bin" ] && zigbee_msnger zgb_ota /tmp/ControlBridge.bin
-[ "$(zigbee_msnger get_zgb_ver | grep coor)" != "coor ver =0526" ] && zigbee_msnger zgb_ota /tmp/ControlBridge.bin
-/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/M2/3.2.8_0006.0526/linux_3.2.8_0006.0526.bin
-fw_update /tmp/linux.bin
-echo 3 >/proc/sys/vm/drop_caches; sleep 1; sync
-/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M2/3.2.8_0006.0526/rootfs_3.2.8_0006.0526_modified.bin
-killall homekitserver; fw_update /tmp/rootfs.bin
-sync; sync
+cd /tmp && wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1" && chmod a+x /tmp/curl
+/tmp/curl -s -k -L -o /tmp/m2_update.sh https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M2/m2_update.sh
+chmod a+x /tmp/m2_update.sh && /tmp/m2_update.sh
 ```
 If there is no any error generated, then restart gateway by reboot command.
 
 ## Flash P3 Custom firmware method
 ```shell
-cd /tmp
-wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
-chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/ControlBridge.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/P3/3.2.8_0007.0526/ControlBridge.bin
-[ "$(md5sum /tmp/ControlBridge.bin)" = "799ecb705ce22049566a0d772c93c2b2  /tmp/ControlBridge.bin" ] && zigbee_msnger zgb_ota /tmp/ControlBridge.bin
-[ "$(zigbee_msnger get_zgb_ver | grep coor)" != "coor ver =0526" ] && zigbee_msnger zgb_ota /tmp/ControlBridge.bin
-/tmp/curl -s -k -L -o /tmp/IRController.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/P3/3.2.8_0007.0526/IRController.bin
-[ "$(md5sum /tmp/IRController.bin)" = "4c8209564354944f2f7fdb12efd09db8  /tmp/IRController.bin" ] && ir_ota ttyS2 115200 /tmp/IRController.bin
-/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/P3/3.2.8_0007.0526/linux_3.2.8_0007.0526.bin
-fw_update /tmp/linux.bin
-echo 3 >/proc/sys/vm/drop_caches; sleep 1; sync
-/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/P3/3.2.8_0007.0526/rootfs_3.2.8_0007.0526_modified.bin
-killall homekitserver; fw_update /tmp/rootfs.bin
-sync; sync
+cd /tmp && wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1" && chmod a+x /tmp/curl
+/tmp/curl -s -k -L -o /tmp/p3_update.sh https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/P3/p3_update.sh
+chmod a+x /tmp/p3_update.sh && /tmp/p3_update.sh
 ```
 If there is no any error generated, then restart gateway by reboot command.
 
 ## Flash H1 Custom firmware method
 ```shell
-cd /tmp
-wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
-chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/linux.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/original/H1/3.0.8_0001.0512/linux_3.0.8_0001.0512.bin
-fw_update /tmp/linux.bin
-echo 3 >/proc/sys/vm/drop_caches; sleep 1; sync
-/tmp/curl -s -k -L -o /tmp/rootfs.bin https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/H1/3.0.8_0001.0512/rootfs_3.0.8_0001.0512_modified.bin
-killall homekitserver; fw_update /tmp/rootfs.bin
-sync; sync
+cd /tmp && wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1" && chmod a+x /tmp/curl
+/tmp/curl -s -k -L -o /tmp/h1_update.sh https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/H1/h1_update.sh
+chmod a+x /tmp/h1_update.sh && /tmp/h1_update.sh
 ```
 If there is no any error generated, then restart gateway by reboot command.
 
 ## Flash E1 Custom firmware method
 
 ```shell
-cd /tmp
-wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"
-chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/coor.bin https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/original/E1/3.1.3_0066/Network-Co-Processor.ota
-[ "$(md5sum /tmp/coor.bin)" = "59b527769c2ecb2b840967f97b88eaa3  /tmp/coor.bin" ] && zigbee_msnger zgb_ota /tmp/coor.bin
-/tmp/curl -s -k -L -o /tmp/kernel https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/original/E1/3.1.3_0066/kernel_3.1.3_0066
-[ "$(md5sum /tmp/kernel)" = "c5fb24da4d0ba28181a1c0c7f71e5497  /tmp/kernel" ] && fw_update.sh /tmp/kernel
-echo 3 >/proc/sys/vm/drop_caches; sleep 1; sync
-/tmp/curl -s -k -L -o /tmp/rootfs.sqfs https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/modified/E1/3.1.3_0066/rootfs_3.1.3_0066_modified.sqfs
-[ "$(md5sum /tmp/rootfs.sqfs)" = "2a8c23fa8e0f742269f0eb1dc13bbc7c  /tmp/rootfs.sqfs" ] && fw_update.sh /tmp/rootfs.sqfs
-sync; sync
+cd /tmp && wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1" && chmod a+x /tmp/curl
+/tmp/curl -s -k -L -o /tmp/e1_update.sh https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/modified/E1/e1_update.sh
+chmod a+x /tmp/e1_update.sh && /tmp/e1_update.sh
 ```
 <img src="https://raw.githubusercontent.com/niceboygithub/AqaraGateway/master/E1_flash_done.png">
 
