@@ -3,13 +3,13 @@
 Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM)**.
 Gateway support **Zigbee 3**.
 
-This integration was based on the development of <a href=https://github.com/AlexxIT/XiaomiGateway3/>@AlexxIT</a>, Thanks Alex.
+This integration was based on the development of [@AlexxIT](https://github.com/AlexxIT/XiaomiGateway3/), Thanks Alex.
 
 **ATTENTION:** The component **only works on modified firmware (M2) or the gateway which was enabled telnet.**
 
-For Gateway M2, to flash modified firmware to M2, please use <a href="https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe"> AqaraGateway.exe </a> to flash customize firmware. Need to open the case of gateway and wired out the UART.
+For Gateway M2 and Switch H1 Hub, to flash modified firmware to M2, please use [AqaraGateway.exe](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe) to flash customize firmware. Need to open the case of gateway and wired out the UART of [M2](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/images/M2/m2_uart.png) or [H1](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/images/H1/h1_uart.png).
 
-For Gateway M1S CN, AirCondition P3 CN, Smart Hub H1 CN, Hub E1 CN, please switch to **Mi Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor).
+For Gateway M1S CN, AirCondition P3 CN, Hub E1 CN, please switch to **Mi Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor).
 
 ## Installation
 
@@ -36,7 +36,7 @@ Or Download and copy `custom_components/aqara_gateway` folder to `custom_compone
 
 
 ## Manually Enable Telnet
-You can use <a href="https://gist.github.com/zvldz/1bd6b21539f84339c218f9427e022709"> custom open telnet command </a> way 2 or way 3 to enable telnet in *Mija Home mode*, then flash modification firmwares to <a href="https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/M1S"> M1S </a>, <a href="https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/P3"> P3 </a>, <a href="https://github.com/niceboygithub/AqaraCameraHubfw/tree/main/modified/E1/"> E1 </a>,  if you want use them in Aqara Home. No need to open the case of gateway.
+You can use [custom open telnet command](https://gist.github.com/zvldz/1bd6b21539f84339c218f9427e022709) way 2 or way 3 to enable telnet in *Mija Home mode*, then flash modification firmwares to [M1S](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/M1S), [P3](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/P3), [E1](https://github.com/niceboygithub/AqaraCameraHubfw/tree/main/modified/E1),  if you want use them in Aqara Home. No need to open the case of gateway.
 
 After telnet to gateway via putty, there are two methods (Flash or Not) to enable telnet and public mqtt.
 
@@ -103,7 +103,7 @@ If there is no any error generated, then restart gateway by reboot command.
 *Note: It updates firmware only if the checksum of the downloaded file is correct.*
 
 ## For G2H
-There is a way to <a href="https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/binutils/README.md#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils">enable telnetd</a>.
+There is a way to [enable telnetd](https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/binutils/README.md#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils).
 
 ## How to check this component is working properly.
 Go to Configuration->Info->system_health
