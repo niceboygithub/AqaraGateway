@@ -544,9 +544,8 @@ DEVICES = [{
         ['13.1.85', None, 'channels', 'sensor']
     ]
 }, {
-    # button switch with rotation
+    # button rotation
     'lumi.remote.rkba01': ["Aqara", "Smart Knob H1", "ZNXNKG02LM"],  # @miniknife88
-    'lumi.switch.rkna01': ["Aqara", "Smart Knob Switch H1", "ZNXNKG01LM"],  # @miniknife88
     'params': [
         ['1.16.85', 'slee_time', 'slee_time', None],
         ['13.1.85', None, 'button', None],
@@ -554,9 +553,41 @@ DEVICES = [{
         ['0.25.85', 'action_duration', 'action_time', None],
         ['0.29.85', 'rotate_angle', 'rotate_angle', None],  # while hold
         ['0.30.85', 'action_duration', 'rotate_angle', None],  # while hold
-        [None, None, 'action', 'binary_sensor'],
+        [None, None, 'switch', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor']
     ]
+}, {
+    # button switch with rotation
+    'lumi.switch.rkna01': ["Aqara", "Smart Knob Switch H1", "ZNXNKG01LM"],  # @miniknife88
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['0.24.85', 'rotate_angle', 'rotate_angle', None],
+        ['0.25.85', 'action_duration', 'action_time', None],
+        ['0.29.85', 'rotate_angle', 'rotate_angle', None],  # while hold
+        ['0.30.85', 'action_duration', 'rotate_angle', None],  # while hold
+        ['1.16.85', 'slee_time', 'slee_time', None],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        [None, None, 'switch', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['13.8.85', None, 'mode', None],
+        ['14.6.85', None, 'sensitivity', None],
+        ['14.7.85', 'single_click_control_mode', 'mode', None],
+        ['14.8.85', 'double_click_control_mode', 'mode', None],
+        ['14.9.85', 'long_press_control_mode', 'mode', None],
+    ]
+#}, {
+#    # cube with rotation
+#    'lumi.remote.cagl01': ["Aqara", "Cube H1", "MFKZQ11LM"],  # @Kris
+#    'lumi.remote.cagl02': ["Aqara", "Cube H1 Pro", "MFKZQ12LM"],  # @Kris
+#    'params': [
+#        ['0.2.85', None, 'duration', None],
+#        ['0.3.85', None, 'angle', None],
+#        ['13.1.85', None, 'action', 'binary_sensor'],
+#        ['8.0.2001', 'battery', 'battery', 'sensor']
+#    ]
 }]
 
 DEVICES_AIOT = [{
