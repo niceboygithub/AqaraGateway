@@ -1,7 +1,7 @@
 """Support for Xiaomi Aqara sensors."""
 from datetime import timedelta
 
-from homeassistant.util.dt import now
+from homeassistant.util.dt import now, utc_from_timestamp
 from homeassistant.const import (
     ATTR_BATTERY_LEVEL,
     ATTR_VOLTAGE,
@@ -117,7 +117,7 @@ class GatewaySensor(GatewayGenericDevice, SensorEntity):
 
         if attr == 'consumption':
             self._attr_state_class = 'measurement'
-            self._attr_last_reset = None
+            self._attr_last_reset = utc_from_timestamp(1379376000)
 
         super().__init__(gateway, device, attr)
 
