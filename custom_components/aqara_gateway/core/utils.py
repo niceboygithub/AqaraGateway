@@ -818,13 +818,28 @@ DEVICES_AIOT = [{
         # ['0.10.85', 'body movements', 'body_movements', 'sensor'],  # not implement
         ['14.35.85', None, 'mode', 'sensor'],
     ]
+}, {
+    'lumi.curtain.acn002': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
+    'params': [
+        ['0.1.85', None, 'working_time', None],
+        ['1.1.85', 'curtain_level', 'position', None],
+        ['4.1.85', None, 'motor_stroke', None],
+        ['4.2.85', None, 'polarity', None],
+        ['13.1.85', None, 'charging_status', None],
+        ['14.2.85', None, 'mode', None],
+        ['14.3.85', None, 'speed', None],
+        ['14.4.85', 'run_state', 'run_state', None],
+        ['14.8.85', None, 'motor', 'cover'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['8.0.2041', None, 'model', None],
+    ]
 }]
 
 DEVICES_MIOT = [{
     # with neutral wire
     'lumi.switch.n1acn1': ["Aqara", "Single Wall Switch H1 Pro", "QBKG30LM"],  # @Kris
     'lumi.switch.b1nc01': ["Aqara", "Single Wall Switch E1", "QBKG40LM"],
-    'params': [
+    'mi_spec': [
         ['2.1', 'channel_0', 'channel 1', 'switch'],
         ['4.1', None, 'consumption', None],
         ['4.2', 'load_power', 'power', 'sensor'],
@@ -951,7 +966,7 @@ DEVICES_MIOT = [{
 }, {
     # button switch, no retain
     'lumi.remote.b18ac1': ["Aqara", "Single Wall Button H1", "WXKG14LM"],
-    'params': [
+    'mi_spec': [
         ['3.1', None, 'button', None],
         [None, None, 'switch', 'binary_sensor'],
         ['5.1', 'battery', 'battery', 'sensor'],
@@ -1007,12 +1022,32 @@ DEVICES_MIOT = [{
     ]
 }, {
     'lumi.airmonitor.acn01': ["Aqara", "Smart TVOC Air Quality Monitor", "VOCKQJK11LM"],
-    'params': [
+    'mi_spec': [
         ['3.1', '3.1', 'temperature', 'sensor'],
         ['3.2', '3.2', 'humidity', 'sensor'],
         ['3.3', '3.3', 'tvoc', 'sensor'],
         ['4.1', '4.1', 'tvoc_level', 'air_quality'],
         ['4.2', '4.2', 'battery', 'sensor'],
+    ]
+}, {
+    'lumi.curtain.acn002': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
+    'mi_spec': [
+        ['1.4', '1.4', 'fw_ver', None],
+        ['2.1', '2.1', 'fault', None],
+        ['2.2', '2.2', 'motor', 'cover'],
+        ['2.3', '2.3', 'mode', None],
+        ['2.4', '2.4', 'position', None],
+        ['2.5', '2.5', 'current_position', None],
+        ['2.6', '2.6', 'run_state', None],
+        ['2.7', '2.7', 'polarity', None],
+        ['3.1', '3.1', 'status_low_energy', None],
+        ['3.2', '3.2', 'voltage', None],
+        ['3.3', '3.3', 'charging_status', None],
+        ['3.4', '3.4', 'battery', 'sensor'],
+        ['5.1', '5.1', 'motor_stroke', None],
+        ['5.2', '5.2', 'working_time', None],
+        ['5.5', '5.5', 'speed', None],
+        ['6.1', '6.1', 'unpair', None],
     ]
 }]
 
@@ -1084,7 +1119,7 @@ GLOBAL_PROP = {
     '8.0.2215': '8.0.2215',
     '8.0.2228': '8.0.2228',
     '8.0.2229': '8.0.2229',
-    '8.0.2230': '8.0.2230',
+    '8.0.2230': 'manufacturer_id',
     '8.0.2231': '8.0.2231',
     '8.0.9001': 'battery_end_of_life',
     '8.1.2162': 'channel_2_loading_type',

@@ -3,6 +3,7 @@
 from homeassistant.const import (
     # ATTR_BATTERY_LEVEL,
     # ATTR_TEMPERATURE,
+    CONDUCTIVITY,
     DEVICE_CLASS_BATTERY,
     DEVICE_CLASS_HUMIDITY,
     DEVICE_CLASS_ILLUMINANCE,
@@ -12,10 +13,10 @@ from homeassistant.const import (
     DEVICE_CLASS_CO2,
     ENERGY_WATT_HOUR,
     ENERGY_KILO_WATT_HOUR,
-    # LIGHT_LUX,
-    # PERCENTAGE,
+    LIGHT_LUX,
+    PERCENTAGE,
     POWER_WATT,
-    # PRESSURE_HPA,
+    PRESSURE_HPA,
     TEMP_CELSIUS,
     CONCENTRATION_PARTS_PER_BILLION,
     CONCENTRATION_PARTS_PER_MILLION,
@@ -107,20 +108,20 @@ DOMAINS = ['air_quality',
            'switch']
 
 UNITS = {
-    DEVICE_CLASS_BATTERY: '%',
-    DEVICE_CLASS_HUMIDITY: '%',
-    DEVICE_CLASS_ILLUMINANCE: 'lx',  # zb light and motion and ble flower - lux
+    DEVICE_CLASS_BATTERY: PERCENTAGE,
+    DEVICE_CLASS_HUMIDITY: PERCENTAGE,
+    DEVICE_CLASS_ILLUMINANCE: LIGHT_LUX,  # zb light and motion and ble flower - lux
     DEVICE_CLASS_POWER: POWER_WATT,
-    DEVICE_CLASS_PRESSURE: 'hPa',
+    DEVICE_CLASS_PRESSURE: PRESSURE_HPA,
     DEVICE_CLASS_TEMPERATURE: TEMP_CELSIUS,
     DEVICE_CLASS_CO2: CONCENTRATION_PARTS_PER_MILLION,
-    'conductivity': "µS/cm",
+    'conductivity': CONDUCTIVITY,
     'consumption': ENERGY_KILO_WATT_HOUR,
     'gas density': '% LEL',
     'smoke density': '% obs/ft',
-    'moisture': '%',
+    'moisture': PERCENTAGE,
     'tvoc': CONCENTRATION_PARTS_PER_BILLION,
-    'li battery': '%',
+    'li battery': PERCENTAGE,
     # 'link_quality': 'lqi',
     # 'rssi': 'dBm',
     # 'msg_received': 'msg',
@@ -171,7 +172,7 @@ AC_STATE_FAN = {
 }
 
 # Cover
-RUN_STATES = [STATE_CLOSING, STATE_OPENING, None]
+RUN_STATES = {0: STATE_CLOSING, 1: STATE_OPENING, 2: "stop", 3: "hinder_stop"}
 
 # Switch Sensor
 # https://github.com/Koenkk/zigbee-herdsman-converters/blob/master/converters/fromZigbee.js#L4738

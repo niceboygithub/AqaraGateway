@@ -203,6 +203,14 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             updates={CONF_HOST: discovery_info[CONF_HOST]}
         )
 
+        if not self._check_port(23):
+            return self.async_abort(reason="connection_error")
+        ret = gateway.is_aqaragateway(self._host,
+                                        self._password,
+                                        self._model)
+        if "error" in ret['status']:
+            return self.async_abort(reason="connection_error")
+
         if (fwcloud == "miot" and
                 discovery_info.get('type') == '_aqara-setup._tcp.local.'):
             return await self.async_step_user()
