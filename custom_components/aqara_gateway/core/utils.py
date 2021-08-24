@@ -354,6 +354,8 @@ DEVICES = [{
     # door window sensor
     'lumi.sensor_magnet': ["Xiaomi", "Door Sensor", "MCCGQ01LM"],
     'lumi.sensor_magnet.aq2': ["Aqara", "Door Sensor", "MCCGQ11LM"],
+    'lumi.magnet.akr01': ["Aqara", "Door Sensor P1", "MCCGQ13LM"],
+    'lumi.magnet.ca01': ["Aqara", "Door Sensor P1", "MCCGQ13LM"],
     'params': [
         ['3.1.85', 'status', 'contact', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
