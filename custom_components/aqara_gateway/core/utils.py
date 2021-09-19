@@ -775,6 +775,7 @@ DEVICES_AIOT = [{
 }, {
     # door window sensor
     'lumi.magnet.agl02': ["Aqara", "Door Sensor T1", "MCCGQ12LM"],  # @Kris
+    'lumi.magnet.acn001': ["Aqara", "Door Sensor E1", "MCCGQ14LM"],
     'params': [
         ['3.1.85', 'status', 'contact', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
@@ -846,6 +847,13 @@ DEVICES_AIOT = [{
         ['14.8.85', None, 'motor', 'cover'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
         ['8.0.2041', None, 'model', None],
+    ]
+}, {
+    # water leak sensor
+    'lumi.flood.acn001': ["Aqara", "Water Leak Sensor E1", "SJCGQ13LM"],
+    'params': [
+        ['3.1.85', 'alarm', 'moisture', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
 }]
 
@@ -1019,6 +1027,7 @@ DEVICES_MIOT = [{
 },{
     # door window sensor
     'lumi.magnet.agl02': ["Aqara", "Door Sensor T1", "MCCGQ12LM"],  # @Kris
+    'lumi.magnet.acn001': ["Aqara", "Door Sensor E1", "MCCGQ14LM"],
     'mi_spec': [
         ['2.1', 'status', 'contact', 'binary_sensor'],
         ['5.1', None, 'elapsed_time', None],
@@ -1083,6 +1092,13 @@ DEVICES_MIOT = [{
         ['5.2', '5.2', 'working_time', None],
         ['5.5', '5.5', 'speed', None],
         ['6.1', '6.1', 'unpair', None],
+    ]
+}, {
+    # water leak sensor
+    'lumi.flood.acn001': ["Aqara", "Water Leak Sensor E1", "SJCGQ13LM"],
+    'params': [
+        ['2.1', 'alarm', 'moisture', 'binary_sensor'],
+        ['6.1', 'battery', 'battery', 'sensor'],
     ]
 }]
 
