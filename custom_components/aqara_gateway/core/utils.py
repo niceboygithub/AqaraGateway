@@ -444,10 +444,19 @@ DEVICES = [{
 }, {
     'lumi.lock.aq1': ["Aqara", "Door Lock S1", "ZNMS11LM"],
     'lumi.lock.acn02': ["Aqara", "Door Lock S2", "ZNMS12LM"],
-    'lumi.lock.acn03': ["Aqara", "Door Lock S2 Pro", "ZNMS12LM"],
     'params': [
         ['13.1.85', None, 'key_id', 'sensor'],
         ['13.20.85', 'lock_state', 'lock', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
+}, {
+    'lumi.lock.acn03': ["Aqara", "Door Lock S2 Pro", "ZNMS12LM"],
+    'params': [
+        ['13.1.85', None, 'key_id', 'sensor'],
+        ['13.26.85', 'door_state', 'door', 'binary_sensor'],
+        ['3.1.85', 'reverse_lock_state', 'occupancy', 'binary_sensor'],
+        ['13.28.85', None, 'lock_state', 'sensor'],
+        ['13.25.85', None, 'lock_action', 'sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
 }, {
@@ -743,6 +752,7 @@ DEVICES_AIOT = [{
 }, {
     # button switch, no retain
     'lumi.remote.b18ac1': ["Aqara", "Single Wall Button H1", "WXKG14LM"],
+    'lumi.remote.acn003': ["Aqara", "Single Wall Button E1", "WXKG16LM"],
     'params': [
         ['13.1.85', None, 'button', None],
         [None, None, 'switch', 'binary_sensor'],
@@ -752,6 +762,7 @@ DEVICES_AIOT = [{
     # multi button switch, no retain
     'lumi.remote.b286acn03': ["Aqara", "Double Wall Button T1", "WXKG04LM"],   # @darkbao
     'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
+    'lumi.remote.acn004': ["Aqara", "Double Wall Button E1", "WXKG17LM"],
     'params': [
         ['4.13.85', None, 'mode', None],
         ['13.1.85', None, 'button_1', None],
@@ -985,6 +996,27 @@ DEVICES_MIOT = [{
         ['5.1', 'battery', 'battery', 'sensor'],
     ]
 }, {
+    'lumi.remote.acn003': ["Aqara", "Single Wall Button E1", "WXKG16LM"],
+    'mi_spec': [
+        ['2.1', None, 'button: 1', None],  # single
+        ['2.2', None, 'button: 2', None],  # double
+        ['2.3', None, 'button: 16', None],  # long
+        ['3.2', '3.2', 'battery', 'sensor'],
+        [None, None, 'action', 'sensor'],
+    ]
+}, {
+    'lumi.remote.acn004': ["Aqara", "Double Wall Button E1", "WXKG17LM"],
+    'mi_spec': [
+        ['2.1', None, 'button_1: 1', None],  # single
+        ['2.2', None, 'button_1: 2', None],  # double
+        ['2.3', None, 'button_1: 16', None],  # long
+        ['7.1', None, 'button_2: 1', None],  # single
+        ['7.2', None, 'button_2: 2', None],  # double
+        ['7.3', None, 'button_2: 16', None],  # long
+        ['3.2', '3.2', 'battery', 'sensor'],
+        [None, None, 'action', 'sensor'],
+    ]
+},{
     # door window sensor
     'lumi.magnet.agl02': ["Aqara", "Door Sensor T1", "MCCGQ12LM"],  # @Kris
     'mi_spec': [
