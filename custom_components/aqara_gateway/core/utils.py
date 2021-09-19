@@ -245,6 +245,7 @@ DEVICES = [{
     'ikea.light.led1546g12': ["IKEA", "Bulb E27 950 lm", "LED1546G12"],
     'ikea.light.led1536g5': ["IKEA", "Bulb E14 400 lm", "LED1536G5"],
     'ikea.light.led1537r6': ["IKEA", "Bulb GU10 400 lm", "LED1537R6"],
+    'lumi.light.cwac02': ["Aqara", "Bulb T1", "ZNLDP13LM"],  # @Kris
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
