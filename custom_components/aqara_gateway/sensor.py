@@ -116,8 +116,9 @@ class GatewaySensor(GatewayGenericDevice, SensorEntity):
             self._voltage = None
 
         if attr == 'consumption':
+            self._attr_state_class = 'total_increasing'
+        elif attr in UNITS:
             self._attr_state_class = 'measurement'
-            self._attr_last_reset = utc_from_timestamp(1379376000)
 
         super().__init__(gateway, device, attr)
 
