@@ -144,7 +144,7 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                     else:
                         value = data[ATTR_HS_COLOR].replace('0x', '')
                 else:
-                    value = data[ATTR_HS_COLOR]
+                    value = data[ATTR_HS_COLOR] * 3
                 rgb = color_util.rgb_hex_to_rgb_list(value)
                 if len(rgb) > 3:
                     self._white = rgb.pop()

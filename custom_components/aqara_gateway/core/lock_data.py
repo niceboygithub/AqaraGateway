@@ -34,9 +34,20 @@ LOCK_NOTIFICATIOIN = {
         "7": "Other 2"},
     "door": {
         "default": "door state changed",
-        "0": "Door is open",
-        "1": "Open Door",
-        "2": "Door is not close"},
+        "0": "Unknown",
+        "1": "The door cannot be locked",
+        "2": "The door is not closed",
+        "3": "The door is not locked",
+        "4": "The door is locked",
+        "5": "The door is auti-locked",
+        "6": "The door is unlocked",
+        "7": "The door is locked and auti-locked",
+        "8": "The door is left unlocked"},
+    "lock_event": {
+        "default": "Got lock event",
+        "0": "Unlock",
+        "1": "Lock"
+    },
     "unlock from inside": {"default": "Unlock from Inside"},
     "someone detected": {"default": "Someone is lingering at the door"},
     "li battery notify":

@@ -1104,6 +1104,13 @@ DEVICES_MIOT = [{
 }]
 
 GLOBAL_PROP = {
+    # lumi miot
+    '5.1': 'en_night_tip_light',
+    '5.2': 'overturn_light',
+    '5.3': 'config_time_period',
+    '6.1': 'poweroff_memory',
+    '7.1': 'temperature_alarm',
+    # lumi miio
     '0.11.85': 'load_voltage',
     '0.12.85': 'load_power',
     '0.13.85': 'consumption',
