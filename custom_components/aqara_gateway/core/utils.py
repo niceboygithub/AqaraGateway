@@ -360,6 +360,7 @@ DEVICES = [{
     'params': [
         ['3.1.85', 'status', 'contact', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['14.35.85', None, 'mode', None]
     ]
 }, {
     # motion sensor
@@ -1011,7 +1012,7 @@ DEVICES_MIOT = [{
         ['2.2', None, 'button: 2', None],  # double
         ['2.3', None, 'button: 16', None],  # long
         ['3.2', '3.2', 'battery', 'sensor'],
-        [None, None, 'action', 'sensor'],
+        [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
     'lumi.remote.acn004': ["Aqara", "Double Wall Button E1", "WXKG17LM"],
@@ -1023,7 +1024,7 @@ DEVICES_MIOT = [{
         ['7.2', None, 'button_2: 2', None],  # double
         ['7.3', None, 'button_2: 16', None],  # long
         ['3.2', '3.2', 'battery', 'sensor'],
-        [None, None, 'action', 'sensor'],
+        [None, None, 'switch', 'binary_sensor'],
     ]
 },{
     # door window sensor

@@ -315,7 +315,7 @@ class GatewayDoorSensor(GatewayBinarySensor, BinarySensorEntity):
         self._open_since = None
         self.is_metric = True
         self.has_since = False
-        if device['model'] in ('lumi.sensor_magnet.aq2', 'lumi.magnet.agl02'):
+        if device['model'] in ('lumi.sensor_magnet.aq2', 'lumi.magnet.agl02', 'lumi.magnet.ac01'):
             self.is_metric = False
             self.has_since = True
         super().__init__(gateway, device, attr)
