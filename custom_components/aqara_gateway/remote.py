@@ -121,3 +121,7 @@ class GatewayRemote(GatewayGenericDevice, ToggleEntity):
                 self.async_write_ha_state()
                 self._state = False
                 await self.async_refresh_toggle.async_call()
+            elif cmd == 'power':
+                self.gateway.send(self.device, {'power_tx': int(args[1])})
+            elif cmd == 'channel':
+                self.gateway.send(self.device, {'channel': int(args[1])})
