@@ -245,11 +245,20 @@ DEVICES = [{
     'ikea.light.led1546g12': ["IKEA", "Bulb E27 950 lm", "LED1546G12"],
     'ikea.light.led1536g5': ["IKEA", "Bulb E14 400 lm", "LED1536G5"],
     'ikea.light.led1537r6': ["IKEA", "Bulb GU10 400 lm", "LED1537R6"],
-    'lumi.light.cwac02': ["Aqara", "Bulb T1", "ZNLDP13LM"],  # @Kris
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
         ['14.2.85', 'colour_temperature', 'color_temp', None],
+    ]
+}, {
+    # light with brightness and color temp
+    'lumi.light.cwac02': ["Aqara", "Bulb T1", "ZNLDP13LM"],  # @Kris
+    'params': [
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['1.6.85', None, 'ms_to_turn_on', None],
+        ['1.7.85', 'light_level', 'brightness', None],
+        ['1.9.85', 'colour_temperature', 'color_temp', None],
+        ['1.14.85', None, 'ms_to_turn_off', None],
     ]
 }, {
     # light with brightness and color temp, rgb color
@@ -406,7 +415,7 @@ DEVICES = [{
     ]
 }, {
     'lumi.sen_ill.agl01': ["Aqara", "Light Sensor T1", "GZCGQ11LM"],
-    'mi_spec': [
+    'params': [
         ['0.3.85', None, 'illuminance', 'sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
         ['8.0.2097', None, 'detect_interval', None],
@@ -607,7 +616,6 @@ DEVICES = [{
 DEVICES_AIOT = [{
     # with neutral wire
     'lumi.switch.n1acn1': ["Aqara", "Single Wall Switch H1 Pro", "QBKG30LM"],  # @Kris
-    'lumi.switch.b1nc01': ["Aqara", "Single Wall Switch E1", "QBKG40LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -619,7 +627,6 @@ DEVICES_AIOT = [{
     # with neutral wire
 #    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 Pro", "QBKG31LM"],  # @miniknife88
-    'lumi.switch.b2nc01': ["Aqara", "Double Wall Switch E1", "QBKG41LM"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -681,6 +688,8 @@ DEVICES_AIOT = [{
     'lumi.switch.b1lc04': ["Aqara", "Single Wall Switch E1", "QBKG38LM"],
     'lumi.switch.b1laus01': ["Aqara", "Single Wall Switch US", "WS-USC01"],
     'lumi.switch.l1aeu1': ["Aqara", "Single Wall Switch EU H1", "WS-EUK01"],
+    # with neutral wire, not support power measurement
+    'lumi.switch.b1nc01': ["Aqara", "Single Wall Switch E1", "QBKG40LM"],
     'params': [
         ['4.1.85', 'channel_0', 'switch', 'switch'],  # or neutral_0?
         ['13.1.85', None, 'button', None],
@@ -690,6 +699,8 @@ DEVICES_AIOT = [{
     'lumi.switch.b2lc04': ["Aqara", "Double Wall Switch E1", "QBKG39LM"],
     'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.l2aeu1': ["Aqara", "Double Wall Switch EU H1", "WS-EUK02"],
+    # with neutral wire, not support power measurement
+    'lumi.switch.b2nc01': ["Aqara", "Double Wall Switch E1", "QBKG41LM"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -741,6 +752,12 @@ DEVICES_AIOT = [{
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
         # ['5.7', '5.7', 'voltage', 'sensor'],
+    ]
+}, {
+    'lumi.sen_ill.mgl01': ["Xiaomi", "Light Sensor", "GZCGQ01LM"],
+    'params': [
+        ['0.3.85', None, 'illuminance', 'sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
 }, {
     'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
@@ -862,7 +879,6 @@ DEVICES_AIOT = [{
 DEVICES_MIOT = [{
     # with neutral wire
     'lumi.switch.n1acn1': ["Aqara", "Single Wall Switch H1 Pro", "QBKG30LM"],  # @Kris
-    'lumi.switch.b1nc01': ["Aqara", "Single Wall Switch E1", "QBKG40LM"],
     'mi_spec': [
         ['2.1', 'channel_0', 'channel 1', 'switch'],
         ['4.1', None, 'consumption', None],
@@ -874,7 +890,6 @@ DEVICES_MIOT = [{
     # with neutral wire,
 #    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 Pro", "QBKG31LM"],
-    'lumi.switch.b2nc01': ["Aqara", "Double Wall Switch E1", "QBKG41LM"],
     'mi_spec': [
         ['2.1', 'channel_0', 'channel 1', 'switch'],
         ['3.1', 'channel_1', 'channel 2', 'switch'],
@@ -911,6 +926,8 @@ DEVICES_MIOT = [{
     'lumi.switch.b1lc04': ["Aqara", "Single Wall Switch E1", "QBKG38LM"],
     'lumi.switch.b1laus01': ["Aqara", "Single Wall Switch US", "WS-USC01"],
     'lumi.switch.l1aeu1': ["Aqara", "Single Wall Switch EU H1", "WS-EUK01"],
+    # with neutral wire, not support power measurement
+    'lumi.switch.b1nc01': ["Aqara", "Single Wall Switch E1", "QBKG40LM"],
     'mi_spec': [
         ['1.2', None, 'model', None],
         ['1.4', None, 'back_version', None],
@@ -923,6 +940,8 @@ DEVICES_MIOT = [{
     'lumi.switch.b2lc04': ["Aqara", "Double Wall Switch E1", "QBKG39LM"],
     'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.l2aeu1': ["Aqara", "Double Wall Switch EU H1", "WS-EUK02"],
+    # with neutral wire, not support power measurement
+    'lumi.switch.b2nc01': ["Aqara", "Double Wall Switch E1", "QBKG41LM"],
     'mi_spec': [
         ['2.1', '2.1', 'channel 1', 'switch'],
         ['3.1', '3.1', 'channel 2', 'switch'],
@@ -977,6 +996,12 @@ DEVICES_MIOT = [{
         ['3.1', '3.1', 'consumption', 'sensor'],
         ['3.2', '3.2', 'power', 'sensor'],
         # ['5.7', '5.7', 'voltage', 'sensor'],
+    ]
+}, {
+    'lumi.sen_ill.mgl01': ["Xiaomi", "Light Sensor", "GZCGQ01LM"],
+    'mi_spec': [
+        ['2.1', '2.1', 'illuminance', 'sensor'],
+        ['3.1', '3.1', 'battery', 'sensor'],
     ]
 }, {
     'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
