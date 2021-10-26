@@ -223,6 +223,8 @@ CUBE = {
     'flip180': 'flip180',
     'rotate': 'rotate',
     'alert': 'alert',
+    'shake_air': 'shock',
+    'tap_twice': 'knock'
 }
 
 ATTR_DENSITY = "density"
