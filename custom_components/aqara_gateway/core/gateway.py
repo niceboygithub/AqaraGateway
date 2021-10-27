@@ -55,7 +55,7 @@ class Gateway(Thread):
         self._info_ts = None
         self._gateway_did = ''
         self._model = self.options.get(CONF_MODEL, '')  # for fast access
-        self._cloud = 'aiot'  # for fast access
+        self.cloud = 'aiot'  # for fast access
 
     @property
     def device(self):
@@ -250,11 +250,11 @@ class Gateway(Thread):
 
             value = json.loads(raw)
             dev_info = value.get("devInfo", 'null') or []
-            self._cloud = shell.get_prop("persist.sys.cloud")
+            self.cloud = shell.get_prop("persist.sys.cloud")
 
             for dev in dev_info:
                 model = dev['model']
-                desc = Utils.get_device(model, self._cloud)
+                desc = Utils.get_device(model, self.cloud)
                 # skip unknown model
                 if desc is None:
                     self.debug("{} has an unsupported model: {}".format(
@@ -282,7 +282,7 @@ class Gateway(Thread):
         for device in devices:
             timeout = 300
             if device['type'] in ('gateway', 'zigbee'):
-                desc = Utils.get_device(device['model'], self._cloud)
+                desc = Utils.get_device(device['model'], self.cloud)
                 if not desc:
                     self.debug("Unsupported model: {}".format(device))
                     continue
@@ -458,7 +458,7 @@ class Gateway(Thread):
             dev_info = value.get("devInfo", 'null') or []
             for dev in dev_info:
                 model = dev['model']
-                desc = Utils.get_device(model, self._cloud)
+                desc = Utils.get_device(model, self.cloud)
                 # skip unknown model
                 if desc is None:
                     self.debug("{} has an unsupported modell: {}".format(
@@ -741,6 +741,9 @@ def prepare_aqaragateway(shell, model):
     time.sleep(1)
     if model in ('lumi.gateway.aqcn02', 'lumi.camera.gwpagl01'):
         shell.check_bin('mosquitto', MD5_MOSQUITTO_ARMV7L , 'bin/armv7l/mosquitto')
+        if model in ('lumi.gateway.aqcn02'):
+            command = "chattr +i /data/scripts"
+            shell.run_command(command)
     else:
         shell.check_bin('mosquitto', MD5_MOSQUITTO_MIPSEL, 'bin/mipsel/mosquitto')
 
@@ -792,4 +795,5 @@ def is_aqaragateway(host: str,
                 prepare_aqaragateway(shell, model)
         if shell:
             shell.close()
+
     return result
