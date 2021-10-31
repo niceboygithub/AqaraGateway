@@ -572,12 +572,10 @@ class Gateway(Thread):
 
             # https://github.com/Koenkk/zigbee2mqtt/issues/798
             # https://www.maero.dk/aqara-temperature-humidity-pressure-sensor-teardown/
-            if (prop == 'temperature' and
-                    device['model'] != 'lumi.airmonitor.acn01'):
+            if (prop == 'temperature'):
                 if -4000 < param['value'] < 12500:
                     payload[prop] = param['value'] / 100.0
-            elif (prop == 'humidity' and
-                    device['model'] != 'lumi.airmonitor.acn01'):
+            elif (prop == 'humidity'):
                 if 0 <= param['value'] <= 10000:
                     payload[prop] = param['value'] / 100.0
             elif prop == 'pressure':
