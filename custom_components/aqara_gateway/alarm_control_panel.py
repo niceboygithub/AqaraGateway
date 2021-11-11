@@ -56,6 +56,8 @@ class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
             gateway.host, None, Utils.get_device_name(device['model']))
         self._get_state()
         super().__init__(gateway, device, attr)
+        self._attr_supported_features = (SUPPORT_ALARM_ARM_HOME |
+                SUPPORT_ALARM_ARM_AWAY | SUPPORT_ALARM_ARM_NIGHT)
 
     @property
     def should_poll(self):

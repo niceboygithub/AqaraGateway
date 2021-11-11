@@ -17,7 +17,7 @@ from homeassistant.components.light import ATTR_HS_COLOR
 
 from .shell import TelnetShell
 from .utils import DEVICES, Utils, GLOBAL_PROP
-from .const import CONF_MODEL, DOMAIN
+from .const import CONF_MODEL, DOMAIN, SIGMASTAR_MODELS, SUPPORTED_MODELS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -365,7 +365,6 @@ class Gateway(Thread):
                 if 'res_name' in param:
                     if param['res_name'] in GLOBAL_PROP:
                         prop = GLOBAL_PROP[param['res_name']]
-                        print(prop)
                 if prop == 'report':
                     report_list = param['value'].split(',')
                     stat = {}
@@ -723,10 +722,13 @@ class Gateway(Thread):
 
 def prepare_aqaragateway(shell, model):
     """ Prepare supported Aqara Gateway """
+    if model in SIGMASTAR_MODELS:
+        command = "chattr -i /data/scripts"
+        shell.run_command(command)
     command = "mkdir -p /data/scripts"
     shell.write(command.encode() + b"\n")
     time.sleep(1)
-    if model in ('lumi.gateway.aqcn02', 'lumi.camera.gwpagl01'):
+    if model in SIGMASTAR_MODELS:
         command = "echo -e '#!/bin/sh\r\n\r\nfw_manager.sh -r\r\n" \
             "/bin/riu_w 101e 53 3012\r\ntelnetd' > /data/scripts/post_init.sh"
     else:
@@ -739,12 +741,11 @@ def prepare_aqaragateway(shell, model):
     command = "mkdir -p /data/bin"
     shell.write(command.encode() + b"\n")
     time.sleep(1)
-    if model in ('lumi.gateway.aqcn02', 'lumi.camera.gwpagl01'):
+    if model in SIGMASTAR_MODELS:
         shell.check_bin('mosquitto', MD5_MOSQUITTO_ARMV7L , 'bin/armv7l/mosquitto')
-        if model in ('lumi.gateway.aqcn02'):
-            command = "chattr +i /data/scripts"
-            shell.run_command(command)
-    else:
+        command = "chattr +i /data/scripts"
+        shell.run_command(command)
+    elif model in REALTEK_MODELS:
         shell.check_bin('mosquitto', MD5_MOSQUITTO_MIPSEL, 'bin/mipsel/mosquitto')
 
 
@@ -786,12 +787,7 @@ def is_aqaragateway(host: str,
             result['model'] = model
             result['status'] = 'ok'
             result['token'] = token
-
-            if model in ('lumi.gateway.acn01', 'lumi.aircondition.acn05',
-                         'lumi.gateway.sacn01', 'lumi.gateway.iragl5',
-                          'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
-                          'lumi.gateway.aqcn02'
-                          ):
+            if model in SUPPORTED_MODELS:
                 prepare_aqaragateway(shell, model)
         if shell:
             shell.close()

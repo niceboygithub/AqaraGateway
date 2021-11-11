@@ -68,6 +68,21 @@ OPT_DEVICE_NAME = {
     'm2': "Aqara Gateway M2"
 }
 
+SIGMASTAR_MODELS = [
+    'lumi.gateway.aqcn02'
+]
+
+REALTEK_MODELS = [
+    'lumi.gateway.acn01',
+    'lumi.aircondition.acn05',
+    'lumi.gateway.sacn01',
+    'lumi.gateway.iragl5',
+    'lumi.gateway.iragl7',
+    'lumi.gateway.iragl01'
+]
+# supported models and help to enable telnet
+SUPPORTED_MODELS = SIGMASTAR_MODELS + REALTEK_MODELS
+
 DATA_KEY = "aqara_gateway"
 
 # Load power in watts (W)
