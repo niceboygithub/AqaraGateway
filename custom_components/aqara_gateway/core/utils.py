@@ -14,6 +14,7 @@ from homeassistant.helpers.device_registry import DeviceRegistry
 from homeassistant.helpers.typing import HomeAssistantType
 from homeassistant.exceptions import PlatformNotReady
 
+from .const import DOMAIN, SIGMASTAR_MODELS
 
 SOFT_HACK_REALTEK = {"ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
 SOFT_HACK_SIGMASTAR = {"ssid": "\"\"", "pswd": "123123 ; /bin/riu_w 101e 53 3012 ; telnetd"}
@@ -1057,6 +1058,7 @@ DEVICES_MIOT = [{
     'lumi.magnet.acn001': ["Aqara", "Door Sensor E1", "MCCGQ14LM"],
     'mi_spec': [
         ['2.1', 'status', 'contact', 'binary_sensor'],
+        ['3.2', '3.2', 'voltage', None],
         ['5.1', None, 'elapsed_time', None],
         ['6.1', 'battery', 'battery', 'sensor'],
     ]
@@ -1357,6 +1359,15 @@ class Utils:
         return False
 
     @staticmethod
+    def gateway_is_aiot_only(model: str) -> Optional[bool]:
+        """ return the gateway is aiot only """
+        if model in ('lumi.camera.gwagl02', 'lumi.gateway.iragl5',
+                     'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
+                     'lumi.gateway.sacn01'):
+            return True
+        return False
+
+    @staticmethod
     def get_device_name(model: str) -> Optional[str]:
         """ return the device name """
         if model in DEVICES[0]:
@@ -1385,7 +1396,7 @@ class Utils:
                     device_info.firmware_version,
                     device_info.hardware_version)
             )
-            if "lumi.gateway.aqcn02" in model:
+            if model in SIGMASTAR_MODELS:
                 ret = miio_device.raw_command(
                     "set_ip_info",
                     SOFT_HACK_SIGMASTAR

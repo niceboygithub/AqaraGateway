@@ -54,7 +54,7 @@ class Gateway(Thread):
         self._device_state_attributes = {}
         self._info_ts = None
         self._gateway_did = ''
-        self._model = self.options.get(CONF_MODEL, '')  # for fast access
+        self._model = options.get(CONF_MODEL, '')  # long model, will replace to short later
         self.cloud = 'aiot'  # for fast access
 
     @property
@@ -250,7 +250,8 @@ class Gateway(Thread):
 
             value = json.loads(raw)
             dev_info = value.get("devInfo", 'null') or []
-            self.cloud = shell.get_prop("persist.sys.cloud")
+            if not Utils.gateway_is_aiot_only(model):
+                self.cloud = shell.get_prop("persist.sys.cloud")
 
             for dev in dev_info:
                 model = dev['model']
@@ -460,7 +461,7 @@ class Gateway(Thread):
                 desc = Utils.get_device(model, self.cloud)
                 # skip unknown model
                 if desc is None:
-                    self.debug("{} has an unsupported modell: {}".format(
+                    self.debug("{} has an unsupported model: {}".format(
                         dev['did'], model
                     ))
                     continue
