@@ -89,14 +89,9 @@ chmod a+x /tmp/h1_update.sh && /tmp/h1_update.sh
 ```
 If there is no any error generated, then restart gateway by reboot command.
 
-## Flash E1 Custom firmware method
+## Not Flash E1 Custom firmware method
 
-```shell
-cd /tmp && wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1" && chmod a+x /tmp/curl
-/tmp/curl -s -k -L -o /tmp/e1_update.sh https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/modified/E1/e1_update.sh
-chmod a+x /tmp/e1_update.sh && /tmp/e1_update.sh
-```
-<img src="https://raw.githubusercontent.com/niceboygithub/AqaraGateway/master/E1_flash_done.png">
+Suggest to use another expert's method, pleae move to [his github](https://github.com/zvldz/aqcn02_fw/tree/main/update) to see hot to do it.  He provides a way that avoid any risk on flashing firmwares.
 
 If there is no any error generated, then restart gateway by reboot command.
 
