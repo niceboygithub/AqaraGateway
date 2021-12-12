@@ -154,13 +154,22 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
     async def async_step_zeroconf(self, discovery_info: DiscoveryInfoType):
         """Handle zeroconf discovery."""
         # Hostname is format: _aqara._tcp.local., _aqara-setup._tcp.local.
-        local_name = discovery_info["hostname"][:-1]
-        node_name = local_name[: -len(".local")]
-        address = discovery_info["properties"].get(
-            "address", discovery_info["host"])
-        model = discovery_info["properties"].get("md", "unknow")
-        fwversion = discovery_info["properties"].get("fw", "unknow")
-        fwcloud = discovery_info["properties"].get("cl", "unknow")
+        if getattr(discovery_info, "hostname"):
+            local_name = discovery_info.hostname[:-1]
+            node_name = local_name[: -len(".local")]
+            address = discovery_info.properties.get(
+                "address", discovery_info.host)
+            model = discovery_info.properties.get("md", "unknow")
+            fwversion = discovery_info.properties.get("fw", "unknow")
+            fwcloud = discovery_info.properties.get("cl", "unknow")
+        else:
+            local_name = discovery_info["hostname"][:-1]
+            node_name = local_name[: -len(".local")]
+            address = discovery_info["properties"].get(
+                "address", discovery_info[CONF_HOST])
+            model = discovery_info["properties"].get("md", "unknow")
+            fwversion = discovery_info["properties"].get("fw", "unknow")
+            fwcloud = discovery_info["properties"].get("cl", "unknow")
         self._device_info = (
                 f"Name: {node_name}\n"
                 f"Model: {model}\n"
@@ -170,7 +179,10 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                 f"Cloud: {fwcloud}"
             )
 
-        self._host = discovery_info[CONF_HOST]
+        if getattr(discovery_info, "hostname"):
+            self._host = discovery_info.hostname
+        else:
+            self._host = discovery_info[CONF_HOST]
         self._name = node_name
         self._password = ''
         self._token = ''
@@ -180,13 +192,13 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             already_configured = False
             if CONF_HOST in entry.data and entry.data[CONF_HOST] in [
                 address,
-                discovery_info[CONF_HOST],
+                self._host,
             ]:
                 # Is this address or IP address already configured?
                 already_configured = True
             elif CONF_HOST in entry.options and entry.options[CONF_HOST] in [
                 address,
-                discovery_info[CONF_HOST],
+                self._host,
             ]:
                 # Is this address or IP address already configured?
                 already_configured = True
@@ -200,7 +212,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             await self.async_set_unique_id(node_name)
 
         self._abort_if_unique_id_configured(
-            updates={CONF_HOST: discovery_info[CONF_HOST]}
+            updates={CONF_HOST: self._host}
         )
 
         if (fwcloud == "miot" and
