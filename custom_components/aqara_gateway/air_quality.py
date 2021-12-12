@@ -75,7 +75,7 @@ class GatewayAirMonitorSensor(GatewayGenericDevice, AirQualityEntity):
         self.is_metric = False
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         attrs = {
             ATTR_BATTERY_LEVEL: self._battery,
@@ -189,7 +189,7 @@ class GatewayTvocSensor(GatewayAirMonitorSensor, AirQualityEntity):
         self._state = 0
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         attrs = {
             ATTR_BATTERY_LEVEL: self._battery,

@@ -230,11 +230,6 @@ class GatewayGenericDevice(Entity):
         return self.device.get('online', True)
 
     @property
-    def device_state_attributes(self):
-        """ return attrs """
-        return self._attrs
-
-    @property
     def device_info(self):
         """
         https://developers.home-assistant.io/docs/device_registry_index/

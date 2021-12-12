@@ -51,7 +51,7 @@ class Gateway(Thread):
         self.devices = {}
         self.updates = {}
         self.setups = {}
-        self._device_state_attributes = {}
+        self._extra_state_attributes = {}
         self._info_ts = None
         self._gateway_did = ''
         self._model = options.get(CONF_MODEL, '')  # long model, will replace to short later
@@ -324,21 +324,21 @@ class Gateway(Thread):
 
     def add_stats(self, ieee: str, handler):
         """ add gateway stats """
-        self._device_state_attributes[ieee] = handler
+        self._extra_state_attributes[ieee] = handler
 
         if self.parent_scan_interval > 0:
             self._info_ts = time.time() + 5
 
     def remove_stats(self, ieee: str, handler):
         """ remove gateway stats """
-        self._device_state_attributes.pop(ieee)
+        self._extra_state_attributes.pop(ieee)
 
     def process_gateway_stats(self, payload: dict = None):
         """ process gateway status """
         # empty payload - update available state
         self.debug(f"gateway <= {payload or self.available}")
 
-        if 'lumi.0' not in self._device_state_attributes:
+        if 'lumi.0' not in self._extra_state_attributes:
             return
 
         if payload:
@@ -384,7 +384,7 @@ class Gateway(Thread):
                 value = json.loads(raw)
                 data.update(value)
 
-        self._device_state_attributes['lumi.0'](data)
+        self._extra_state_attributes['lumi.0'](data)
 
     def on_connect(self, client, userdata, flags, ret):
         # pylint: disable=unused-argument

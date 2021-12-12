@@ -78,7 +78,7 @@ class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
         return 'mdi:power-socket'
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         self._attrs[ATTR_CHIP_TEMPERATURE] = self._chip_temperature
         self._attrs[ATTR_FW_VER] = self._fw_ver

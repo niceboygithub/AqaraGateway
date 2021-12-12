@@ -145,7 +145,7 @@ class GatewaySensor(GatewayGenericDevice, SensorEntity):
         return ICONS.get(self._attr)
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         if self.with_attr:
             attrs = {
@@ -349,7 +349,7 @@ class GatewayLockSensor(GatewaySensor):
         return "lock_state"
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         attrs = {
             ATTR_BATTERY_LEVEL: self._battery,

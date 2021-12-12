@@ -129,7 +129,7 @@ class GatewayNatgasSensor(GatewayBinarySensor, BinarySensorEntity):
         super().__init__(gateway, device, attr)
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         attrs = {
             ATTR_CHIP_TEMPERATURE: self._chip_temperature,
@@ -187,7 +187,7 @@ class GatewayMotionSensor(GatewayBinarySensor):
         await super().async_added_to_hass()
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         self._attrs[ATTR_BATTERY_LEVEL] = self._battery
         self._attrs[ATTR_CHIP_TEMPERATURE] = self._chip_temperature
@@ -321,7 +321,7 @@ class GatewayDoorSensor(GatewayBinarySensor, BinarySensorEntity):
         super().__init__(gateway, device, attr)
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         attrs = {
             ATTR_BATTERY_LEVEL: self._battery,
@@ -387,7 +387,7 @@ class GatewaWaterLeakSensor(GatewayBinarySensor, BinarySensorEntity):
         super().__init__(gateway, device, attr)
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         attrs = {
             ATTR_BATTERY_LEVEL: self._battery,
@@ -450,7 +450,7 @@ class GatewaySmokeSensor(GatewayBinarySensor, BinarySensorEntity):
         super().__init__(gateway, device, attr)
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         attrs = {
             ATTR_CHIP_TEMPERATURE: self._chip_temperature,
@@ -518,7 +518,7 @@ class GatewayButtonSwitch(GatewayBinarySensor, BinarySensorEntity):
         return 'hass:radiobox-blank'
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         attrs = {
             ATTR_BATTERY_LEVEL: self._battery,
@@ -619,7 +619,7 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
         return 'hass:radiobox-blank'
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         self._attrs[ATTR_BATTERY_LEVEL] = self._battery
         self._attrs[ATTR_CHIP_TEMPERATURE] = self._chip_temperature

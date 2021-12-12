@@ -139,7 +139,7 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
         self.gateway.send(self.device, {'position': position})
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         self._attrs[ATTR_CURRENT_POSITION] = self._pos
         self._attrs[ATTR_CHIP_TEMPERATURE] = self._chip_temperature
