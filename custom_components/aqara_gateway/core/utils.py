@@ -544,11 +544,13 @@ DEVICES = [{
         ['4.20.85', None, 'latch_state', None],
         ['13.31.85', 'lock_state', 'lock', 'sensor'],
         ['13.42.85', None, 'unlock by fringprint', None],
+        [None, None, 'key_id', 'sensor'],
         ['13.55.85', 'voltage', 'voltage', None],
         ['13.56.85', 'li battery', 'li battery', 'sensor'],
         ['13.62.85', None, 'timestamp', None],
         ['13.69.85', 'temperature', 'li battery temperature', None],
-        ['13.88.85', None, 'door', None],   
+        ['13.88.85', None, 'door', None],
+        [None, None, 'lock_event', 'sensor'],
     ]
 }, {
     'lumi.airrtc.tcpecn01': ["Aqara", "Thermostat S1", "KTWKQ02ES"],
