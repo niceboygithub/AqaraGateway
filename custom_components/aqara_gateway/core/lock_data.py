@@ -16,7 +16,10 @@ DEVICE_MAPPINGS = {
     "aqara.lock.bzacn3": (
         SUPPORT_ALARM | SUPPORT_DOORBELL),
     "aqara.lock.bzacn4": (
-        SUPPORT_ALARM | SUPPORT_DOORBELL)
+        SUPPORT_ALARM | SUPPORT_DOORBELL),
+    "aqara.lock.dacn03": (
+        WITH_LI_BATTERY | SUPPORT_ALARM |
+        SUPPORT_DOORBELL | SUPPORT_WIFI | SUPPORT_CAMERA)
 }
 
 LOCK_NOTIFICATIOIN = {
