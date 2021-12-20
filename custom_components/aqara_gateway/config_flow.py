@@ -19,7 +19,7 @@ from homeassistant.util.network import is_ip_address
 from .core import gateway
 from .core.const import (
     DOMAIN, OPT_DEVICE_NAME, CONF_MODEL, OPT_DEBUG,
-    CONF_DEBUG, CONF_STATS, CONF_NOFFLINE
+    CONF_DEBUG, CONF_STATS, CONF_NOFFLINE, SUPPORTED_MODELS
 )
 from .core.utils import Utils
 
@@ -214,6 +214,9 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         self._abort_if_unique_id_configured(
             updates={CONF_HOST: self._host}
         )
+
+        if model not in SUPPORTED_MODELS:
+            return self.async_abort(reason="connection_error")
 
         if (fwcloud == "miot" and
                 discovery_info.get('type') == '_aqara-setup._tcp.local.'):

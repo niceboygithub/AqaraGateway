@@ -157,6 +157,12 @@ class GatewaySensor(GatewayGenericDevice, SensorEntity):
             return attrs
         return None
 
+    @property
+    def entity_category(self) -> str:
+        """Device entity category."""
+        # ENTITY_CATEGORY_CONFIG
+        return "config"
+
     def update(self, data: dict = None):
         """update sensor."""
         for key, value in data.items():

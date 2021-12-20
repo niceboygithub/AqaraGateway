@@ -40,6 +40,7 @@ DEVICES = [{
     'lumi.gateway.sacn01': ["Aqara", "Smart Hub H1", "QBCZWG11LM"],
     'lumi.gateway.aqcn02': ["Aqara", "Hub E1", "ZHWG16LM"],  # tested
     'lumi.camera.gwagl02': ["Aqara", "Camera Hub G2H", "ZNSXJ12LM"],  # tested
+    'lumi.camera.gwpagl01': ["Aqara", "Camera Hub G3", "ZNSXJ13LM"],  # tested
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],
@@ -1360,7 +1361,7 @@ class Utils:
     def gateway_alarm_mode_supported(model: str) -> Optional[bool]:
         """ return the gateway alarm mode supported """
         #  basic_cli not support
-        if model not in ('lumi.camera.gwagl02'):
+        if model not in ('lumi.camera.gwagl02', 'lumi.camera.gwpagl01'):
             return True
         return False
 

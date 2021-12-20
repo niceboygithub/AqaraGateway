@@ -1,6 +1,6 @@
-# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN) integration for Home Assistant
+# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN, G3 CN) integration for Home Assistant
 
-Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM)**.
+Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM, ZNSXJ13LM)**.
 Gateway support **Zigbee 3**.
 
 This integration was based on the development of [@AlexxIT](https://github.com/AlexxIT/XiaomiGateway3/), Thanks Alex.
@@ -40,7 +40,7 @@ You can use [custom open telnet command](https://gist.github.com/zvldz/1bd6b2153
 
 After telnet to gateway via putty, there are two methods (Flash or Not) to enable telnet and public mqtt.
 
-## Not Flash Custom firmware method
+## Not Flash Custom firmware method (not for G2H, E1 hub, G3)
 
 ```shell
 mkdir /data/bin
@@ -56,6 +56,19 @@ cd /data/scripts
 chmod +x /data/scripts/post_init.sh
 ```
 Then restart gateway by reboot command.
+
+
+## Not Flash Custom firmware method (for G2H, E1 hub, G3)
+
+```shell
+mkdir /data/bin
+cd /data/bin
+wget -O /data/bin/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"
+chmod +x /data/bin/curl
+/data/bin/curl -s -k -L -o /data/bin/mosquitto https://github.com/niceboygithub/AqaraCameraHubfw/raw/main/binutils/mosquitto
+chmod a+x /data/bin/mosquitto
+
+```
 
 ## Flash M1S Custom firmware method
 ```shell
@@ -99,6 +112,15 @@ If there is no any error generated, then restart gateway by reboot command.
 
 ## For G2H
 There is a way to [enable telnetd](https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/binutils/README.md#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils).
+
+## For G3
+There is a way to [enable telnetd](https://github.com/Wh1terat/aQRootG3) from #Wh1terat. After enabled telnet, you need use putty to telnet <ip of your G3>. Then enter the following commands.
+
+```
+chmod a+w /data/scripts/post_init.sh
+echo -e "#!/bin/sh\n\nasetprop sys.camera_ptz_moving true\nfw_manager.sh -r\nfw_manager.sh -t -k" > /data/scripts/post_init.sh
+chattr +i post_init.sh
+```
 
 ## How to check this component is working properly.
 Go to Configuration->Info->system_health
