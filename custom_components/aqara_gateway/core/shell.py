@@ -28,15 +28,18 @@ class TelnetShell(Telnet):
     def __init__(self, host: str, password=None, device_name=None):
         super().__init__(host, timeout=5)
         login_name = 'admin'
-        if (device_name and ('g2h' in device_name or 'e1' in device_name)):
+        if (device_name and any(
+                name in device_name for name in ['g2h', 'e1', 'g3'])):
             self._aqara_property = True
             login_name = 'root'
         self.read_until(b"login: ", timeout=10)
-        if device_name and 'e1' in device_name:
-            password = '\n'
+        if (device_name and any(
+                name in device_name for name in ['e1', 'g3'])):
             self._suffix = "/ # "
+            if any(name in device_name for name in ['e1', 'g3']):
+                password = '\n'
         if password:
-            command = '{}\n'.format(login_name)
+            command = "{}\n".format(login_name)
             self.write(command.encode())
             self.read_until(b"Password: ", timeout=10)
             self.run_command(password)
@@ -45,6 +48,8 @@ class TelnetShell(Telnet):
         if device_name and 'e1' in device_name:
             self.read_until(b"\r\n/ # ", timeout=30)
         self.run_command("stty -echo")
+        if 'g3' in device_name:
+            self.run_command("cd /")
 #        self._suffix = "# "
 #        self.run_command("export PS1='# '")
 

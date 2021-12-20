@@ -17,7 +17,7 @@ from homeassistant.components.light import ATTR_HS_COLOR
 
 from .shell import TelnetShell
 from .utils import DEVICES, Utils, GLOBAL_PROP
-from .const import CONF_MODEL, DOMAIN, SIGMASTAR_MODELS, SUPPORTED_MODELS
+from .const import CONF_MODEL, DOMAIN, SIGMASTAR_MODELS, REALTEK_MODELS, SUPPORTED_MODELS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -215,7 +215,8 @@ class Gateway(Thread):
                 raw = shell.read_file(zb_coordinator, with_newline=False)
                 did = shell.get_prop("persist.sys.did")
                 model = shell.get_prop("ro.sys.model")
-            elif 'lumi.gateway' in model or 'lumi.aircondition' in model:
+            elif any(name in model for name in [
+                    'lumi.gateway', 'lumi.aircondition', 'lumi.camera.gwpagl01']):
                 raw = shell.read_file('/data/zigbee/coordinator.info', with_newline=False)
                 did = shell.get_prop("persist.sys.did")
                 model = shell.get_prop("ro.sys.model")
