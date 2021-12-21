@@ -114,7 +114,13 @@ If there is no any error generated, then restart gateway by reboot command.
 There is a way to [enable telnetd](https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/binutils/README.md#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils).
 
 ## For G3
-There is a way to [enable telnetd](https://github.com/Wh1terat/aQRootG3) from #Wh1terat.
+There is a way to [enable telnetd](https://github.com/Wh1terat/aQRootG3) from #Wh1terat. After enabled telnet, you need use putty to telnet <ip of your G3>. Then enter the following commands.
+
+```
+chmod a+w /data/scripts/post_init.sh
+echo -e "#!/bin/sh\n\nasetprop sys.camera_ptz_moving true\nfw_manager.sh -r\nfw_manager.sh -t -k" > /data/scripts/post_init.sh
+chattr +i post_init.sh
+```
 
 ## How to check this component is working properly.
 Go to Configuration->Info->system_health
