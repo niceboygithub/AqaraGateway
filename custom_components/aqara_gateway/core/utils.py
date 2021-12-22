@@ -33,7 +33,7 @@ DEVICES = [{
     'lumi.aircondition.acn05': ["Aqara", "AirCondition P3", "KTBL12LM"],  # xStars tested
     # 'lumi.aircondition.acn04': ["Aqara", "AirCondition P3", "KTBL12LM"],
     # 'lumi.acpartner.acn04': ["Aqara", "AirCondition P3", "KTBL12LM"],
-    # 'lumi.gateway.aeu01': ["Aqara", "Gateway M1S", "HM1S-G01"],
+    'lumi.gateway.aeu01': ["Aqara", "Gateway M1S", "HM1S-G01"],
     # 'lumi.gateway.iragl01': ["Aqara", "Gateway M2", "ZHWG12LM"],
     # 'lumi.gateway.iragl7': ["Aqara", "Gateway M2", "HM2-G01"],
     'lumi.gateway.iragl5': ["Aqara", "Gateway M2", "ZHWG12LM"],  # tested
@@ -1346,14 +1346,14 @@ class Utils:
     @staticmethod
     def gateway_illuminance_supported(model: str) -> Optional[bool]:
         """ return the gateway illuminance supported """
-        if 'lumi.gateway.acn01' in model:
+        if model in ('lumi.gateway.acn01', 'lumi.gateway.aeu01'):
             return True
         return False
 
     @staticmethod
     def gateway_light_supported(model: str) -> Optional[bool]:
         """ return the gateway light supported """
-        if 'lumi.gateway.acn01' in model:
+        if model in ('lumi.gateway.acn01', 'lumi.gateway.aeu01'):
             return True
         return False
 
