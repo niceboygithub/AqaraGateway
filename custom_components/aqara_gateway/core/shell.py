@@ -25,32 +25,23 @@ class TelnetShell(Telnet):
     _suffix = "# "
     # pylint: disable=unsubscriptable-object
 
-    def __init__(self, host: str, password=None, device_name=None):
+    def __init__(self, host: str, password=None):
+        """ init function """
         super().__init__(host, timeout=5)
-        login_name = 'admin'
-        if (device_name and any(
-                name in device_name for name in ['g2h', 'e1', 'g3'])):
-            self._aqara_property = True
-            login_name = 'root'
+        self._host = host
+        self._password = password
+
+    def login(self):
+        """ login function """
+        self.write(b"\n")
         self.read_until(b"login: ", timeout=10)
-        if (device_name and any(
-                name in device_name for name in ['e1', 'g3'])):
-            self._suffix = "/ # "
-            if any(name in device_name for name in ['e1', 'g3']):
-                password = '\n'
-        if password:
-            command = "{}\n".format(login_name)
-            self.write(command.encode())
-            self.read_until(b"Password: ", timeout=10)
-            self.run_command(password)
-        else:
-            self.run_command(login_name)
-        if device_name and 'e1' in device_name:
-            self.read_until(b"\r\n/ # ", timeout=30)
+
+        self.run_command("admin")
+        if self._password:
+            self.read_until(b"Password: ", timeout=1)
+            self.write(self._password.encode() + b"\n")
         self.run_command("stty -echo")
-        if 'g3' in device_name:
-            self.run_command("cd /")
-#        self._suffix = "# "
+
 #        self.run_command("export PS1='# '")
 
     def run_command(self, command: str, as_bytes=False) -> Union[str, bytes]:
@@ -155,7 +146,7 @@ class TelnetShell(Telnet):
             if ret.endswith(self._suffix):
                 ret = "".join(ret.rsplit(self._suffix, 1))
             if ret.startswith(self._suffix):
-                ret = ret.replace(self._suffix, "", 1)
+                ret = ret.replace(self._suffix, "", 2)
             return ret.replace("\r", "").replace("\n", "")
         except Exception:
             return ''
@@ -188,3 +179,77 @@ class TelnetShell(Telnet):
         if self.file_exist(filename):
             return self.read_file(filename).rstrip().encode().hex()
         return None
+
+
+class TelnetShellG2H(TelnetShell):
+
+    def login(self):
+        """ login function """
+        self._aqara_property = True
+
+        self.write(b"\n")
+        self.read_until(b"login: ", timeout=10)
+
+        password = self._password
+        if ((self._password is None) or
+            (isinstance(self._password, str) and len(self._password) <= 1)
+        ):
+            password = '\n'
+
+        self.write(b"root\n\r")
+        if password:
+            self.read_until(b"Password: ", timeout=3)
+            #self.write(password.encode() + b"\n")
+            self.run_command(password)
+
+        command = "stty -echo"
+        self.write(command.encode() + b"\n")
+        self.read_until(b"stty -echo\n", timeout=10)
+
+
+class TelnetShellE1(TelnetShell):
+
+    def login(self):
+        """ login function """
+        self._aqara_property = True
+
+        self.write(b"\n")
+        self.read_until(b"login: ", timeout=10)
+        self.write(b"root\n\r")
+
+        self.read_until(b"Password: ", timeout=10)
+        self.write(b"\n\r")
+
+        self.read_until(b"/ # ", timeout=30)
+        self._suffix = "/ # "
+
+        command = "stty -echo"
+        self.write(command.encode() + b"\n")
+        self.read_until(b"stty -echo\n", timeout=10)
+
+
+class TelnetShellG3(TelnetShell):
+
+    def login(self):
+        """ login function """
+        self._aqara_property = True
+
+        self.write(b"\n")
+        self.read_until(b"login: ", timeout=3)
+        password = self._password
+        if ((self._password is None) or
+            (isinstance(self._password, str) and len(self._password) <= 1)
+        ):
+            password = '\n'
+
+        self.write(b"root\n\r")
+        if password:
+            self.read_until(b"Password: ", timeout=3)
+            self.write(password.encode() + b"\n")
+        command = "cd /"
+        self.write(command.encode() + b"\n")
+
+        command = "stty -echo"
+        self.write(command.encode() + b"\n")
+
+        self._suffix = "/ # "

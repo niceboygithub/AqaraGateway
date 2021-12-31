@@ -17,7 +17,7 @@ from homeassistant.const import (
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
 from .core.utils import Utils
-from .core.shell import TelnetShell
+from .core.shell import TelnetShell, TelnetShellE1
 
 ALARM_STATES = [STATE_ALARM_ARMED_HOME, STATE_ALARM_ARMED_AWAY,
                 STATE_ALARM_ARMED_NIGHT, STATE_ALARM_DISARMED]
@@ -52,8 +52,11 @@ class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
         attr
     ):
         """Initialize the Alarm Panel."""
-        self._shell = TelnetShell(
-            gateway.host, None, Utils.get_device_name(device['model']))
+        if "e1" in Utils.get_device_name(device['model']):
+            self._shell = TelnetShellE1(gateway.host)
+        else:
+            self._shell = TelnetShell(gateway.host)
+        self._shell.login()
         self._get_state()
         super().__init__(gateway, device, attr)
         self._attr_supported_features = (SUPPORT_ALARM_ARM_HOME |

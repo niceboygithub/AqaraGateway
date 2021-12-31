@@ -68,6 +68,7 @@ DEVICES = [{
     'lumi.plug.mmeu01': ["Xiaomi", "Plug EU", "ZNCZ04LM"],
     'lumi.plug.maus01': ["Xiaomi", "Plug US", "ZNCZ12LM"],
     'lumi.ctrl_86plug': ["Aqara", "Socket", "QBCZ11LM"],
+    'lumi.plug.macn01': ["Aqara", "Plug T1", "ZNCZ15LM"],
     # 'lumi.plug.maeu01': ["Aqara", "Plug EU", "SP-EUC01"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],

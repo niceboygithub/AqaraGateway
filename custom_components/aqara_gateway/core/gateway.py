@@ -15,7 +15,7 @@ from homeassistant.const import CONF_NAME, CONF_PASSWORD
 from homeassistant.components.light import ATTR_HS_COLOR
 
 
-from .shell import TelnetShell
+from .shell import TelnetShell, TelnetShellG2H, TelnetShellE1, TelnetShellG3
 from .utils import DEVICES, Utils, GLOBAL_PROP
 from .const import CONF_MODEL, DOMAIN, SIGMASTAR_MODELS, REALTEK_MODELS, SUPPORTED_MODELS
 
@@ -175,10 +175,20 @@ class Gateway(Thread):
         running.
         """
         try:
-            shell = TelnetShell(self.host,
-                                self.options.get(CONF_PASSWORD, ''),
-                                Utils.get_device_name(self._model))
-
+            device_name = Utils.get_device_name(self._model).lower()
+            if "g2h" in device_name:
+                shell = TelnetShellG2H(self.host,
+                                       self.options.get(CONF_PASSWORD, ''))
+            elif "e1" in device_name:
+                shell = TelnetShellE1(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
+            elif "g3" in device_name:
+                shell = TelnetShellG3(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
+            else:
+                shell = TelnetShell(self.host,
+                                    self.options.get(CONF_PASSWORD, ''))
+            shell.login()
             processes = shell.get_running_ps()
             public_mosquitto = shell.check_public_mosquitto()
             if not public_mosquitto:
@@ -201,7 +211,7 @@ class Gateway(Thread):
             self.debug("Can't read devices: {}".format(expt))
             return False
 
-    def _get_devices(self, shell: TelnetShell):
+    def _get_devices(self, shell):
         """Load devices info for Coordinator, Zigbee and Mesh."""
         devices = {}
 
@@ -217,7 +227,8 @@ class Gateway(Thread):
                 model = shell.get_prop("ro.sys.model")
             elif any(name in model for name in [
                     'lumi.gateway', 'lumi.aircondition', 'lumi.camera.gwpagl01']):
-                raw = shell.read_file('/data/zigbee/coordinator.info', with_newline=False)
+                raw = shell.read_file(
+                    '/data/zigbee/coordinator.info', with_newline=False)
                 did = shell.get_prop("persist.sys.did")
                 model = shell.get_prop("ro.sys.model")
             else:
@@ -226,7 +237,8 @@ class Gateway(Thread):
                 did = data.group(1) if data else ''
                 data = re.search(r"model=([a-zA-Z0-9.-]+).+", raw)
                 model = data.group(1) if data else ''
-                raw = shell.read_file('/mnt/config/zigbee/coordinator.info', with_newline=False)
+                raw = shell.read_file(
+                    '/mnt/config/zigbee/coordinator.info', with_newline=False)
             value = json.loads(raw)
             devices = [{
                 'coordinator': 'lumi.0',
@@ -375,11 +387,22 @@ class Gateway(Thread):
                             ':', 1) if 'time' in item else item.lstrip(
                                 ).strip().split(' '))
                         data.update(dict(zip(stat, stat)))
-            shell = TelnetShell(self.host,
-                                self.options.get(CONF_PASSWORD, ''),
-                                Utils.get_device_name(self._model))
+            device_name = Utils.get_device_name(self._model).lower()
+            if "g2h" in device_name:
+                shell = TelnetShellG2H(self.host,
+                                       self.options.get(CONF_PASSWORD, ''))
+            elif "e1" in device_name:
+                shell = TelnetShellE1(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
+            elif "g3" in device_name:
+                shell = TelnetShellG3(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
+            else:
+                shell = TelnetShell(self.host,
+                                    self.options.get(CONF_PASSWORD, ''))
+            shell.login()
             raw = shell.read_file('{}/zigbee/networkBak.info'.format(
-                    Utils.get_info_store_path(self._model)), with_newline=False)
+                Utils.get_info_store_path(self._model)), with_newline=False)
             shell.close()
             if len(raw) >= 1:
                 value = json.loads(raw)
@@ -410,13 +433,20 @@ class Gateway(Thread):
         # pylint: disable=unused-argument
         """ on getting messages from mqtt server """
 
+        topic = msg.topic
+        if topic == 'broker/ping':
+            return
+
         if 'mqtt' in self._debug:
             try:
                 self.debug("MQTT on_message: {} {}".format(
-                    msg.topic, msg.payload.decode()))
+                    topic, msg.payload.decode()))
             except UnicodeDecodeError:
-                self.debug("MQTT on_message: {}".format(msg.topic))
+                self.debug("MQTT on_message: {}".format(topic))
                 self.debug(msg.payload)
+
+        if topic == 'log/camera':
+            return
 
         try:
             json.loads(msg.payload)
@@ -424,13 +454,16 @@ class Gateway(Thread):
             self.debug("Decoding JSON failed")
             return
 
-        if msg.topic == 'zigbee/send':
+        if topic == 'zigbee/send':
             payload = json.loads(msg.payload)
             self._process_message(payload)
-        elif msg.topic == 'ioctl/send':
+        elif topic == 'ioctl/send':
             payload = json.loads(msg.payload)
             self._process_message(payload)
-        elif msg.topic == 'debug/host':
+        elif topic == 'ioctl/recv':
+            payload = json.loads(msg.payload)
+            self._process_message(payload)
+        elif topic == 'debug/host':
             payload = json.loads(msg.payload)
             self._process_message(payload)
 
@@ -444,9 +477,20 @@ class Gateway(Thread):
             return
 
         if prop == 'paring' and value == 0:
-            shell = TelnetShell(self.host,
-                                self.options.get(CONF_PASSWORD, ''),
-                                Utils.get_device_name(self._model))
+            device_name = Utils.get_device_name(self._model).lower()
+            if "g2h" in device_name:
+                shell = TelnetShellG2H(self.host,
+                                       self.options.get(CONF_PASSWORD, ''))
+            elif "e1" in device_name:
+                shell = TelnetShellE1(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
+            elif "g3" in device_name:
+                shell = TelnetShellG3(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
+            else:
+                shell = TelnetShell(self.host,
+                                    self.options.get(CONF_PASSWORD, ''))
+            shell.login()
             zb_device = shell.get_prop("sys.zb_device")
             if len(zb_device) >= 1:
                 raw = shell.read_file(zb_device, with_newline=False)
@@ -763,7 +807,8 @@ def is_aqaragateway(host: str,
         try:
             socket.inet_aton(host)
             if device_name and 'g2h' in device_name:
-                shell = TelnetShell(host, password, device_name)
+                shell = TelnetShellG2H(host, password)
+                shell.login()
                 raw = str(shell.read_file('/etc/build.prop'))
                 data = re.search(r"ro\.sys\.name=([a-zA-Z0-9.-]+).+", raw)
                 name = data.group(1) if data else ''
@@ -773,7 +818,13 @@ def is_aqaragateway(host: str,
                 data = re.search(r"mac=([a-zA-Z0-9:]+).+", raw)
                 mac = data.group(1) if data else ''
             else:
-                shell = TelnetShell(host, password, device_name)
+                if "e1" in device_name.lower():
+                    shell = TelnetShellE1(host, password)
+                elif "g3" in device_name.lower():
+                    shell = TelnetShellG3(host, password)
+                else:
+                    shell = TelnetShell(host, password)
+                shell.login()
                 model = shell.get_prop("persist.sys.model")
                 name = shell.get_prop("ro.sys.name")
                 mac = shell.get_prop("persist.sys.miio_mac")
