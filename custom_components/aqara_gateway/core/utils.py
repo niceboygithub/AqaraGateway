@@ -411,12 +411,6 @@ DEVICES = [{
         [None, None, 'action', 'binary_sensor']
     ]
 }, {
-    'lumi.sen_ill.mgl01': ["Xiaomi", "Light Sensor", "GZCGQ01LM"],
-    'mi_spec': [
-        ['2.1', '2.1', 'illuminance', 'sensor'],
-        ['3.1', '3.1', 'battery', 'sensor'],
-    ]
-}, {
     'lumi.sen_ill.agl01': ["Aqara", "Light Sensor T1", "GZCGQ11LM"],
     'params': [
         ['0.3.85', None, 'illuminance', 'sensor'],
