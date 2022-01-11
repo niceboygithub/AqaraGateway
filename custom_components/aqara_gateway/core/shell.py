@@ -202,9 +202,7 @@ class TelnetShellG2H(TelnetShell):
             #self.write(password.encode() + b"\n")
             self.run_command(password)
 
-        command = "stty -echo"
-        self.write(command.encode() + b"\n")
-        self.read_until(b"stty -echo\n", timeout=10)
+        self.run_command("stty -echo")
 
 
 class TelnetShellE1(TelnetShell):
@@ -223,9 +221,7 @@ class TelnetShellE1(TelnetShell):
         self.read_until(b"/ # ", timeout=30)
         self._suffix = "/ # "
 
-        command = "stty -echo"
-        self.write(command.encode() + b"\n")
-        self.read_until(b"stty -echo\n", timeout=10)
+        self.run_command("stty -echo")
 
 
 class TelnetShellG3(TelnetShell):
@@ -246,10 +242,8 @@ class TelnetShellG3(TelnetShell):
         if password:
             self.read_until(b"Password: ", timeout=3)
             self.write(password.encode() + b"\n")
-        command = "cd /"
-        self.write(command.encode() + b"\n")
 
-        command = "stty -echo"
-        self.write(command.encode() + b"\n")
-
+        self.run_command("cd /")
         self._suffix = "/ # "
+        self.run_command("stty -echo")
+

@@ -779,13 +779,8 @@ def prepare_aqaragateway(shell, model):
     command = "mkdir -p /data/scripts"
     shell.write(command.encode() + b"\n")
     time.sleep(1)
-    if model in SIGMASTAR_MODELS:
-        command = "echo -e '#!/bin/sh\r\n\r\nfw_manager.sh -r\r\n" \
-            "/bin/riu_w 101e 53 3012\r\ntelnetd' > /data/scripts/post_init.sh"
-    else:
-        command = "echo -e '#!/bin/sh\r\n\r\nfw_manager.sh -r\r\n" \
-            "echo enable > /sys/class/tty/tty/enable\r\ntelnetd' "\
-                "> /data/scripts/post_init.sh"
+    command = "echo -e '#!/bin/sh\r\n\r\nfw_manager.sh -r\r\n" \
+        "fw_manager.sh -t -k' > /data/scripts/post_init.sh"
     shell.run_command(command)
     command = "chmod a+x /data/scripts/post_init.sh"
     shell.run_command(command)
