@@ -22,6 +22,7 @@ from .const import CONF_MODEL, DOMAIN, SIGMASTAR_MODELS, REALTEK_MODELS, SUPPORT
 _LOGGER = logging.getLogger(__name__)
 
 MD5_MOSQUITTO_ARMV7L = '0422c48517dc464a2e986a1038dc448a'
+MD5_MOSQUITTO_NEW_ARMV7L = '329fbbc41bad4df99760af6a9a6be150'
 MD5_MOSQUITTO_MIPSEL = 'e0ce4757cfcccb079d89134381fd11b0'
 
 class Gateway(Thread):
@@ -792,7 +793,7 @@ def prepare_aqaragateway(shell, model):
     shell.write(command.encode() + b"\n")
     time.sleep(1)
     if model in SIGMASTAR_MODELS:
-        shell.check_bin('mosquitto', MD5_MOSQUITTO_ARMV7L , 'bin/armv7l/mosquitto')
+        shell.check_bin('mosquitto', MD5_MOSQUITTO_NEW_ARMV7L , 'bin/armv7l/mosquitto_new')
         command = "chattr +i /data/scripts"
         shell.run_command(command)
     elif model in REALTEK_MODELS:
