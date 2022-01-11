@@ -617,13 +617,15 @@ class Gateway(Thread):
 
             # https://github.com/Koenkk/zigbee2mqtt/issues/798
             # https://www.maero.dk/aqara-temperature-humidity-pressure-sensor-teardown/
-            if (prop == 'temperature' and
-                    device['model'] != 'lumi.airmonitor.acn01'):
-                if -4000 < param['value'] < 12500:
-                    payload[prop] = param['value'] / 100.0
-            elif (prop == 'humidity' and
-                    device['model'] != 'lumi.airmonitor.acn01'):
-                if 0 <= param['value'] <= 10000:
+            if prop == 'temperature':
+                if device['model'] == 'lumi.airmonitor.acn01' and self.cloud == 'miot':
+                    payload[prop] = param['value']
+                elif -4000 < param['value'] < 12500:
+                        payload[prop] = param['value'] / 100.0
+            elif prop == 'humidity':
+                if device['model'] == 'lumi.airmonitor.acn01' and self.cloud == 'miot':
+                    payload[prop] = param['value']
+                elif 0 <= param['value'] <= 10000:
                     payload[prop] = param['value'] / 100.0
             elif prop == 'pressure':
                 payload[prop] = param['value'] / 100.0
@@ -633,6 +635,8 @@ class Gateway(Thread):
                     continue
                 # not using coin cell battery
                 if 'aqara.lock' in device['model']:
+                    payload[prop] = param['value']
+                elif 'lumi.motion.agl02' in device['model']:
                     payload[prop] = param['value']
                 else:
                     payload[prop] = (

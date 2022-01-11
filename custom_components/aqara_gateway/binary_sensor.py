@@ -163,18 +163,29 @@ class GatewayNatgasSensor(GatewayBinarySensor, BinarySensorEntity):
 
 class GatewayMotionSensor(GatewayBinarySensor):
     """Representation of a Xiaomi/Aqara Motion Sensor."""
-    _default_delay = None
-    _last_on = 0
-    _last_off = 0
-    _timeout_pos = 0
-    _unsub_set_no_motion = None
-    _state = None
-    _state = False
-    _battery = None
-    _chip_temperature = None
-    _lqi = None
-    _voltage = None
-    is_metric = True
+
+    def __init__(
+        self,
+        gateway,
+        device,
+        attr,
+    ):
+        """Initialize the Xiaomi/Aqara Motion Sensor."""
+        self._default_delay = None
+        self._last_on = 0
+        self._last_off = 0
+        self._timeout_pos = 0
+        self._unsub_set_no_motion = None
+        self._state = False
+        self._battery = None
+        self._chip_temperature = None
+        self._lqi = None
+        self._voltage = None
+        self._open_since = None
+        self.is_metric = True
+        if device['model'] in ('lumi.motion.agl02'):
+            self.is_metric = False
+        super().__init__(gateway, device, attr)
 
     async def async_added_to_hass(self):
         """ add to hass """
@@ -315,7 +326,8 @@ class GatewayDoorSensor(GatewayBinarySensor, BinarySensorEntity):
         self._open_since = None
         self.is_metric = True
         self.has_since = False
-        if device['model'] in ('lumi.sensor_magnet.aq2', 'lumi.magnet.agl02', 'lumi.magnet.ac01'):
+        if device['model'] in (
+                'lumi.sensor_magnet.aq2', 'lumi.magnet.agl02', 'lumi.magnet.ac01'):
             self.is_metric = False
             self.has_since = True
         super().__init__(gateway, device, attr)
