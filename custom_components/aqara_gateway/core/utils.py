@@ -85,6 +85,7 @@ DEVICES = [{
 }, {
     # on/off, power measurement
     'lumi.plug.sacn03': ["Aqara", "Socket H1 USB", "QBCZ15LM"],  # @miniknife88
+    'lumi.plug.acn003': ["Aqara", "Socket X1 USB", "QBCZ16LM"],
     'params': [
         ['0.11.85', 'load_voltage', 'power', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
@@ -256,6 +257,8 @@ DEVICES = [{
 }, {
     # light with brightness and color temp
     'lumi.light.cwac02': ["Aqara", "Bulb T1", "ZNLDP13LM"],  # @Kris
+    'lumi.light.acn014': ["Aqara", "Bulb T1", "ZNLDP14LM"],
+    'lumi.light.acn015': ["Aqara", "Sun Light H1", "QKD01LM"],
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['1.6.85', None, 'ms_to_turn_on', None],
@@ -290,6 +293,7 @@ DEVICES = [{
     # light with brightness and color temp
     'lumi.light.cwacn1': ["Aqara", "0-10V Dimmer", "ZNTGMK12LM"],  # @miniknife88
     'lumi.light.cwjwcn01': ["Aqara", "Jiawen 0-12V Dimmer", "Z204"],  # @Kris
+    'lumi.light.acn004': ["Aqara", "Smart Dimmer Controller T1 Pro", "SSWQD02LM"],
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
@@ -309,6 +313,21 @@ DEVICES = [{
         [None, 'hs_color', 'hs_color', 'light'],
         ['8.0.2022', None, 'ambilight', None],
         ['8.0.2150', None, 'dynamic', None],
+    ]
+}, {
+    # light with brightness
+    'lumi.light.wjwcn01': ["Aqara", "Spot Light (Adjustable Brightness)", ""],
+    'lumi.light.acn006': ["Aqara", "Smart Spot Light (24 Degree)", "ZNCXGDD01LM"],
+    'lumi.light.acn007': ["Aqara", "Smart Grille Light (6-Lamp)", "ZNCXGDD02LM"],
+    'lumi.light.acn008': ["Aqara", "Smart Grille Light (12-Lamp)", "ZNCXGDD03LM"],
+    'lumi.light.acn009': ["Aqara", "Smart Light (30cm)", "ZNCXGDD04LM"],
+    'lumi.light.acn010': ["Aqara", "Smart Light (60cm)", "ZNCXGDD05LM"],
+    'lumi.light.acn011': ["Aqara", "Smart Pendant Light", "ZNCXGDD06LM"],
+    'lumi.light.acn012': ["Aqara", "Smart Foldable Grille Light (6-Lamp)", "ZNCXGDD07LM"],
+    'lumi.light.acn013': ["Aqara", "Smart Magnetic Wall Washer Light (22cm)", "ZNCXGDD08LM"],
+    'params': [
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['14.1.85', 'light_level', 'brightness', None],
     ]
 }, {
     # button switch, no retain
@@ -391,6 +410,15 @@ DEVICES = [{
         ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
 }, {
+    'lumi.motion.ac01': ["Aqara", "Presence Detector FP1", "RTCGQ12LM"],
+    'params': [
+        ['0.4.85', 'illumination', 'illuminance', 'sensor'],
+        ['3.51.85', None, 'motion', 'binary_sensor'],
+        ['13.27.85', None, 'motion', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['8.0.2115', None, 'detect_interval', None],
+    ]
+}, {
     # water leak sensor
     'lumi.sensor_wleak.aq1': ["Aqara", "Water Leak Sensor", "SJCGQ11LM"],
     'lumi.flood.agl02': ["Aqara", "Water Leak Sensor T1", "SJCGQ12LM"],  # @Kris
@@ -419,6 +447,7 @@ DEVICES = [{
     ]
 }, {
     'lumi.sensor_smoke': ["Honeywell", "Smoke Sensor", "JTYJ-GD-01LM/BW"],
+    'lumi.sensor_smoke.acn03': ["Aqara", "Smoke Sensor", "JTYJ-GD-02LM/BW"],
     'params': [
         ['0.1.85', 'density', 'smoke density', 'sensor'],
         ['13.1.85', 'alarm', 'smoke', 'binary_sensor'],
@@ -434,6 +463,7 @@ DEVICES = [{
     'lumi.curtain': ["Aqara", "Curtain", "ZNCLDJ11LM"],
     'lumi.curtain.aq2': ["Aqara", "Roller Shade", "ZNGZDJ11LM"],
     'lumi.curtain.hagl07': ["Aqara", "Curtain C2", "ZNCLDJ11LM"],   # @darkbao
+    'lumi.curtain.vagl02': ["Aqara", "Curtain T1", "ZNGZDJ15LM"],
     'params': [
         ['1.1.85', 'curtain_level', 'position', None],
         ['14.2.85', None, 'motor', 'cover'],
@@ -458,14 +488,17 @@ DEVICES = [{
         ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
 }, {
-    'lumi.lock.acn03': ["Aqara", "Door Lock S2 Pro", "ZNMS12LM"],
+    'lumi.lock.acn03': ["Aqara", "Door Lock S2 Pro", "ZNMS13LM"],
+    'lumi.lock.acn04': ["Aqara", "Door Lock HL", "ZNMS15LM"],
+    'lumi.lock.acn05': ["Aqara", "Door Lock S2 Pro-B", "ZNMS16LM"],
     'params': [
-        ['13.1.85', None, 'key_id', 'sensor'],
+        ['3.1.85', 'reverse_lock_state', 'lock', 'binary_sensor'],
         ['13.26.85', 'door_state', 'door', 'binary_sensor'],
-        ['3.1.85', 'reverse_lock_state', 'occupancy', 'binary_sensor'],
-        ['13.28.85', None, 'lock_state', 'sensor'],
-        ['13.25.85', None, 'lock_action', 'sensor'],
-        ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['8.0.2001', 'bat_percent', 'battery', 'sensor'],
+        ['13.1.85', None, 'key_id', None],
+        ['13.25.85', None, 'lock_control', None],
+        ['13.28.85', None, 'lock_state', None],
+        [None, None, 'action', 'sensor'],
     ]
 }, {
     'aqara.lock.wbzac1': ["Aqara", "Door Lock P100", "ZNMS19LM"],
@@ -562,7 +595,7 @@ DEVICES = [{
         ['14.16.85', None, 'reboot', None],
     ]
 }, {
-    'lumi.airrtc.tcpecn02': ["Aqara", "Thermostat (CO2)", "KTWKQ04ES"],
+    'lumi.airrtc.tcpco2ecn01': ["Aqara", "Thermostat (CO2)", "KTWKQ04ES"],
     'params': [
         ['0.1.85', None, 'carbon_dioxide', 'sesor'],
         ['3.1.85', 'power_status', 'power', None],
@@ -611,6 +644,24 @@ DEVICES = [{
         ['14.7.85', 'single_click_control_mode', 'mode', None],
         ['14.8.85', 'double_click_control_mode', 'mode', None],
         ['14.9.85', 'long_press_control_mode', 'mode', None],
+    ]
+}, {
+    'lumi.curtain.acn004': ["Aqara", "Curtain Controller X1", "ZNJLBL02LM"],
+    'lumi.curtain.acn007': ["Aqara", "Curtain Controller", "ZNJLBL03LM"],
+    'params': [
+        ['1.1.85', 'curtain_level', 'position', None],
+        ['4.1.85', None, 'motor_stroke', None],
+        ['4.2.85', None, 'polarity', None],
+        ['14.2.85', None, 'mode', None],
+        ['14.3.85', None, 'speed', None],
+        ['14.4.85', 'run_state', 'run_state', None],
+        ['14.8.85', None, 'motor', 'cover'],
+    ]
+}, {
+    'aqara.tow_w.acn001': ["Aqara", "Towel Warmer H1", "ZNMJJ02LM"],
+    'params': [
+        ['0.1.85', 'temperature', 'temperature', 'sensor'],
+        ['4.21.85', 'switch', 'switch', 'switch'],
     ]
 #}, {
 #    # cube with rotation
