@@ -57,15 +57,26 @@ chmod +x /data/scripts/post_init.sh
 ```
 Then restart gateway by reboot command.
 
-
-## Not Flash Custom firmware method (for G2H, E1 hub, G3)
+## Not Flash Custom firmware method (for G2H)
 
 ```shell
 mkdir /data/bin
 cd /data/bin
 wget -O /data/bin/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"
 chmod +x /data/bin/curl
-/data/bin/curl -s -k -L -o /data/bin/mosquitto https://github.com/niceboygithub/AqaraCameraHubfw/raw/main/binutils/mosquitto
+/data/bin/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/binutils/mosquitto
+chmod a+x /data/bin/mosquitto
+
+```
+
+## Not Flash Custom firmware method (for E1 hub, G3)
+
+```shell
+mkdir /data/bin
+cd /data/bin
+wget -O /data/bin/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"
+chmod +x /data/bin/curl
+/data/bin/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/binutils/mosquitto_e1
 chmod a+x /data/bin/mosquitto
 
 ```
