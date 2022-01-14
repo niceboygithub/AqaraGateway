@@ -630,20 +630,12 @@ class Gateway(Thread):
                     payload[prop] = param['value'] / 100.0
             elif prop == 'pressure':
                 payload[prop] = param['value'] / 100.0
-            elif prop in ('battery', 'voltage'):
-                # sometimes voltage and battery came in one payload
-                if prop == 'voltage' and 'battery' in payload:
-                    continue
-                # not using coin cell battery
-                if 'aqara.lock' in device['model']:
-                    payload[prop] = param['value']
-                elif 'lumi.motion.agl02' in device['model']:
-                    payload[prop] = param['value']
-                else:
-                    payload[prop] = (
-                        param['value'] if param['value'] < 1000
-                        else round((min(param['value'], 3200) - 2500) / 7)
-                    )
+            elif prop == 'battery':
+                # I do not know if the formula is correct, so battery is more
+                # important than voltage
+                payload[prop] = Utils.fix_xiaomi_battery(param['value'])
+            elif prop == 'voltage':
+                payload[prop] = Utils.fix_xiaomi_voltage(param['value'])
             elif prop == 'alive' and param['value']['status'] == 'offline':
                 if not self.options.get('noffline', False):
                     device['online'] = False

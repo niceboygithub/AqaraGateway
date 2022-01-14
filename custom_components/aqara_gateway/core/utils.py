@@ -1473,6 +1473,25 @@ class Utils:
         except DeviceException as err:
             raise PlatformNotReady from err
 
+    # from AlexxIT's XaiomiGateway3 repo
+    @staticmethod
+    def fix_xiaomi_battery(value: int) -> int:
+        """Convert battery voltage to battery percent."""
+        if value <= 100:
+            return value
+        if value <= 2700:
+            return 0
+        if value >= 3200:
+            return 100
+        return int((value - 2700) / 5)
+
+    @staticmethod
+    def fix_xiaomi_voltage(value: int) -> float:
+        """Convert voltage to battery percent."""
+        if value <= 1000:
+            return round(value * 1000.0, 2)
+        return value
+
 
 class AqaraGatewayDebug(logging.Handler, HomeAssistantView):
     # pylint: disable=abstract-method, arguments-differ
