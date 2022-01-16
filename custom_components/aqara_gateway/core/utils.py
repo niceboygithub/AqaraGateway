@@ -439,6 +439,12 @@ DEVICES = [{
         [None, None, 'action', 'binary_sensor']
     ]
 }, {
+    'lumi.sen_ill.mgl01': ["Xiaomi", "Light Sensor", "GZCGQ01LM"],
+    'params': [
+        ['0.3.85', None, 'illuminance', 'sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
+}, {
     'lumi.sen_ill.agl01': ["Aqara", "Light Sensor T1", "GZCGQ11LM"],
     'params': [
         ['0.3.85', None, 'illuminance', 'sensor'],
@@ -816,12 +822,6 @@ DEVICES_AIOT = [{
         # ['5.7', '5.7', 'voltage', 'sensor'],
     ]
 }, {
-    'lumi.sen_ill.mgl01': ["Xiaomi", "Light Sensor", "GZCGQ01LM"],
-    'params': [
-        ['0.3.85', None, 'illuminance', 'sensor'],
-        ['8.0.2001', 'battery', 'battery', 'sensor'],
-    ]
-}, {
     'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
     'params': [
         ['3.1.85', None, 'motion', None],
@@ -1058,12 +1058,6 @@ DEVICES_MIOT = [{
         ['3.1', '3.1', 'consumption', 'sensor'],
         ['3.2', '3.2', 'power', 'sensor'],
         # ['5.7', '5.7', 'voltage', 'sensor'],
-    ]
-}, {
-    'lumi.sen_ill.mgl01': ["Xiaomi", "Light Sensor", "GZCGQ01LM"],
-    'mi_spec': [
-        ['2.1', '2.1', 'illuminance', 'sensor'],
-        ['3.1', '3.1', 'battery', 'sensor'],
     ]
 }, {
     'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
