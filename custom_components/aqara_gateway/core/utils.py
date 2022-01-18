@@ -412,7 +412,6 @@ DEVICES = [{
 }, {
     'lumi.motion.ac01': ["Aqara", "Presence Detector FP1", "RTCGQ12LM"],
     'params': [
-        ['0.4.85', 'illumination', 'illuminance', 'sensor'],
         ['3.51.85', None, 'motion', 'binary_sensor'],
         ['13.27.85', None, 'motion', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
