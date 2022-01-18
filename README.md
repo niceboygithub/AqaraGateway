@@ -40,15 +40,13 @@ You can use [custom open telnet command](https://gist.github.com/zvldz/1bd6b2153
 
 After telnet to gateway via putty, there are two methods (Flash or Not) to enable telnet and public mqtt.
 
-## Not Flash Custom firmware method (not for G2H, E1 hub, G3)
+## Not Flash Custom firmware method (NOT for G2H, E1 hub, G3)
 
 ```shell
 mkdir /data/bin
 cd /data/bin
-wget -O /data/bin/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"
-chmod +x /data/bin/curl
-/data/bin/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/binutils/mosquitto
-chmod a+x /data/bin/mosquitto
+wget -O /data/bin/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1"; chmod +x /data/bin/curl
+/data/bin/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/binutils/mosquitto; chmod a+x /data/bin/mosquitto
 
 mkdir /data/scripts
 cd /data/scripts
@@ -62,10 +60,8 @@ Then restart gateway by reboot command.
 ```shell
 mkdir /data/bin
 cd /data/bin
-wget -O /data/bin/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"
-chmod +x /data/bin/curl
-/data/bin/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/binutils/mosquitto
-chmod a+x /data/bin/mosquitto
+wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"; chmod +x /tmp/curl
+/tmp/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/binutils/mosquitto; chmod a+x /data/bin/mosquitto
 
 ```
 
@@ -74,10 +70,8 @@ chmod a+x /data/bin/mosquitto
 ```shell
 mkdir /data/bin
 cd /data/bin
-wget -O /data/bin/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"
-chmod +x /data/bin/curl
-/data/bin/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/binutils/mosquitto_e1
-chmod a+x /data/bin/mosquitto
+wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"; chmod +x /tmp/curl
+/tmp/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/binutils/mosquitto_e1; chmod a+x /data/bin/mosquitto
 
 ```
 
