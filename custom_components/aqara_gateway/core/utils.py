@@ -155,6 +155,7 @@ DEVICES = [{
 }, {
     # on/off
     'lumi.switch.b1lacn02': ["Aqara", "Single Wall Switch D1", "QBKG21LM"],
+    'lumi.switch.l1acn1': ["Aqara", "Single Wall Switch H1", "QBKG27LM"],  # @firesunCN
     'params': [
         ['4.1.85', 'channel_0', 'switch', 'switch'],  # or neutral_0?
         ['13.1.85', None, 'button', None],
@@ -173,6 +174,7 @@ DEVICES = [{
     ]
 }, {
     'lumi.switch.b2lacn02': ["Aqara", "Double Wall Switch D1", "QBKG22LM"],
+    'lumi.switch.l2acn1': ["Aqara", "Double Wall Switch H1", "QBKG28LM"],  # @firesunCN
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -184,6 +186,7 @@ DEVICES = [{
 }, {
     # triple channel on/off, no neutral wire
     'lumi.switch.l3acn3': ["Aqara", "Triple Wall Switch D1", "QBKG25LM"],
+    'lumi.switch.l3acn1': ["Aqara", "Triple Wall Switch H1", "QBKG29LM"],  # @firesunCN
     'params': [
         ['4.1.85', 'neutral_0', 'channel 1', 'switch'],  # @to4ko
         ['4.2.85', 'neutral_1', 'channel 2', 'switch'],  # @to4ko
