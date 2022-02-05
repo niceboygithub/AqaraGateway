@@ -41,6 +41,7 @@ DEVICES = [{
     'lumi.gateway.aqcn02': ["Aqara", "Hub E1", "ZHWG16LM"],  # tested
     'lumi.camera.gwagl02': ["Aqara", "Camera Hub G2H", "ZNSXJ12LM"],  # tested
     'lumi.camera.gwpagl01': ["Aqara", "Camera Hub G3", "ZNSXJ13LM"],  # tested
+    'lumi.camera.gwpgl1': ["Aqara", "Camera Hub G3", "CH-H03"],
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],
