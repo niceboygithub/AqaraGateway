@@ -1113,12 +1113,18 @@ DEVICES_MIOT = [{
 },{
     # door window sensor
     'lumi.magnet.agl02': ["Aqara", "Door Sensor T1", "MCCGQ12LM"],  # @Kris
-    'lumi.magnet.acn001': ["Aqara", "Door Sensor E1", "MCCGQ14LM"],
     'mi_spec': [
         ['2.1', 'status', 'contact', 'binary_sensor'],
         ['3.2', '3.2', 'voltage', None],
         ['5.1', None, 'elapsed_time', None],
         ['6.1', 'battery', 'battery', 'sensor'],
+    ]
+},{
+    # door window sensor
+    'lumi.magnet.acn001': ["Aqara", "Door Sensor E1", "MCCGQ14LM"],
+    'mi_spec': [
+        ['2.1', 'status', 'contact', 'binary_sensor'],
+        ['3.2', 'voltage', 'battery', 'sensor']
     ]
 }, {
     # motion sensor with illuminance
