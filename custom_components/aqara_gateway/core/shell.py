@@ -41,6 +41,7 @@ class TelnetShell(Telnet):
             self.read_until(b"Password: ", timeout=1)
             self.write(self._password.encode() + b"\n")
         self.run_command("stty -echo")
+        self.read_until(b"/ # ", timeout=10)
 
 #        self.run_command("export PS1='# '")
 
@@ -222,6 +223,7 @@ class TelnetShellE1(TelnetShell):
         self._suffix = "/ # "
 
         self.run_command("stty -echo")
+        self.read_until(b"/ # ", timeout=10)
 
 
 class TelnetShellG3(TelnetShell):
