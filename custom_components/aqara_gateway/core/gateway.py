@@ -770,7 +770,6 @@ def prepare_aqaragateway(shell, model):
         shell.run_command(command)
     command = "mkdir -p /data/scripts"
     shell.write(command.encode() + b"\n")
-    time.sleep(1)
     command = "echo -e '#!/bin/sh\r\n\r\nfw_manager.sh -r\r\n" \
         "fw_manager.sh -t -k' > /data/scripts/post_init.sh"
     shell.run_command(command)
@@ -778,7 +777,6 @@ def prepare_aqaragateway(shell, model):
     shell.run_command(command)
     command = "mkdir -p /data/bin"
     shell.write(command.encode() + b"\n")
-    time.sleep(1)
     if model in SIGMASTAR_MODELS:
         shell.check_bin('mosquitto', MD5_MOSQUITTO_NEW_ARMV7L , 'bin/armv7l/mosquitto_new')
         command = "chattr +i /data/scripts"

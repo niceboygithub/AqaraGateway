@@ -77,7 +77,6 @@ class TelnetShell(Telnet):
     def file_exist(self, filename: str) -> bool:
         """ check file exit """
         raw = self.run_command("ls -al {}".format(filename))
-        time.sleep(.1)
         if "No such" not in str(raw):
             return True
         return False
