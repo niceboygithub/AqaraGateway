@@ -130,7 +130,13 @@ class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
         raw = self._shell.get_prop('persist.app.arming_guard')
         if raw == 'true':
             raw = self._shell.get_prop('persist.app.arming_state')
-            self._state = ALARM_STATES[int(raw)]
+            if raw is not ["0", "1", "2", "3"]:
+                raw = self._shell.get_prop('persist.app.arming_state')
+            try:
+                self._state = ALARM_STATES[int(raw)]
+            except:
+                self._state = 0
+
 
     def update(self, *args):
         """Update the alarm status."""
