@@ -416,10 +416,20 @@ DEVICES = [{
 }, {
     'lumi.motion.ac01': ["Aqara", "Presence Detector FP1", "RTCGQ12LM"],
     'params': [
-        ['3.51.85', None, 'motion', 'binary_sensor'],
-        ['13.27.85', None, 'motion', 'binary_sensor'],
-        ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['3.51.85', None, 'occupancy', 'binary_sensor'],
         ['8.0.2115', None, 'detect_interval', None],
+        ['4.1.85', None, 'monitoring_mode', None],
+        ['4.2.85', None, 'reverted_mode', None],
+        ['4.22.85', None, '4.22.85', None],
+        ['14.47.85', None, 'approaching_distance', None],
+        ['14.48.85', None, '14.48.85', None],
+        ['14.49.85', None, '14.49.85', None],
+        ['14.92.85', None, 'edge_region', None],
+        ['14.93.85', None, 'exits_entrances_region', None],
+        ['14.94.85', None, 'interference_region', None],
+        ['14.56.85', None, 'detecting_region', None],
+        ['13.21.85', None, 'occupancy_region', 'sensor'],
+        ['13.27.85', None, 'movements', 'sensor'],
     ]
 }, {
     # water leak sensor

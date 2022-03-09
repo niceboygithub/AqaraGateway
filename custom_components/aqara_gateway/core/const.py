@@ -165,6 +165,7 @@ ICONS = {
     'hear_rate': 'mdi:heart-pulse',
     'breath_rate': 'mdi:lungs',
     'body_movements': 'mdi:page-layout-body',
+    'movements': 'mdi:page-layout-body'
 }
 
 # Binary_sensor
@@ -322,3 +323,16 @@ SWITCH_ATTRIBUTES = (
     'poweroff_memory',
     )
 
+# FP1
+APPROACHING_DISTANCE = 'approaching_distance'
+DETECTING_REGION = 'detecting_region'
+EXITS_ENTRANCES_REGION = 'exits_entrances_region'
+INTERFERENCE_REGION = 'interference_region'
+MONITORING_MODE = 'monitoring_mode'
+REVERTED_MODE = 'reverted_mode'
+ATTR_APPROACHING_DISTANCE = 'Approaching distance'
+ATTR_DETECTING_REGION = 'Detecting region'
+ATTR_EXITS_ENTRANCES_REGION = 'Exits/entrances region'
+ATTR_INTERFERENCE_REGION = 'Interference region'
+ATTR_MONITORING_MODE = 'Monitoring mode'
+ATTR_REVERTED_MODE = 'Reverted mode'

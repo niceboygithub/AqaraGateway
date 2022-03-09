@@ -37,6 +37,18 @@ from .core.const import (
     LATCH_STATUS,
     LI_BATTERY,
     LI_BATTERY_TEMP,
+    APPROACHING_DISTANCE,
+    DETECTING_REGION,
+    EXITS_ENTRANCES_REGION,
+    INTERFERENCE_REGION,
+    MONITORING_MODE,
+    REVERTED_MODE,
+    ATTR_APPROACHING_DISTANCE,
+    ATTR_DETECTING_REGION,
+    ATTR_EXITS_ENTRANCES_REGION,
+    ATTR_INTERFERENCE_REGION,
+    ATTR_MONITORING_MODE,
+    ATTR_REVERTED_MODE
     )
 from .core.lock_data import (
     WITH_LI_BATTERY,
@@ -80,6 +92,10 @@ async def async_setup_entry(hass, entry, add_entities):
                 add_entities([GatewaySensor(gateway, device, attr)])
             elif device['type'] == 'zigbee':
                 add_entities([GatewaySensor(gateway, device, attr)])
+        elif attr == 'movements':
+            add_entities([GatewayMoveSensor(gateway, device, attr)])
+        elif attr == 'occupancy_region':
+            add_entities([GatewayOccupancyRegionSensor(gateway, device, attr)])
         else:
             add_entities([GatewaySensor(gateway, device, attr)])
 
@@ -156,12 +172,6 @@ class GatewaySensor(GatewayGenericDevice, SensorEntity):
             }
             return attrs
         return None
-
-    @property
-    def entity_category(self) -> str:
-        """Device entity category."""
-        # ENTITY_CATEGORY_CONFIG
-        return "config"
 
     def update(self, data: dict = None):
         """update sensor."""
@@ -404,7 +414,6 @@ class GatewayLockSensor(GatewaySensor):
         self.async_write_ha_state()
 
 
-
 class GatewayKeyIDSensor(GatewaySensor):
     """Representation of a Aqara Lock Key ID."""
 
@@ -474,3 +483,105 @@ class GatewaySleepMonitorSensor(GatewaySensor):
                 self._state = value
 
         self.async_write_ha_state()
+
+
+class GatewayMoveSensor(GatewaySensor):
+    """Representation of a Aqara Moving Sensor."""
+    # pylint: disable=too-many-instance-attributes
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return ICONS.get(self._attr)
+
+    @property
+    def device_class(self):
+        """Return the class of this device."""
+        return "moving"
+
+    def update(self, data: dict = None):
+        """ update move state """
+        # handle available change
+        for key, value in data.items():
+            if key == self._attr:
+                self._state = value
+
+        if self._attr in data:
+            self._state = data[self._attr]
+            self.async_write_ha_state()
+
+            # repeat event from Aqara integration
+            self.hass.bus.async_fire('xiaomi_aqara.click', {
+                'entity_id': self.entity_id, 'click_type': self._state
+            })
+
+        self.schedule_update_ha_state()
+
+
+class GatewayOccupancyRegionSensor(GatewaySensor):
+    """Representation of a Aqara Occupancy Region Sensor."""
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, gateway, device, attr):
+        """Initialize the Aqara lock device."""
+        super().__init__(gateway, device, attr)
+        self._chip_temperature = None
+        self._lqi = None
+        self._state = None
+        self._approaching_distance = None
+        self._detecting_region = None
+        self._exits_entrances_region = None
+        self._interference_region = None
+        self._monitoring_mdoe = None
+        self._reverted_mode = None
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return "mdi:square-opacity"
+
+    @property
+    def device_class(self):
+        """Return the class of this device."""
+        return "moving"
+
+    def update(self, data: dict = None):
+        """ update move state """
+        # handle available change
+        for key, value in data.items():
+            if key == APPROACHING_DISTANCE:
+                self._approaching_distance = value
+            if key == DETECTING_REGION:
+                self._detecting_region = value
+            if key == EXITS_ENTRANCES_REGION:
+                self._exits_entrances_region = value
+            if key == INTERFERENCE_REGION:
+                self._interference_region = value
+            if key == MONITORING_MODE:
+                self._monitoring_mode = value
+            if key == REVERTED_MODE:
+                self._reverted_mode = value
+            if key == CHIP_TEMPERATURE:
+                self._chip_temperature = value
+            if key == LQI:
+                self._lqi = value
+            if key == self._attr:
+                self._state = value
+
+        if self._attr in data:
+            self._state = data[self._attr]
+            self.async_write_ha_state()
+
+    @property
+    def extra_state_attributes(self):
+        """Return the state attributes."""
+        attrs = {
+            ATTR_LQI: self._lqi,
+            ATTR_CHIP_TEMPERATURE: self._chip_temperature,
+            ATTR_APPROACHING_DISTANCE: self._approaching_distance,
+            ATTR_DETECTING_REGION: self._detecting_region,
+            ATTR_EXITS_ENTRANCES_REGION: self._exits_entrances_region,
+            ATTR_INTERFERENCE_REGION: self._interference_region,
+            ATTR_MONITORING_MODE: self._monitoring_mode,
+            ATTR_REVERTED_MODE: self._reverted_mode
+        }
+        return attrs
