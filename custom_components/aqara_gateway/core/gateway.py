@@ -240,6 +240,8 @@ class Gateway(Thread):
                 model = shell.get_prop("ro.sys.model")
             else:
                 raw = str(shell.read_file('/mnt/config/miio/device.conf'))
+                if len(raw) <= 1:
+                    raw = str(shell.read_file('/mnt/config/miio/device.conf'))
                 data = re.search(r"did=([0-9]+).+", raw)
                 did = data.group(1) if data else ''
                 data = re.search(r"model=([a-zA-Z0-9.-]+).+", raw)
