@@ -179,10 +179,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                 f"Cloud: {fwcloud}"
             )
 
-        if getattr(discovery_info, "hostname"):
-            self._host = discovery_info.hostname
-        else:
-            self._host = discovery_info[CONF_HOST]
+        self._host = address
         self._name = node_name
         self._password = ''
         self._token = ''

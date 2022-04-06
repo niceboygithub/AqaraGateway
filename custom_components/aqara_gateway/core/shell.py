@@ -203,6 +203,7 @@ class TelnetShellG2H(TelnetShell):
             self.run_command(password)
 
         self.run_command("stty -echo")
+        self._suffix = "# "
 
 
 class TelnetShellE1(TelnetShell):
@@ -248,3 +249,6 @@ class TelnetShellG3(TelnetShell):
         self._suffix = "/ # "
         self.run_command("stty -echo")
 
+
+class TelnetShellG2HPro(TelnetShellG3):
+    pass

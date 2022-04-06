@@ -17,7 +17,7 @@ from homeassistant.exceptions import PlatformNotReady
 from .const import DOMAIN, SIGMASTAR_MODELS
 
 SOFT_HACK_REALTEK = {"ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
-SOFT_HACK_SIGMASTAR = {"ssid": "\"\"", "pswd": "123123 ; /bin/riu_w 101e 53 3012 ; telnetd"}
+SOFT_HACK_SIGMASTAR = {"ssid": "\"\"", "pswd": "123123 ; passwd -d root ; /bin/riu_w 101e 53 3012 ; telnetd"}
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -42,6 +42,7 @@ DEVICES = [{
     'lumi.camera.gwagl02': ["Aqara", "Camera Hub G2H", "ZNSXJ12LM"],  # tested
     'lumi.camera.gwpagl01': ["Aqara", "Camera Hub G3", "ZNSXJ13LM"],  # tested
     'lumi.camera.gwpgl1': ["Aqara", "Camera Hub G3", "CH-H03"],
+    'lumi.camera.agl001': ["Aqara", "Camera Hub G2H Pro", "ZNSXJ15LM"],
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],
@@ -1437,7 +1438,8 @@ class Utils:
         """ return the gateway is aiot only """
         if model in ('lumi.camera.gwagl02', 'lumi.gateway.iragl5',
                      'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
-                     'lumi.gateway.sacn01'):
+                     'lumi.gateway.sacn01', 'lumi.camera.gwpagl01',
+                     'lumi.camera.agl001'):
             return True
         return False
 
@@ -1451,7 +1453,7 @@ class Utils:
     @staticmethod
     def get_info_store_path(model: str) -> Optional[str]:
         """ return the path of zigbee info """
-        if model.startswith('lumi.camera.'):
+        if model in ('lumi.camera.gwagl02'):
             return '/mnt/config'
         return '/data'
 

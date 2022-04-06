@@ -1,6 +1,6 @@
-# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN, G3 CN) integration for Home Assistant
+# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN, G3 CN, G2H Pro) integration for Home Assistant
 
-Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM, ZNSXJ13LM)**.
+Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM, ZNSXJ13LM, ZNSXJ15LM)**.
 Gateway support **Zigbee 3**.
 
 This integration was based on the development of [@AlexxIT](https://github.com/AlexxIT/XiaomiGateway3/), Thanks Alex.
@@ -62,6 +62,16 @@ mkdir /data/bin
 cd /data/bin
 wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"; chmod +x /tmp/curl
 /tmp/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/binutils/mosquitto; chmod a+x /data/bin/mosquitto
+
+```
+
+## Not Flash Custom firmware method (for G2H)
+
+```shell
+mkdir /data/bin
+cd /data/bin
+wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"; chmod +x /tmp/curl
+/tmp/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/binutils/mosquitto_g2hpro; chmod a+x /data/bin/mosquitto
 
 ```
 

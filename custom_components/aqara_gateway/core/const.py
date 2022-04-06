@@ -60,6 +60,7 @@ OPT_DEBUG = {
 }
 
 OPT_DEVICE_NAME = {
+    'g2h pro': "Aqara Camera Hub G2H Pro",
     'g3': "Aqara Camera Hub G3",
     'g2h': "Aqara Camera Hub G2H",
     'h1': "Aqara Smart Hub H1",
@@ -72,7 +73,9 @@ OPT_DEVICE_NAME = {
 SIGMASTAR_MODELS = [
     'lumi.gateway.aqcn02',
     'lumi.camera.gwagl02',
-    'lumi.camera.gwpagl01'
+    'lumi.camera.gwpagl01',
+    'lumi.camera.agl001',
+    'lumi.gateway.acn004'
 ]
 
 REALTEK_MODELS = [
