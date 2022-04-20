@@ -531,7 +531,7 @@ class GatewayOccupancyRegionSensor(GatewaySensor):
         self._detecting_region = None
         self._exits_entrances_region = None
         self._interference_region = None
-        self._monitoring_mdoe = None
+        self._monitoring_mode = None
         self._reverted_mode = None
 
     @property
