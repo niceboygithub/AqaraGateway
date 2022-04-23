@@ -408,6 +408,7 @@ DEVICES = [{
 }, {
     # motion sensor with illuminance
     'lumi.sensor_motion.aq2': ["Aqara", "Motion Sensor", "RTCGQ11LM"],
+    'lumi.motion.ac02': ["Aqara", "Motion Sensor P1", "RTCGQ14LM"],
     'params': [
         ['0.3.85', 'lux', 'illuminance_lux', None],
         ['0.4.85', 'illumination', 'illuminance', 'sensor'],
