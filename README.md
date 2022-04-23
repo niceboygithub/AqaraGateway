@@ -142,6 +142,14 @@ Go to Configuration->Info->system_health
 <img src="https://raw.githubusercontent.com/niceboygithub/AqaraGateway/master/system_health.png">
 
 
+### Aqara Presence Detector FP1
+
+Movements sensor
+```
+In the left and right monitoring mode, only report 2, 3, 4, 5, 6, 7;
+In the non-directional monitoring mode, only report 0, 1, 6, 7; 0: enter 1: leave 2: left in 3: right out 4 : Right in 5: Left out 6: Approaching 7: Far away
+```
+
 **Attention:** The component is under active development.
 
 <a href="https://www.buymeacoffee.com/niceboygithub" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
