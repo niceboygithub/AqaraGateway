@@ -2,7 +2,7 @@
   "domain": "aqara_gateway",
   "name": "Aqara Gateway",
   "config_flow": true,
-  "version": "0.0.13",
+  "version": "0.0.14",
   "zeroconf": ["_aqara._tcp.local.", "_aqara-setup._tcp.local."],
   "documentation": "https://github.com/niceboygithub/AqaraGateway",
   "issue_tracker": "https://github.com/niceboygithub/AqaraGateway/issues",
