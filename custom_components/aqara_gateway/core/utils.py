@@ -603,6 +603,21 @@ DEVICES = [{
         [None, None, 'lock_event', 'sensor'],
     ]
 }, {
+    'aqara.lock.dacn03': ["Aqara", "Door Lock A100", "ZNMS02ES"],
+    'params': [
+        ['13.17.85', 'lock_state', 'lock', 'sensor'],
+        ['13.18.85', None, 'key_type', None],
+        ['13.32.85', None, 'verification failed', None],
+        ['13.42.85', None, 'unlock by fringprint', None],
+        ['13.43.85', None, 'unlock by password', None],
+        ['13.44.85', None, 'unlock by nfc', None],
+        ['13.46.85', None, 'unlock by temporary password', None],
+        ['13.54.85', None, 'away mode', None],
+        [None, None, 'key_id', 'sensor'],
+        ['13.55.85', 'voltage', 'voltage', None],
+        ['13.56.85', 'battery', 'battery', 'sensor'],
+    ]
+}, {
     'lumi.airrtc.tcpecn01': ["Aqara", "Thermostat S1", "KTWKQ02ES"],
     # https://github.com/AlexxIT/XiaomiGateway3/issues/101
     'lumi.airrtc.tcpecn02': ["Aqara", "Thermostat S2", "KTWKQ03ES"],
@@ -699,6 +714,7 @@ DEVICES = [{
 DEVICES_AIOT = [{
     # with neutral wire
     'lumi.switch.n1acn1': ["Aqara", "Single Wall Switch H1 Pro", "QBKG30LM"],  # @Kris
+    'lumi.switch.acn029': ["Aqara", "Single Wall Switch H1M", "ZNQBKG24LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -710,6 +726,7 @@ DEVICES_AIOT = [{
     # with neutral wire
 #    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 Pro", "QBKG31LM"],  # @miniknife88
+    'lumi.switch.acn030': ["Aqara", "Double Wall Switch H1M", "ZNQBKG25LM"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -722,6 +739,7 @@ DEVICES_AIOT = [{
 }, {
     # with neutral wire, thanks @Mantoui
     'lumi.switch.n3acn1': ["Aqara", "Triple Wall Switch H1 Pro", "QBKG32LM"],  # @Kris
+    'lumi.switch.acn031': ["Aqara", "Triple Wall Switch H1M", "ZNQBKG26LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
