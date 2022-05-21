@@ -969,6 +969,17 @@ DEVICES_AIOT = [{
         ['3.1.85', 'alarm', 'moisture', 'binary_sensor'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
+}, {
+    'lumi.airrtc.agl001': ["Aqara", "Smart Radiator Thermostat E1", ""],
+    'params': [
+        ['0.1.85', 'temperature', 'temperature', 'sensor'],
+        ['1.8.85', None, 'target_temperature', None],
+        ['14.51.85', None, 'mode', None],
+        ['4.21.85', 'switch', 'switch', 'switch'],
+        ['4.25.85', 'check_switch', 'switch', 'switch'],
+        ['4.26.85', 'child_lock_switch', 'switch', 'switch'],
+        ['8.0.2001', 'battery', 'battery', 'sensor']
+    ]
 }]
 
 DEVICES_MIOT = [{
@@ -1220,9 +1231,17 @@ DEVICES_MIOT = [{
 }, {
     # water leak sensor
     'lumi.flood.acn001': ["Aqara", "Water Leak Sensor E1", "SJCGQ13LM"],
-    'params': [
+    'mi_spec': [
         ['2.1', 'alarm', 'moisture', 'binary_sensor'],
         ['6.1', 'battery', 'battery', 'sensor'],
+    ]
+}, {
+    'lumi.airrtc.agl001': ["Aqara", "Smart Radiator Thermostat E1", ""],
+    'mi_spec': [
+        ['2.4', '2.4', 'mode', None],
+        ['2.5', '2.5', 'target_temperature', None],
+        ['2.1', '2.1', 'switch', 'switch']
+        ['2.7', 'temperature', 'temperature', 'sensor'],
     ]
 }]
 
