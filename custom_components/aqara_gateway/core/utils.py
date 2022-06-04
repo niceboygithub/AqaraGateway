@@ -40,6 +40,7 @@ DEVICES = [{
     'lumi.gateway.sacn01': ["Aqara", "Smart Hub H1", "QBCZWG11LM"],
     'lumi.gateway.aqcn02': ["Aqara", "Hub E1", "ZHWG16LM"],  # tested
     'lumi.camera.gwagl02': ["Aqara", "Camera Hub G2H", "ZNSXJ12LM"],  # tested
+    'lumi.camera.gwag03': ["Aqara", "Camera Hub G2H", "CH-H01"],  # tested
     'lumi.camera.gwpagl01': ["Aqara", "Camera Hub G3", "ZNSXJ13LM"],  # tested
     'lumi.camera.gwpgl1': ["Aqara", "Camera Hub G3", "CH-H03"],
     'lumi.camera.agl001': ["Aqara", "Camera Hub G2H Pro", "ZNSXJ15LM"],
@@ -1370,6 +1371,8 @@ class Utils:
         # the model has an extra tail when added
         if re.match(r'\.v(\d)', zigbee_model[-3:]):
             zigbee_model = zigbee_model[:-3]
+
+        _LOGGER.debug(f"getting device, model: {zigbee_model}")
 
         devices = []
         devices.extend(DEVICES)
