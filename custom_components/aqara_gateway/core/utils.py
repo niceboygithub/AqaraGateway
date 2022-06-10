@@ -484,7 +484,7 @@ DEVICES = [{
 }, {
     'lumi.curtain': ["Aqara", "Curtain", "ZNCLDJ11LM"],
     'lumi.curtain.aq2': ["Aqara", "Roller Shade", "ZNGZDJ11LM"],
-    'lumi.curtain.hagl07': ["Aqara", "Curtain C2", "ZNCLDJ11LM"],   # @darkbao
+    'lumi.curtain.hagl07': ["Aqara", "Curtain C2", "ZNCLDJ14LM"],   # @darkbao
     'lumi.curtain.vagl02': ["Aqara", "Curtain T1", "ZNGZDJ15LM"],
     'params': [
         ['1.1.85', 'curtain_level', 'position', None],
@@ -950,6 +950,8 @@ DEVICES_AIOT = [{
     ]
 }, {
     'lumi.curtain.acn002': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
+    'lumi.curtain.acn003': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
+    'lumi.curtain.agl001': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
     'params': [
         ['0.1.85', None, 'working_time', None],
         ['1.1.85', 'curtain_level', 'position', None],
@@ -980,6 +982,15 @@ DEVICES_AIOT = [{
         ['4.25.85', 'check_switch', 'switch', 'switch'],
         ['4.26.85', 'child_lock_switch', 'switch', 'switch'],
         ['8.0.2001', 'battery', 'battery', 'sensor']
+    ]
+}, {
+    'lumi.airer.acn001': ["Aqara", "Smart Clothes Drying Rack H1", ""],
+    'params': [
+        ['4.21.85', 'light', 'switch', 'switch'],
+        ['4.22.85', 'disinfect', 'switch', 'switch'],
+        ['4.66.85', 'hot_drying', 'switch', 'switch'],
+        ['4.67.85', 'drying', 'switch', 'switch'],
+        ['14.51.85', None, 'airer_control', 'cover'],
     ]
 }]
 
@@ -1211,6 +1222,8 @@ DEVICES_MIOT = [{
 #    ]
 }, {
     'lumi.curtain.acn002': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
+    'lumi.curtain.acn003': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
+    'lumi.curtain.agl001': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
     'mi_spec': [
         ['1.4', '1.4', 'fw_ver', None],
         ['2.1', '2.1', 'fault', None],
@@ -1241,7 +1254,7 @@ DEVICES_MIOT = [{
     'mi_spec': [
         ['2.4', '2.4', 'mode', None],
         ['2.5', '2.5', 'target_temperature', None],
-        ['2.1', '2.1', 'switch', 'switch']
+        ['2.1', '2.1', 'switch', 'switch'],
         ['2.7', 'temperature', 'temperature', 'sensor'],
     ]
 }]
