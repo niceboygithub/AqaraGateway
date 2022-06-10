@@ -227,6 +227,8 @@ class Gateway(Thread):
             zb_coordinator = shell.get_prop("sys.zb_coordinator")
             model = shell.get_prop("persist.sys.model")
             if len(zb_coordinator) >= 1:
+                self.debug(f"zb_coordinator: {zb_coordinator}")
+
                 raw = shell.read_file(zb_coordinator, with_newline=False)
                 did = shell.get_prop("persist.sys.did")
                 model = shell.get_prop("ro.sys.model")
@@ -248,6 +250,9 @@ class Gateway(Thread):
                 model = data.group(1) if data else ''
                 raw = shell.read_file(
                     '/mnt/config/zigbee/coordinator.info', with_newline=False)
+
+            self.debug(f"raw coordinator: {raw}")
+
             value = json.loads(raw)
             devices = [{
                 'coordinator': 'lumi.0',
@@ -262,15 +267,27 @@ class Gateway(Thread):
             }]
             self._model = model
 
+            self.debug("loading zigbee devices info")
+
             # zigbee devices
             zb_device = shell.get_prop("sys.zb_device")
             if len(zb_device) >= 1:
+                self.debug(f"sys.zb_device: {zb_device}")
                 raw = shell.read_file(zb_device, with_newline=False)
             else:
-                raw = shell.read_file('{}/zigbee/device.info'.format(
-                    Utils.get_info_store_path(self._model)), with_newline=False)
+                self.debug("getting devices from file")
+                device_info_path = '{}/zigbee/device.info'.format(Utils.get_info_store_path(self._model))
+                if shell.file_exist(device_info_path):
+                    self.debug(f"device info file path: {device_info_path}")
+                    raw = shell.read_file(device_info_path, with_newline=False)
+                else:
+                    device_info_path = '/mnt/config/zigbee/device.info'
+                    self.debug(f"device info file path: {device_info_path}")
+                    raw = shell.read_file(device_info_path)
 
+            self.debug(f"raw device info: {raw}")
             value = json.loads(raw)
+
             dev_info = value.get("devInfo", 'null') or []
             if not Utils.gateway_is_aiot_only(model):
                 self.cloud = shell.get_prop("persist.sys.cloud")
