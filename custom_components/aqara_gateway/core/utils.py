@@ -1385,8 +1385,6 @@ class Utils:
         if re.match(r'\.v(\d)', zigbee_model[-3:]):
             zigbee_model = zigbee_model[:-3]
 
-        _LOGGER.debug(f"getting device, model: {zigbee_model}")
-
         devices = []
         devices.extend(DEVICES)
         if cloud and cloud == "aiot":
