@@ -784,6 +784,16 @@ def prepare_aqaragateway(shell, model):
     if model in SIGMASTAR_MODELS:
         command = "chattr -i /data/scripts"
         shell.run_command(command)
+    if model in SIGMASTAR_MODELS:
+        command = "asetprop persist.app.tty_enable true"
+    else:
+        command = "setprop persist.app.tty_enable true"
+    shell.write(command.encode() + b"\n")
+    if model in SIGMASTAR_MODELS:
+        command = "asetprop persist.app.debug_log true"
+    else:
+        command = "setprop persist.app.debug_log true"
+    shell.write(command.encode() + b"\n")
     command = "mkdir -p /data/scripts"
     shell.write(command.encode() + b"\n")
     command = "echo -e '#!/bin/sh\r\n\r\nfw_manager.sh -r\r\n" \

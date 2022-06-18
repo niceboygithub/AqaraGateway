@@ -7,6 +7,8 @@ This integration was based on the development of [@AlexxIT](https://github.com/A
 
 **ATTENTION:** The component **only works on modified firmware (M2) or the gateway which was enabled telnet.**
 
+## ATTENTION2: The Lumi company (Aqara manufacturer) started disable the post_init script and telnet soft_hack method. If you still want to use this component, please do not update to latest firmware of the gateway/hub.
+
 For Gateway M2 and Switch H1 Hub, to flash modified firmware to M2, please use [AqaraGateway.exe](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe) to flash customize firmware. Need to open the case of gateway and wired out the UART of [M2](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/images/M2/m2_uart.png) or [H1](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/images/H1/h1_uart.png).
 
 For Gateway M1S CN, AirCondition P3 CN, Hub E1 CN, please switch to **Mi Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor).
