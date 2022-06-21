@@ -7,7 +7,7 @@ This integration was based on the development of [@AlexxIT](https://github.com/A
 
 **ATTENTION:** The component **only works on modified firmware (M2) or the gateway which was enabled telnet.**
 
-## ATTENTION2: The Lumi company (Aqara manufacturer) started disable the post_init script and telnet soft_hack method. If you still want to use this component, please do not update to latest firmware of the gateway/hub.
+## ATTENTION2: The Lumi company (Aqara manufacturer) started disable the post_init script. If you still want to use this component, please do not update to latest firmware of the gateway/hub. If you already updated to latest firmware and telnet is not working, you need switch to Mi Home mode and enable telnet by soft_hack method. Then flash modified firmware.
 
 For Gateway M2 and Switch H1 Hub, to flash modified firmware to M2, please use [AqaraGateway.exe](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe) to flash customize firmware. Need to open the case of gateway and wired out the UART of [M2](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/images/M2/m2_uart.png) or [H1](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/images/H1/h1_uart.png).
 
@@ -42,7 +42,7 @@ You can use [custom open telnet command](https://gist.github.com/zvldz/1bd6b2153
 
 After telnet to gateway via putty, there are two methods (Flash or Not) to enable telnet and public mqtt.
 
-## Not Flash Custom firmware method (NOT for G2H, E1 hub, G3)
+## Not Flash modified firmware method (NOT for G2H, E1 hub, G3)
 
 ```shell
 mkdir /data/bin
@@ -57,7 +57,7 @@ chmod +x /data/scripts/post_init.sh
 ```
 Then restart gateway by reboot command.
 
-## Not Flash Custom firmware method (for G2H)
+## Not Flash modified firmware method (for G2H)
 
 ```shell
 mkdir /data/bin
@@ -67,7 +67,7 @@ wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/cu
 
 ```
 
-## Not Flash Custom firmware method (for G2H)
+## Not Flash modified firmware method (for G2H)
 
 ```shell
 mkdir /data/bin
@@ -77,7 +77,7 @@ wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/cu
 
 ```
 
-## Not Flash Custom firmware method (for E1 hub, G3)
+## Not Flash modified firmware method (for E1 hub, G3)
 
 ```shell
 mkdir /data/bin
@@ -87,7 +87,7 @@ wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/cu
 
 ```
 
-## Flash M1S Custom firmware method
+## Flash M1S modified firmware method
 ```shell
 cd /tmp && wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1" && chmod a+x /tmp/curl
 /tmp/curl -s -k -L -o /tmp/m1s_update.sh https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M1S/m1s_update.sh
@@ -95,7 +95,7 @@ chmod a+x /tmp/m1s_update.sh && /tmp/m1s_update.sh
 ```
 If there is no any error generated, then restart gateway by reboot command.
 
-## Flash M2 Custom firmware method
+## Flash M2 modified firmware method
 ```shell
 cd /tmp && wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1" && chmod a+x /tmp/curl
 /tmp/curl -s -k -L -o /tmp/m2_update.sh https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/M2/m2_update.sh
@@ -103,7 +103,7 @@ chmod a+x /tmp/m2_update.sh && /tmp/m2_update.sh
 ```
 If there is no any error generated, then restart gateway by reboot command.
 
-## Flash P3 Custom firmware method
+## Flash P3 modified firmware method
 ```shell
 cd /tmp && wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1" && chmod a+x /tmp/curl
 /tmp/curl -s -k -L -o /tmp/p3_update.sh https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/P3/p3_update.sh
@@ -111,7 +111,7 @@ chmod a+x /tmp/p3_update.sh && /tmp/p3_update.sh
 ```
 If there is no any error generated, then restart gateway by reboot command.
 
-## Flash H1 Custom firmware method
+## Flash H1 modified firmware method
 ```shell
 cd /tmp && wget -O /tmp/curl "http://master.dl.sourceforge.net/project/mgl03/bin/curl?viasf=1" && chmod a+x /tmp/curl
 /tmp/curl -s -k -L -o /tmp/h1_update.sh https://raw.githubusercontent.com/niceboygithub/AqaraM1SM2fw/main/modified/H1/h1_update.sh
@@ -119,7 +119,7 @@ chmod a+x /tmp/h1_update.sh && /tmp/h1_update.sh
 ```
 If there is no any error generated, then restart gateway by reboot command.
 
-## Not Flash E1 Custom firmware method
+## Not Flash E1 modified firmware method
 
 Suggest to use another expert's method, pleae move to [his github](https://github.com/zvldz/aqcn02_fw/tree/main/update) to see hot to do it.  He provides a way that avoid any risk on flashing firmwares.
 
