@@ -598,7 +598,7 @@ class Gateway(Thread):
                         return
             elif pkey in ('control'):
                 payload = {}
-                if data['type'] == 'rgb' and data.get('from', '') != 'ha':
+                if data.get('type', '') == 'rgb' and data.get('from', '') != 'ha':
                     brightness = int(max(data['data']['blue'], data['data']['green'], data['data']['red']) / 255 * 100)
                     payload[ATTR_HS_COLOR] = hex(int(
                         data['data']['blue'] + data['data']['green'] * 256 + data['data']['red'] * 65536))
@@ -606,6 +606,8 @@ class Gateway(Thread):
                     payload[ATTR_BRIGHTNESS] = brightness
                     for handler in self.updates[self._gateway_did]:
                         handler(payload)
+                elif data.get('from', '') != 'ha':
+                    _LOGGER.warning("Unsupported cmd: {}".format(data))
                 return
 
 
