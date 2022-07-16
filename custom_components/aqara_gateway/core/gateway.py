@@ -12,7 +12,7 @@ from paho.mqtt.client import Client, MQTTMessage
 
 from homeassistant.core import Event
 from homeassistant.const import CONF_NAME, CONF_PASSWORD
-from homeassistant.components.light import ATTR_HS_COLOR
+from homeassistant.components.light import ATTR_HS_COLOR, ATTR_RGB_COLOR, ATTR_BRIGHTNESS
 
 
 from .shell import TelnetShell, TelnetShellG2H, TelnetShellE1, TelnetShellG3, TelnetShellG2HPro
@@ -561,8 +561,11 @@ class Gateway(Thread):
             return
         elif data['cmd'] == 'behaved':
             return
+        elif data['cmd'] == 'control':
+            data['did'] = 'lumi.0'
+            pkey = 'control'
         else:
-            _LOGGER.warning("Unsupported cmd: %s", data)
+            _LOGGER.warning("Unsupported cmd: {}".format(data))
             return
 
         did = data['did']
@@ -593,6 +596,18 @@ class Gateway(Thread):
                         for handler in self.updates[self._gateway_did]:
                             handler(payload)
                         return
+            elif pkey in ('control'):
+                payload = {}
+                if data['type'] == 'rgb' and data.get('from', '') != 'ha':
+                    brightness = int(max(data['data']['blue'], data['data']['green'], data['data']['red']) / 255 * 100)
+                    payload[ATTR_HS_COLOR] = hex(int(
+                        data['data']['blue'] + data['data']['green'] * 256 + data['data']['red'] * 65536))
+                    payload[ATTR_RGB_COLOR] = (data['data']['red'], data['data']['green'], data['data']['blue'])
+                    payload[ATTR_BRIGHTNESS] = brightness
+                    for handler in self.updates[self._gateway_did]:
+                        handler(payload)
+                return
+
 
             self.process_gateway_stats(data[pkey])
 
@@ -763,6 +778,7 @@ class Gateway(Thread):
                                 ((hs_color >> 16) & 0xFF) * brightness / 100)},
                         'type': 'rgb',
                         'rev': 1,
+                        'from': 'ha',
                         'id': randint(0, 65535)
                     }
                 else:
@@ -770,6 +786,7 @@ class Gateway(Thread):
                         'cmd': 'control',
                         'data': data,
                         'rev': 1,
+                        'from': 'ha',
                         'id': randint(0, 65535)
                     }
                 payload = json.dumps(payload, separators=(',', ':')).encode()

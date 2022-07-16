@@ -43,10 +43,6 @@ async def async_unload_entry(hass, entry):
 
 class GatewayLight(GatewayGenericDevice, LightEntity):
     """Representation of a Xiaomi/Aqara Light."""
-    _brightness = None
-    _color_temp = None
-    _rgb_color = None
-    _hs = None
     _white = None
     _state = None
 
@@ -64,47 +60,18 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
         self._lqi = None
         for parm in device['params']:
             if parm[2] == "brightness":
-                self._brightness = 0
+                self._attr_supported_features |= SUPPORT_BRIGHTNESS
             if parm[2] == "color_temp":
-                self._color_temp = 0
+                self._attr_supported_features |= SUPPORT_COLOR_TEMP
             if parm[2] == "rgb_color":
-                self._rgb_color = 0
-            if parm[2] == "hs_color":
-                self._hs = (0, 0)
+                self._attr_supported_features |= SUPPORT_COLOR
+        if self.device['type'] == 'gateway':
+            self._attr_supported_features = SUPPORT_COLOR | SUPPORT_BRIGHTNESS
 
     @property
     def is_on(self) -> bool:
         """return state """
         return self._state
-
-    @property
-    def brightness(self):
-        """Return the brightness of this light between 0..255."""
-        return self._brightness
-
-    @property
-    def color_temp(self):
-        """return color temp """
-        return self._color_temp
-
-    @property
-    def hs_color(self):
-        """Return the hs color value."""
-        return self._hs
-
-    @property
-    def supported_features(self):
-        """Flag supported features."""
-        features = 0
-        if self._brightness is not None:
-            features |= SUPPORT_BRIGHTNESS
-        if self._color_temp is not None:
-            features |= SUPPORT_COLOR_TEMP
-        if self._rgb_color is not None:
-            features |= SUPPORT_COLOR
-        if self.device['type'] == 'gateway':
-            features = SUPPORT_COLOR | SUPPORT_BRIGHTNESS
-        return features
 
     @property
     def extra_state_attributes(self):
@@ -130,13 +97,16 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                 self._lqi = value
 
             if self._attr in data:
-                self._state = data[self._attr] == 1
+                if isinstance(data[self._attr], tuple):
+                    self._state = any(data[self._attr])
+                else:
+                    self._state = data[self._attr] >= 1
             if ATTR_BRIGHTNESS in data:
-                self._brightness = data[ATTR_BRIGHTNESS] / 100.0 * 255.0
+                self._attr_brightness = int(data[ATTR_BRIGHTNESS] / 100.0 * 255.0)
             if ATTR_COLOR_TEMP in data:
-                self._color_temp = data[ATTR_COLOR_TEMP]
+                self._attr_color_temp = data[ATTR_COLOR_TEMP]
             if ATTR_RGB_COLOR in data:
-                self._rgb_color = data[ATTR_RGB_COLOR]
+                self._attr_rgb_color = data[ATTR_RGB_COLOR]
             if ATTR_HS_COLOR in data:
                 if self.device['type'] == 'zigbee':
                     if isinstance(data[ATTR_HS_COLOR], int):
@@ -144,14 +114,19 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                     else:
                         value = data[ATTR_HS_COLOR].replace('0x', '')
                 else:
-                    value = data[ATTR_HS_COLOR] * 3
-                rgb = color_util.rgb_hex_to_rgb_list(value)
-                if len(rgb) > 3:
-                    self._white = rgb.pop()
-                if len(rgb) > 3:
-                    self._brightness = rgb.pop()
-                self._hs = color_util.color_RGB_to_hs(*rgb)
-
+                    if isinstance(data[ATTR_HS_COLOR], int):
+                        value = data[ATTR_HS_COLOR] * 3
+                    else:
+                        value = data[ATTR_HS_COLOR].replace('0x', '')
+                if value == '0':
+                    self._attr_hs_color = (0.0, 0.0)
+                else:
+                    rgb = color_util.rgb_hex_to_rgb_list(value)
+                    if len(rgb) > 3:
+                        self._white = rgb.pop()
+                    if len(rgb) > 3:
+                        self._attr_brightness = rgb.pop()
+                    self._attr_hs_color = color_util.color_RGB_to_hs(*rgb)
         self.schedule_update_ha_state()
 
     def turn_on(self, **kwargs):
@@ -159,27 +134,27 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
         payload = {}
 
         if ATTR_BRIGHTNESS in kwargs:
-            self._brightness = int(kwargs[ATTR_BRIGHTNESS] / 255.0 * 100.0)
-            payload[ATTR_BRIGHTNESS] = self._brightness
+            self._attr_brightness = int(kwargs[ATTR_BRIGHTNESS] / 255.0 * 100.0)
+            payload[ATTR_BRIGHTNESS] = self._attr_brightness
 
         if ATTR_COLOR_TEMP in kwargs:
-            self._color_temp = kwargs[ATTR_COLOR_TEMP]
-            payload[ATTR_COLOR_TEMP] = self._color_temp
+            self._attr_color_temp = kwargs[ATTR_COLOR_TEMP]
+            payload[ATTR_COLOR_TEMP] = self._attr_color_temp
 
         if ATTR_RGB_COLOR in kwargs:
-            self._rgb_color = kwargs[ATTR_RGB_COLOR]
-            payload[ATTR_RGB_COLOR] = self._rgb_color
+            self._attr_rgb_color = kwargs[ATTR_RGB_COLOR]
+            payload[ATTR_RGB_COLOR] = self._attr_rgb_color
 
         if ATTR_HS_COLOR in kwargs:
-            self._hs = kwargs[ATTR_HS_COLOR]
+            self._attr_hs_color = kwargs[ATTR_HS_COLOR]
 
         if (ATTR_HS_COLOR in kwargs or ATTR_BRIGHTNESS in kwargs or
                 self._attr == ATTR_RGB_COLOR):
-            if self._hs:
-                payload[ATTR_HS_COLOR] = self._color_temp
-                rgb = color_util.color_hs_to_RGB(*self._hs)
-                rgba = (self._brightness,) + rgb
-                if isinstance(self._brightness, int):
+            if self._attr_hs_color:
+                payload[ATTR_HS_COLOR] = self._attr_color_temp
+                rgb = color_util.color_hs_to_RGB(*self._attr_hs_color)
+                rgba = (self._attr_brightness,) + rgb
+                if isinstance(self._attr_brightness, int):
                     rgbhex = binascii.hexlify(
                         struct.pack("BBBB", *rgba)).decode("ASCII")
                     rgbhex = int(rgbhex, 16)

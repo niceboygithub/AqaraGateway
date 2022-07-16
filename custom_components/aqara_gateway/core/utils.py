@@ -950,8 +950,8 @@ DEVICES_AIOT = [{
     ]
 }, {
     'lumi.curtain.acn002': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
-    'lumi.curtain.acn003': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
-    'lumi.curtain.agl001': ["Aqara", "Roller Shade E1", "ZNJLBL01LM"],
+    'lumi.curtain.acn003': ["Aqara", "Curtain Driver E1", "ZNJLBL01LM"],
+    'lumi.curtain.agl001': ["Aqara", "Curtain Driver E1", "ZNJLBL01LM"],
     'params': [
         ['0.1.85', None, 'working_time', None],
         ['1.1.85', 'curtain_level', 'position', None],
@@ -964,6 +964,7 @@ DEVICES_AIOT = [{
         ['14.8.85', None, 'motor', 'cover'],
         ['8.0.2001', 'battery', 'battery', 'sensor'],
         ['8.0.2041', None, 'model', None],
+        ['13.10.85', None, 'model', None]
     ]
 }, {
     # water leak sensor
