@@ -604,7 +604,7 @@ DEVICES = [{
         [None, None, 'lock_event', 'sensor'],
     ]
 }, {
-    'aqara.lock.dacn03': ["Aqara", "Door Lock A100", "ZNMS02ES"],
+    'aqara.lock.eicn01': ["Aqara", "Door Lock A100", "ZNMS02ES"],
     'params': [
         ['13.17.85', 'lock_state', 'lock', 'sensor'],
         ['13.18.85', None, 'key_type', None],
