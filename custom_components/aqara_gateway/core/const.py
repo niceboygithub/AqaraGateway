@@ -73,6 +73,7 @@ OPT_DEVICE_NAME = {
 SIGMASTAR_MODELS = [
     'lumi.gateway.aqcn02',
     'lumi.camera.gwagl02',
+    'lumi.camera.gwag03',
     'lumi.camera.gwpagl01',
     'lumi.camera.agl001',
     'lumi.gateway.acn004'

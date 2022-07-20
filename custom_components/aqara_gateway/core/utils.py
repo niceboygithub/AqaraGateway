@@ -1475,7 +1475,7 @@ class Utils:
     def gateway_alarm_mode_supported(model: str) -> Optional[bool]:
         """ return the gateway alarm mode supported """
         #  basic_cli not support
-        if model not in ('lumi.camera.gwagl02', 'lumi.camera.gwpagl01'):
+        if model not in ('lumi.camera.gwagl02', 'lumi.camera.gwag03', 'lumi.camera.gwpagl01'):
             return True
         return False
 
@@ -1493,7 +1493,7 @@ class Utils:
         if model in ('lumi.camera.gwagl02', 'lumi.gateway.iragl5',
                      'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
                      'lumi.gateway.sacn01', 'lumi.camera.gwpagl01',
-                     'lumi.camera.agl001'):
+                     'lumi.camera.agl001', 'lumi.camera.gwag03'):
             return True
         return False
 
@@ -1507,7 +1507,7 @@ class Utils:
     @staticmethod
     def get_info_store_path(model: str) -> Optional[str]:
         """ return the path of zigbee info """
-        if model in ('lumi.camera.gwagl02'):
+        if model in ('lumi.camera.gwagl02', 'lumi.camera.gwag03'):
             return '/mnt/config'
         return '/data'
 
