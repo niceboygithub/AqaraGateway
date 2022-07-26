@@ -1192,6 +1192,12 @@ DEVICES_MIOT = [{
         ['6.1', None, 'elapsed_time', None],
     ]
 }, {
+    # motion sensor with illuminance
+    'lumi.motion.acn001': ["Aqara", "Motion Sensor E1", "RTCGQ15LM"],
+    'mi_spec': [
+        ['2.1', None, 'motion', 'binary_sensor'],
+    ]
+}, {
     # button switch, no retain
     'lumi.remote.b1acn02': ["Aqara", "Button T1", "WXKG13LM"],  # @Kris
     'mi_spec': [
