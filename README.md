@@ -139,6 +139,20 @@ echo -e "#!/bin/sh\n\nasetprop sys.camera_ptz_moving true\nfw_manager.sh -r\nfw_
 chattr +i post_init.sh
 ```
 
+Due to [Lumi closed the exploit](https://github.com/Wh1terat/aQRootG3#warningwarning-warning) and removed post_init.sh feature after version 3.4.1. It won't support after the version 3.3.9 of G3 firmware. If you want to enable telnet of G3, you need to downgrade the firmware to the version 3.3.4. The method to downgrade is as the following steps.
+
+```
+1. Get 'rootfs.bin' of firmware version 3.3.4. (use 7z to extract the firmware bin)
+2. Copy 'rootfs.bin' to sdcard which is using FAT32 format.
+3. Power Off G3.
+4. Insert the sdcard to G3.
+5. Press the front button of G3.
+6. Power on G3.
+7. Wait three seconds and release the button.
+8. If the LED is turned to RED, it starts to flash 'rootfs.bin'.
+```
+
+
 ## How to check this component is working properly.
 Go to Configuration->Info->system_health
 <img src="https://raw.githubusercontent.com/niceboygithub/AqaraGateway/master/system_health.png">
