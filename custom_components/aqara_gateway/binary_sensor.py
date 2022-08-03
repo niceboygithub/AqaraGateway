@@ -184,9 +184,9 @@ class GatewayMotionSensor(GatewayBinarySensor):
         self._lqi = None
         self._voltage = None
         self._open_since = None
-        self.is_metric = True
-        if device['model'] in ('lumi.motion.agl02', 'lumi.sensor_motion.aq2'):
-            self.is_metric = False
+        self.is_metric = False
+        #if device['model'] in ('lumi.motion.agl02', 'lumi.sensor_motion.aq2', 'lumi.motion.agl04'):
+        #    self.is_metric = False
         super().__init__(gateway, device, attr)
 
     async def async_added_to_hass(self):
