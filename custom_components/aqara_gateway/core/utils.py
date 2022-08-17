@@ -868,6 +868,7 @@ DEVICES_AIOT = [{
     # button switch, no retain
     'lumi.remote.b18ac1': ["Aqara", "Single Wall Button H1", "WXKG14LM"],
     'lumi.remote.acn003': ["Aqara", "Single Wall Button E1", "WXKG16LM"],
+    'lumi.remote.acn007': ["Aqara", "Button E1", "WXKG20LM"],
     'params': [
         ['13.1.85', None, 'button', None],
         [None, None, 'switch', 'binary_sensor'],
@@ -1145,6 +1146,15 @@ DEVICES_MIOT = [{
     ]
 }, {
     'lumi.remote.acn003': ["Aqara", "Single Wall Button E1", "WXKG16LM"],
+    'mi_spec': [
+        ['2.1', None, 'button: 1', None],  # single
+        ['2.2', None, 'button: 2', None],  # double
+        ['2.3', None, 'button: 16', None],  # long
+        ['3.2', '3.2', 'battery', 'sensor'],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    'lumi.remote.acn007': ["Aqara", "Button E1", "WXKG20LM"],
     'mi_spec': [
         ['2.1', None, 'button: 1', None],  # single
         ['2.2', None, 'button: 2', None],  # double
