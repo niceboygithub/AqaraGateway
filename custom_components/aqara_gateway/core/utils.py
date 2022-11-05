@@ -220,6 +220,26 @@ DEVICES = [{
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
+    # with neutral wire
+    'lumi.controller.a4acn1': ["Aqara", "Smart Scene Panel Switch S1", "ZNCJMB14LM"],
+    'params': [
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        ['4.14.85', None, 'auto_brightness', 'switch'],
+        ['4.23.85', None, 'mute', 'switch'],
+        ['4.46.85', None, 'screensaver', 'switch'],
+        ['8.0.2207', None, 'turn_off_light_as_time', 'sensor'],
+        ['13.1.85', None, 'button_1', None],
+        ['13.2.85', None, 'button_2', None],
+        ['13.3.85', None, 'button_3', None],
+        ['13.5.85', None, 'button_both_12', None],
+        ['13.6.85', None, 'button_both_13', None],
+        ['13.7.85', None, 'button_both_23', None],
+        [None, None, 'switch', 'binary_sensor'],
+        ['14.1.111', None, 'alarm_status', 'sensor']
+    ]
+}, {
     # cube action, no retain
     'lumi.sensor_cube': ["Aqara", "Cube", "MFKZQ01LM"],
     'lumi.sensor_cube.aqgl01': ["Aqara", "Cube", "MFKZQ01LM"],  # tested
@@ -607,18 +627,37 @@ DEVICES = [{
     ]
 }, {
     'aqara.lock.eicn01': ["Aqara", "Door Lock A100", "ZNMS02ES"],
+    'aqara.lock.acn001': ["Aqara", "Door Lock A100", "ZNMS02ES"],
     'params': [
+        ['8.0.2148', None, 'timestamp', None],
         ['13.17.85', 'lock_state', 'lock', 'sensor'],
         ['13.18.85', None, 'key_type', None],
+        ['13.31.85', None, 'lock_event', None],
         ['13.32.85', None, 'verification failed', None],
+        ['13.33.85', None, 'latch_state', None],
+        ['13.41.85', None, 'unlock from inside', None],
         ['13.42.85', None, 'unlock by fringprint', None],
         ['13.43.85', None, 'unlock by password', None],
         ['13.44.85', None, 'unlock by nfc', None],
+        ['13.45.85', None, 'unlock by homekit', None],
         ['13.46.85', None, 'unlock by temporary password', None],
+        ['13.49.85', None, 'open in away mode', None],
         ['13.54.85', None, 'away mode', None],
         [None, None, 'key_id', 'sensor'],
         ['13.55.85', 'voltage', 'voltage', None],
         ['13.56.85', 'battery', 'battery', 'sensor'],
+        ['13.57.85', None, 'battery notify', None],
+        ['13.60.85', None, 'verification failed', None],
+        ['13.62.85', None, 'timestamp', None],
+        ['13.63.85', None, 'user added', None],
+        ['13.64.85', None, 'user removed', None],
+        ['13.65.85', None, 'all user removed', None],
+        ['13.66.85', None, 'nfc added', None],
+        ['13.67.85', None, 'nfc removed', None],
+        ['13.68.85', None, 'homekit reset', None],
+        ['13.88.85', None, 'door', None],
+        ['14.83.85', None, 'bluetooth', None],
+        [None, None, 'lock_event', 'sensor'],
     ]
 }, {
     'lumi.airrtc.tcpecn01': ["Aqara", "Thermostat S1", "KTWKQ02ES"],
