@@ -67,7 +67,7 @@ wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/cu
 
 ```
 
-## Not Flash modified firmware method (for G2H)
+## Not Flash modified firmware method (for G2H PRO)
 
 ```shell
 mkdir /data/bin
