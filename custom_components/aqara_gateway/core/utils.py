@@ -930,6 +930,21 @@ DEVICES_AIOT = [{
         ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
 }, {
+    # with neutral wire
+    'lumi.switch.acn040': ["Aqara", "Triple Wall Switch E1", "ZNQBKG31LM"],
+    'params': [
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        ['13.1.85', None, 'button_1', None],
+        ['13.2.85', None, 'button_2', None],
+        ['13.3.85', None, 'button_3', None],
+        ['13.5.85', None, 'button_both_12', None],
+        ['13.6.85', None, 'button_both_13', None],
+        ['13.7.85', None, 'button_both_23', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
     # door window sensor
     'lumi.magnet.agl02': ["Aqara", "Door Sensor T1", "MCCGQ12LM"],  # @Kris
     'lumi.magnet.acn001': ["Aqara", "Door Sensor E1", "MCCGQ14LM"],
@@ -1191,7 +1206,6 @@ DEVICES_MIOT = [{
         ['2.1', None, 'button: 1', None],  # single
         ['2.2', None, 'button: 2', None],  # double
         ['2.3', None, 'button: 16', None],  # long
-        ['3.2', '3.2', 'battery', 'sensor'],
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
@@ -1212,7 +1226,24 @@ DEVICES_MIOT = [{
         ['7.1', None, 'button_2: 1', None],  # single
         ['7.2', None, 'button_2: 2', None],  # double
         ['7.3', None, 'button_2: 16', None],  # long
-        ['3.2', '3.2', 'battery', 'sensor'],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # with neutral wire
+    'lumi.switch.acn040': ["Aqara", "Triple Wall Switch E1", "ZNQBKG31LM"],
+    'mi_spec': [
+        ['2.1', '2.1', 'channel 1', 'switch'],
+        ['3.1', '3.1', 'channel 2', 'switch'],
+        ['4.1', '4.1', 'channel 3', 'switch'],
+        ['9.1', None, 'button_1: 1', None],
+        ['9.2', None, 'button_both: 4', None],
+        ['10.1', None, 'button_2: 1', None],
+        ['10.2', None, 'button_both: 4', None],
+        ['11.1', None, 'button_3: 4', None],
+        ['11.2', None, 'button_both_23: 4', None],
+        ['12.1', None, 'button_both_12: 4', None],
+        ['13.1', None, 'button_both_13: 4', None],
+        ['14.1', None, 'button_both_23: 4', None],
         [None, None, 'switch', 'binary_sensor'],
     ]
 },{
