@@ -136,11 +136,13 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
 
     def close_cover(self, **kwargs):
         """Close the cover."""
-        self.gateway.send(self.device, {'motor': 0})
+        # self.gateway.send(self.device, {'motor': 0})
+        self.gateway.send(self.device, {'position': 0})
 
     def open_cover(self, **kwargs):
         """Open the cover."""
-        self.gateway.send(self.device, {'motor': 1})
+        # self.gateway.send(self.device, {'motor': 1})
+        self.gateway.send(self.device, {'position': 100})
 
     def stop_cover(self, **kwargs):
         """Stop the cover."""
