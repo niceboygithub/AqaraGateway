@@ -24,7 +24,7 @@ DEVICE_MAPPINGS = {
         SUPPORT_DOORBELL | SUPPORT_WIFI | SUPPORT_CAMERA),
 }
 
-LOCK_NOTIFICATIOIN = {
+LOCK_NOTIFICATION = {
     "latch_state": {
         "default": "Latch state changed",
         "0": "Remove the locking from inside",
