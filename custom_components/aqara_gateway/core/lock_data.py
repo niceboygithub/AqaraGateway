@@ -12,6 +12,9 @@ DEVICE_MAPPINGS = {
     "lumi.lock.acn03": SUPPORT_ALARM | SUPPORT_DOORBELL,
     "aqara.lock.eicn01": SUPPORT_ALARM | SUPPORT_DOORBELL,
     "aqara.lock.acn001": SUPPORT_ALARM | SUPPORT_DOORBELL,
+    "aqara.lock.acn004": (
+        WITH_LI_BATTERY | SUPPORT_ALARM |
+        SUPPORT_DOORBELL | SUPPORT_WIFI),
     "aqara.lock.wbzac1": (
         WITH_LI_BATTERY | SUPPORT_ALARM |
         SUPPORT_DOORBELL | SUPPORT_WIFI | SUPPORT_CAMERA),
@@ -22,11 +25,9 @@ DEVICE_MAPPINGS = {
     "aqara.lock.dacn03": (
         WITH_LI_BATTERY | SUPPORT_ALARM |
         SUPPORT_DOORBELL | SUPPORT_WIFI | SUPPORT_CAMERA),
-    "aqara.lock.eicn01": SUPPORT_ALARM | SUPPORT_DOORBELL,
-    "aqara.lock.acn001": SUPPORT_ALARM | SUPPORT_DOORBELL
 }
 
-LOCK_NOTIFICATIOIN = {
+LOCK_NOTIFICATION = {
     "latch_state": {
         "default": "Latch state changed",
         "0": "Remove the locking from inside",

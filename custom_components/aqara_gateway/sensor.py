@@ -56,7 +56,7 @@ from .core.lock_data import (
     SUPPORT_DOORBELL,
     SUPPORT_CAMERA,
     SUPPORT_WIFI,
-    LOCK_NOTIFICATIOIN,
+    LOCK_NOTIFICATION,
     DEVICE_MAPPINGS,
     )
 
@@ -402,8 +402,8 @@ class GatewayLockSensor(GatewaySensor):
             if key == LATCH_STATUS:
                 self._latch_status = LATCH_STATUS_TYPE.get(
                     str(value), str(value))
-            if key in LOCK_NOTIFICATIOIN:
-                notify = LOCK_NOTIFICATIOIN[key]
+            if key in LOCK_NOTIFICATION:
+                notify = LOCK_NOTIFICATION[key]
                 self._notification = notify.get(
                     str(value), None) if notify.get(
                     str(value), None) else notify.get("default")
@@ -453,8 +453,8 @@ class GatewayLockEventSensor(GatewaySensor):
         """ update lock state """
         # handle available change
         for key, value in data.items():
-            if key in LOCK_NOTIFICATIOIN:
-                notify = LOCK_NOTIFICATIOIN[key]
+            if key in LOCK_NOTIFICATION:
+                notify = LOCK_NOTIFICATION[key]
                 self._state = notify.get(str(value), None) if notify.get(
                     str(value), None) else notify.get("default")
 
