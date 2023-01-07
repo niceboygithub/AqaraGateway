@@ -1043,6 +1043,7 @@ DEVICES_AIOT = [{
     'params': [
         ['0.1.85', None, 'working_time', None],
         ['1.1.85', 'curtain_level', 'position', None],
+        ['0.55.85', None, 'position', None],
         ['4.1.85', None, 'motor_stroke', None],
         ['4.2.85', None, 'polarity', None],
         ['13.1.85', None, 'charging_status', None],
