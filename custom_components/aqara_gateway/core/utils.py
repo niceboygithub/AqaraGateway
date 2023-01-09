@@ -765,6 +765,23 @@ DEVICES = [{
         ['14.8.85', None, 'motor', 'cover'],
     ]
 }, {
+    'lumi.curtain.acn011': ["Aqara", "Smart Vertical Blinds Controller H1", "ZNMHLDJ01LM"],
+    'params': [
+        ['0.1.85', None, 'working_time', None],
+        ['1.1.85', None, 'position', None],  # set
+        ['0.55.85', None, 'position', None],  # readonly
+        ['1.11.85', None, 'tilt_position', None],  # set
+        ['0.56.85', None, 'tilt_position', None],  # readonly
+        ['4.1.85', None, 'motor_stroke', None],
+        # ['4.69.85', None, 'tilt_polarity', None],
+        # ['4.70.85', None, 'manual_enable', None],  # 0:enable 1:forbidden
+        # ['4.71.85', None, 'polarity', None],
+        ['14.4.85', None, 'run_state', None],
+        ['14.8.85', None, 'motor', 'cover'],
+        ['14.35.85', None, 'speed', None],
+        ['14.49.85', None, 'tilt_motor', None],  # 0:left 1:right 2:stop
+    ]
+}, {
     'aqara.tow_w.acn001': ["Aqara", "Towel Warmer H1", "ZNMJJ02LM"],
     'params': [
         ['0.1.85', 'temperature', 'temperature', 'sensor'],

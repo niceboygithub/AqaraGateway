@@ -34,6 +34,7 @@ ATTR_CHARGING_STATUS = 'charging status'
 ATTR_WORKING_TIME = 'working time'
 POLARITY = 'polarity'
 POSITION = 'position'
+TILT_POSITION = 'tilt_position'
 CHARGING_STATUS = 'charging_status'
 WORKING_TIME = 'working_time'
 MOTOR_STROKE = 'motor_stroke'
@@ -43,14 +44,19 @@ CHARGING_STATUS_ = {0: "Not Charging", 1: "Charging", 2: "Stop Charging", 3: "Ch
 MOTOR_STROKES = {0: "No stroke", 1: "The stroke has been set"}
 
 DEVICES_WITH_BATTERY = ['lumi.curtain.acn002', 'lumi.curtain.acn003', 'lumi.curtain.agl001']
+DEVICES_WITH_TILT = ['lumi.curtain.acn002', 'lumi.curtain.acn011']
+
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Perform the setup for Xiaomi devices."""
     def setup(gateway: Gateway, device: dict, attr: str):
-        if device.get('mi_spec'):
-            async_add_entities([XiaomiCoverMIOT(gateway, device, attr)])
+        if device['model'] == 'lumi.curtain.acn011':
+            async_add_entities([AqaraVerticalBlindsController(gateway, device, attr)])
         else:
-            async_add_entities([XiaomiGenericCover(gateway, device, attr)])
+            if device.get('mi_spec'):
+                async_add_entities([XiaomiCoverMIOT(gateway, device, attr)])
+            else:
+                async_add_entities([XiaomiGenericCover(gateway, device, attr)])
 
     aqara_gateway: Gateway = hass.data[DOMAIN][config_entry.entry_id]
     aqara_gateway.add_setup('cover', setup)
@@ -76,7 +82,7 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
         self._motor_stroke = None
         self._charging_status = None
         self._working_time = None
-        if device['model'] == 'lumi.curtain.acn002':
+        if device['model'] in DEVICES_WITH_TILT:
             self._attr_current_cover_tilt_position = 0
         if device['model'] in DEVICES_WITH_BATTERY:
             self._battery = None
@@ -104,9 +110,6 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
 
     def update(self, data: dict = None):
         """ update state """
-
-    def update(self, data: dict = None):
-        """ update state """
         for key, value in data.items():
             if key == BATTERY:
                 if hasattr(self, "_battery"):
@@ -127,7 +130,7 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
                 self._working_time = value
             if key == POSITION:
                 self._pos = value
-                if hasattr(self, "current_cover_tilt_position"):
+                if self.current_cover_tilt_position is not None:
                     self._attr_current_cover_tilt_position = value
             if key == RUN_STATE:
                 self._state = RUN_STATES.get(value, STATE_UNKNOWN)
@@ -199,3 +202,54 @@ class XiaomiCoverMIOT(XiaomiGenericCover):
     def close_cover_tilt(self, **kwargs: Any) -> None:
         """Close the cover tilt."""
         self.gateway.send(self.device, {'motor': 6})
+
+
+class AqaraVerticalBlindsController(XiaomiGenericCover):
+
+    _attr_current_cover_tilt_position: int = 0
+
+    def update(self, data: dict = None):
+        """ update state """
+        for key, value in data.items():
+            if key == BATTERY:
+                if hasattr(self, "_battery"):
+                    self._battery = value
+            if key == CHIP_TEMPERATURE:
+                self._chip_temperature = value
+            if key == FW_VER or key == 'back_version':
+                self._fw_ver = value
+            if key == LQI:
+                self._lqi = value
+            if key == POLARITY:
+                self._polarity = value
+            if key == MOTOR_STROKE:
+                self._motor_stroke = MOTOR_STROKES.get(value)
+            if key == CHARGING_STATUS:
+                self._charging_status = CHARGING_STATUS_.get(value)
+            if key == WORKING_TIME:
+                self._working_time = value
+            if key == POSITION:
+                self._pos = value
+            if key == TILT_POSITION:
+                # value is -90~90
+                self._attr_current_cover_tilt_position = int((value + 90) / 180 * 100)  # 0~100
+            if key == RUN_STATE:
+                self._state = RUN_STATES.get(value, STATE_UNKNOWN)
+
+        self.schedule_update_ha_state()
+
+    def open_cover_tilt(self, **kwargs: Any) -> None:
+        """Open the cover tilt."""
+        self.gateway.send(self.device, {'tilt_position': 0})
+
+    def close_cover_tilt(self, **kwargs: Any) -> None:
+        """Close the cover tilt."""
+        self.gateway.send(self.device, {'tilt_position': -90})
+
+    def set_cover_tilt_position(self, **kwargs):
+        """Move the cover tilt to a specific position."""
+        tilt_position = kwargs.get(ATTR_TILT_POSITION)  # 0~100
+        self.gateway.send(self.device, {'tilt_position': tilt_position / 100 * 180 - 90})  # -90~90
+
+    def stop_cover_tilt(self, **kwargs: Any) -> None:
+        self.gateway.send(self.device, {'tilt_motor': 2})
