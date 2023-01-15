@@ -806,6 +806,7 @@ DEVICES_AIOT = [{
         ['13.2.85', None, 'button_2', None],
         ['13.5.85', None, 'button_both', None],
         [None, None, 'switch', 'binary_sensor'],
+        ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'], # @darkbao
     ]
 }, {
