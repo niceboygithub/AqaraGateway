@@ -170,7 +170,15 @@ Go to Configuration->Info->system_health
 Movements sensor
 ```
 In the left and right monitoring mode, only report 2, 3, 4, 5, 6, 7;
-In the non-directional monitoring mode, only report 0, 1, 6, 7; 0: enter 1: leave 2: left in 3: right out 4 : Right in 5: Left out 6: Approaching 7: Far away
+In the non-directional monitoring mode, only report 0, 1, 6, 7;
+0: enter
+1: leave
+2: left in
+3: right out
+4: right in
+5: left out
+6: approaching
+7: far away
 ```
 
 **Attention:** The component is under active development.
