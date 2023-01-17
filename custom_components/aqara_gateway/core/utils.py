@@ -275,7 +275,6 @@ DEVICES = [{
     'ikea.light.led1546g12': ["IKEA", "Bulb E27 950 lm", "LED1546G12"],
     'ikea.light.led1536g5': ["IKEA", "Bulb E14 400 lm", "LED1536G5"],
     'ikea.light.led1537r6': ["IKEA", "Bulb GU10 400 lm", "LED1537R6"],
-    'lumi.light.acn003': ["Aqara", "L1-350 Ceiling Light", "ZNXDD01LM"],
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
@@ -286,6 +285,7 @@ DEVICES = [{
     'lumi.light.cwac02': ["Aqara", "Bulb T1", "ZNLDP13LM"],  # @Kris
     'lumi.light.acn014': ["Aqara", "Bulb T1", "ZNLDP14LM"],
     'lumi.light.acn015': ["Aqara", "Sun Light H1", "QKD01LM"],
+    'lumi.light.acn003': ["Aqara", "L1-350 Ceiling Light", "ZNXDD01LM"],
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['1.6.85', None, 'ms_to_turn_on', None],
@@ -332,12 +332,11 @@ DEVICES = [{
     'params': [
         ['1.10.85', None, 'present_mode', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
-        ['4.1.85', 'power_status', 'light', None],
+        ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
         ['14.2.85', 'colour_temperature', 'color_temp', None],
-        ['14.8.85', 'rgb_color', 'rgb_color', None],
-        ['14.11.85', None, 'dual_color_temperature_mode', None],
-        [None, 'hs_color', 'hs_color', 'light'],
+        ['14.5.85', 'rgb_color', 'rgb_color', None],
+        ['14.46.85', None, 'dual_color_temperature_mode', None],
         ['8.0.2022', None, 'ambilight', None],
         ['8.0.2150', None, 'dynamic', None],
     ]

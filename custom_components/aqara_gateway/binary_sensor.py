@@ -433,8 +433,8 @@ class GatewaWaterLeakSensor(GatewayBinarySensor, BinarySensorEntity):
                     float(value) / 1000, '.3f') if isinstance(
                     value, (int, float)) else None
             if key == self._attr:
-                if self.device['model'] == 'lumi.flood.agl02':
-                    value = not value
+                # if self.device['model'] == 'lumi.flood.agl02':
+                #     value = not value
                 custom = self.hass.data[DATA_CUSTOMIZE].get(self.entity_id)
                 if not custom.get(CONF_INVERT_STATE):
                     self._state = bool(value)
