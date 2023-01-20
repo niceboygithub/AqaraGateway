@@ -77,6 +77,7 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
         self._motor_stroke = None
         self._charging_status = None
         self._working_time = None
+        self._model = device['model']
         if device['model'] == 'lumi.curtain.acn002':
             self._attr_current_cover_tilt_position = 0
         if device['model'] in DEVICES_WITH_BATTERY:
@@ -128,11 +129,12 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
                 self._working_time = value
             if key == POSITION:
                 self._pos = value
-                if device['model'] not in DEVICES_WITH_NO_TILT:
-                    if hasattr(self, "current_cover_tilt_position"):
-                        self._attr_current_cover_tilt_position = value
+                if hasattr(self, "current_cover_tilt_position") and self._model not in DEVICES_WITH_NO_TILT:
+                    self._attr_current_cover_tilt_position = value
             if key == RUN_STATE:
                 self._state = RUN_STATES.get(value, STATE_UNKNOWN)
+
+
 
         self.schedule_update_ha_state()
 
