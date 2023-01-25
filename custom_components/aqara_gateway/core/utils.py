@@ -335,8 +335,8 @@ DEVICES = [{
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
         ['14.2.85', 'colour_temperature', 'color_temp', None],
-        ['14.5.85', 'rgb_color', 'rgb_color', None],
-        ['14.46.85', None, 'dual_color_temperature_mode', None],
+        ['14.8.85', 'xy_color', 'xy_color', None],
+        ['14.11.85', None, 'dual_color_temperature_mode', None],
         ['8.0.2022', None, 'ambilight', None],
         ['8.0.2150', None, 'dynamic', None],
     ]

@@ -58,13 +58,6 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
         self._fw_ver = None
         self._hw_ver = None
         self._lqi = None
-        for parm in device['params']:
-            if parm[2] == "brightness":
-                self._attr_supported_features |= SUPPORT_BRIGHTNESS
-            if parm[2] == "color_temp":
-                self._attr_supported_features |= SUPPORT_COLOR_TEMP
-            if parm[2] == "rgb_color":
-                self._attr_supported_features |= SUPPORT_COLOR
         if self.device['type'] == 'gateway':
             self._attr_supported_features = SUPPORT_COLOR | SUPPORT_BRIGHTNESS
 
@@ -101,13 +94,18 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                     self._state = any(data[self._attr])
                 else:
                     self._state = data[self._attr] >= 1
+
             if ATTR_BRIGHTNESS in data:
+                self._attr_supported_features |= SUPPORT_BRIGHTNESS
                 self._attr_brightness = int(data[ATTR_BRIGHTNESS] / 100.0 * 255.0)
             if ATTR_COLOR_TEMP in data:
+                self._attr_supported_features |= SUPPORT_COLOR_TEMP
                 self._attr_color_temp = data[ATTR_COLOR_TEMP]
             if ATTR_RGB_COLOR in data:
+                self._attr_supported_features |= SUPPORT_COLOR
                 self._attr_rgb_color = data[ATTR_RGB_COLOR]
             if ATTR_HS_COLOR in data:
+                self._attr_supported_features |= SUPPORT_COLOR
                 if self.device['type'] == 'zigbee':
                     if isinstance(data[ATTR_HS_COLOR], int):
                         value = hex(data[ATTR_HS_COLOR] & 0xFFFFFF).replace('0x', '')
