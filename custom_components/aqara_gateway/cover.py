@@ -4,6 +4,7 @@ from typing import Any
 from homeassistant.components.cover import (
     ATTR_POSITION,
     ATTR_CURRENT_POSITION,
+    ATTR_TILT_POSITION,
     CoverEntity,
     CoverEntityFeature,
 )
@@ -34,6 +35,7 @@ ATTR_CHARGING_STATUS = 'charging status'
 ATTR_WORKING_TIME = 'working time'
 POLARITY = 'polarity'
 POSITION = 'position'
+TILT_POSITION = 'tilt_position'
 CHARGING_STATUS = 'charging_status'
 WORKING_TIME = 'working_time'
 MOTOR_STROKE = 'motor_stroke'
@@ -50,6 +52,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     def setup(gateway: Gateway, device: dict, attr: str):
         if device['model'] == 'lumi.curtain.acn002':
             async_add_entities([AqaraRollerShadeE1(gateway, device, attr)])
+        elif device['model'] == 'lumi.curtain.acn011':
+            async_add_entities([AqaraVerticalBlindsController(gateway, device, attr)])
         else:
             if device.get('mi_spec'):
                 async_add_entities([XiaomiCoverMIOT(gateway, device, attr)])
@@ -218,3 +222,32 @@ class AqaraRollerShadeE1(XiaomiGenericCover):
             self.gateway.send(self.device, {'motor': 3})
         else:
             self.gateway.send(self.device, {'motor': 5})
+
+
+class AqaraVerticalBlindsController(XiaomiGenericCover):
+
+    _attr_current_cover_tilt_position: int = 0
+
+    def update(self, data: dict = None):
+        """ update state """
+        super().update(data)
+        if TILT_POSITION in data:
+            value = data[TILT_POSITION]  # value is -90~90
+            self._attr_current_cover_tilt_position = int((value + 90) / 180 * 100)  # 0~100
+            self.schedule_update_ha_state()
+
+    def open_cover_tilt(self, **kwargs: Any) -> None:
+        """Open the cover tilt."""
+        self.gateway.send(self.device, {'tilt_position': 0})
+
+    def close_cover_tilt(self, **kwargs: Any) -> None:
+        """Close the cover tilt."""
+        self.gateway.send(self.device, {'tilt_position': -90})
+
+    def set_cover_tilt_position(self, **kwargs):
+        """Move the cover tilt to a specific position."""
+        tilt_position = kwargs.get(ATTR_TILT_POSITION)  # 0~100
+        self.gateway.send(self.device, {'tilt_position': tilt_position / 100 * 180 - 90})  # -90~90
+
+    def stop_cover_tilt(self, **kwargs: Any) -> None:
+        self.gateway.send(self.device, {'tilt_motor': 2})
