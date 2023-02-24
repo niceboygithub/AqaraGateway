@@ -409,6 +409,17 @@ DEVICES = [{
         ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
 }, {
+    # temperature, humidity, PM2.5 and CO2 sensor
+    'lumi.airm.fhac01': ["Aqara", "Air Quality Monitor S1", "KQJCMB11LM"], # @justbin95
+    'params': [
+        ['0.1.85', 'temperature', 'temperature', 'sensor'],
+        ['0.2.85', 'humidity', 'humidity', 'sensor'],
+        ['0.6.85', None, 'carbon_dioxide', 'sensor'],
+        ['0.19.85', None, 'pm25', 'sensor'],
+        ['0.41.85', None, 'pm1', 'sensor'],
+        ['0.42.85', None, 'pm10', 'sensor'],
+    ]
+}, {
     # door window sensor
     'lumi.sensor_magnet': ["Xiaomi", "Door Sensor", "MCCGQ01LM"],
     'lumi.sensor_magnet.aq2': ["Aqara", "Door Sensor", "MCCGQ11LM"],
