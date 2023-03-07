@@ -747,6 +747,7 @@ DEVICES = [{
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
+        ['13.1.85', None, 'button', None],
         ['0.24.85', 'rotate_angle', 'rotate_angle', None],
         ['0.25.85', 'action_duration', 'action_time', None],
         ['0.29.85', 'rotate_angle', 'rotate_angle', None],  # while hold
@@ -756,7 +757,6 @@ DEVICES = [{
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
         ['4.3.85', 'channel_2', 'channel 3', 'switch'],
         [None, None, 'switch', 'binary_sensor'],
-        ['8.0.2001', 'battery', 'battery', 'sensor'],
         ['13.8.85', None, 'mode', None],
         ['14.6.85', None, 'sensitivity', None],
         ['14.7.85', 'single_click_control_mode', 'mode', None],
