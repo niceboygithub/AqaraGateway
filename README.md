@@ -5,7 +5,7 @@ Gateway support **Zigbee 3**.
 
 This integration was based on the development of [@AlexxIT](https://github.com/AlexxIT/XiaomiGateway3/), Thanks Alex.
 
-**ATTENTION:** The component **only works on modified firmware (M2) or the gateway which was enabled telnet.**
+**ATTENTION**: The component **only works on modified firmware (M2) or the gateway which was enabled telnet.**
 
 **ATTENTION2**: The Lumi company (Aqara manufacturer) started disable the post_init script. If you still want to use this component, please do not update to latest firmware of the gateway/hub. If you already updated to latest firmware and telnet is not working, you need switch to Mi Home mode and enable telnet by soft_hack method. Then flash modified firmware.
 
@@ -38,6 +38,8 @@ Or Download and copy `custom_components/aqara_gateway` folder to `custom_compone
 
 
 ## Manually Enable Telnet
+**ATTENTION**: The Lumi removed the method "set_ip_info" in the new version of M1S "Mi version 4.0.3_0012, Aqara version 3.5.2_0010.0636". If you were already upgrade to this verison, the only way to enabled customed firwmware by [AqaraGateway.exe](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe).
+
 You can use [custom open telnet command](https://gist.github.com/zvldz/1bd6b21539f84339c218f9427e022709) way 2 or way 3 to enable telnet in *Mija Home mode*, then flash modification firmwares to [M1S](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/M1S), [P3](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/P3), [E1](https://github.com/niceboygithub/AqaraCameraHubfw/tree/main/modified/E1),  if you want use them in Aqara Home. No need to open the case of gateway.
 
 After telnet to gateway via putty, there are two methods (Flash or Not) to enable telnet and public mqtt.
