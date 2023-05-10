@@ -203,6 +203,7 @@ class TelnetShellG2H(TelnetShell):
             self.run_command(password)
 
         self.run_command("stty -echo")
+        self.read_until(b"/ # ", timeout=10)
         self._suffix = "# "
 
 
