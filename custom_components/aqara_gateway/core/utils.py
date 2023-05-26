@@ -814,6 +814,7 @@ DEVICES_AIOT = [{
     # with neutral wire
     'lumi.switch.n1acn1': ["Aqara", "Single Wall Switch H1 Pro", "QBKG30LM"],  # @Kris
     'lumi.switch.acn029': ["Aqara", "Single Wall Switch H1M", "ZNQBKG24LM"],
+    'lumi.switch.b1nacn01': ["Aqara", "Single Wall Switch T1", "QBKG19LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -826,6 +827,7 @@ DEVICES_AIOT = [{
 #    'lumi.switch.b2laus01': ["Aqara", "Double Wall Switch US", "WS-USC02"],
     'lumi.switch.n2acn1': ["Aqara", "Double Wall Switch H1 Pro", "QBKG31LM"],  # @miniknife88
     'lumi.switch.acn030': ["Aqara", "Double Wall Switch H1M", "ZNQBKG25LM"],
+    'lumi.switch.b2nacn01': ["Aqara", "Double Wall Switch T1", "QBKG20LM"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -840,6 +842,7 @@ DEVICES_AIOT = [{
     # with neutral wire, thanks @Mantoui
     'lumi.switch.n3acn1': ["Aqara", "Triple Wall Switch H1 Pro", "QBKG32LM"],  # @Kris
     'lumi.switch.acn031': ["Aqara", "Triple Wall Switch H1M", "ZNQBKG26LM"],
+    'lumi.switch.b3n01': ["Aqara", "Triple Wall Switch T1", "QBKG34LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
