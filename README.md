@@ -1,6 +1,9 @@
-# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN, G3 CN, G2H Pro) integration for Home Assistant
 
-Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM, ZNSXJ13LM, ZNSXJ15LM)**.
+<a href="https://www.buymeacoffee.com/niceboygithub" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
+# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN, G3 CN, G2H Pro, M2 2022) integration for Home Assistant
+
+Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM, ZNSXJ13LM, ZNSXJ15LM, ZHWG19LM)**.
 Gateway support **Zigbee 3**.
 
 This integration was based on the development of [@AlexxIT](https://github.com/AlexxIT/XiaomiGateway3/), Thanks Alex.
@@ -80,7 +83,7 @@ wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/cu
 
 ```
 
-## Not Flash modified firmware method (for E1 hub, G3)
+## Not Flash modified firmware method (for E1 hub, G3, G2H Pro, M2 2022)
 
 ```shell
 mkdir /data/bin
@@ -185,5 +188,3 @@ In the non-directional monitoring mode, only report 0, 1, 6, 7;
 ```
 
 **Attention:** The component is under active development.
-
-<a href="https://www.buymeacoffee.com/niceboygithub" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>

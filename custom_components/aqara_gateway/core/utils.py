@@ -44,6 +44,7 @@ DEVICES = [{
     'lumi.camera.gwpagl01': ["Aqara", "Camera Hub G3", "ZNSXJ13LM"],  # tested
     'lumi.camera.gwpgl1': ["Aqara", "Camera Hub G3", "CH-H03"],
     'lumi.camera.agl001': ["Aqara", "Camera Hub G2H Pro", "ZNSXJ15LM"],
+    'lumi.gateway.iragl8': ["Aqara", "Gateway M2 2022", "ZHWG19LM"],  # tested
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],
@@ -1636,7 +1637,8 @@ class Utils:
     def gateway_infrared_supported(model: str) -> Optional[bool]:
         """ return the gateway infrared supported """
         if model in ('lumi.aircondition.acn05', 'lumi.gateway.iragl5',
-                     'lumi.gateway.iragl7', 'lumi.gateway.iragl01'):
+                     'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
+                     'lumi.gateway.iragl8'):
             return True
         return False
 
@@ -1646,7 +1648,8 @@ class Utils:
         if model in ('lumi.camera.gwagl02', 'lumi.gateway.iragl5',
                      'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
                      'lumi.gateway.sacn01', 'lumi.camera.gwpagl01',
-                     'lumi.camera.agl001', 'lumi.camera.gwag03'):
+                     'lumi.camera.agl001', 'lumi.camera.gwag03',
+                     'lumi.gateway.iragl8'):
             return True
         return False
 

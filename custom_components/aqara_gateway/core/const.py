@@ -70,7 +70,8 @@ OPT_DEVICE_NAME = {
     'p3': "Aqara AirCondition P3",
     'm1s': "Aqara Gateway M1S",
     'e1': "Aqara Hub E1",
-    'm2': "Aqara Gateway M2"
+    'm2': "Aqara Gateway M2",
+    'm2 2022': "Aqara Gateway M2 2022"
 }
 
 SIGMASTAR_MODELS = [
@@ -79,7 +80,8 @@ SIGMASTAR_MODELS = [
     'lumi.camera.gwag03',
     'lumi.camera.gwpagl01',
     'lumi.camera.agl001',
-    'lumi.gateway.acn004'
+    'lumi.gateway.acn004',
+    'lumi.gateway.iragl8'
 ]
 
 REALTEK_MODELS = [
