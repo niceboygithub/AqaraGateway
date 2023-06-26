@@ -1101,17 +1101,17 @@ DEVICES_AIOT = [{
         ['1.8.85', None, 'target_temperature', None],
         ['14.51.85', None, 'mode', None],
         ['4.21.85', 'switch', 'switch', 'switch'],
-        ['4.25.85', 'check_switch', 'switch', 'switch'],
-        ['4.26.85', 'child_lock_switch', 'switch', 'switch'],
+        ['4.25.85', 'check_switch', 'check_switch', 'switch'],
+        ['4.26.85', 'child_lock_switch', 'child_lock_switch', 'switch'],
         ['8.0.2001', 'battery', 'battery', 'sensor']
     ]
 }, {
     'lumi.airer.acn001': ["Aqara", "Smart Clothes Drying Rack H1", ""],
     'params': [
-        ['4.21.85', 'light', 'switch', 'switch'],
-        ['4.22.85', 'disinfect', 'switch', 'switch'],
-        ['4.66.85', 'hot_drying', 'switch', 'switch'],
-        ['4.67.85', 'drying', 'switch', 'switch'],
+        ['4.21.85', 'light', 'light_switch', 'switch'],
+        ['4.22.85', 'disinfect', 'disinfect_switch', 'switch'],
+        ['4.66.85', 'hot_drying', 'hot_drying_switch', 'switch'],
+        ['4.67.85', 'drying', 'drying_switch', 'switch'],
         ['14.51.85', None, 'airer_control', 'cover'],
     ]
 }, {
