@@ -1114,6 +1114,15 @@ DEVICES_AIOT = [{
         ['4.67.85', 'drying', 'switch', 'switch'],
         ['14.51.85', None, 'airer_control', 'cover'],
     ]
+}, {
+    'aqara.feeder.acn001': ["Aqara", "Smart Feeder C1", "ZNCWWSQ01LM"],
+    'params': [
+        ['4.21.85', 'feed', 'feed_switch', 'switch'],
+        ['4.22.85', 'child_lock_switch', 'child_lock_switch', 'switch'],
+        ['4.23.85', 'light', 'light_switch', 'switch'],
+        ['4.24.85', 'auto_feed', 'auto_feed_switch', 'switch'],
+        ['13.104.85', 'portion', 'portion', 'sensor']
+    ]
 }]
 
 DEVICES_MIOT = [{

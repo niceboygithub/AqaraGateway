@@ -62,6 +62,7 @@ class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
         self._lqi = None
         self._power_consumed = None
         self._voltage = None
+        self._model = device['model']
         self.feature = feature
         super().__init__(gateway, device, attr)
 
@@ -115,7 +116,10 @@ class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
             if key in SWITCH_ATTRIBUTES:
                 self._attrs[key] = value
             if key == self._attr:
-                self._state = bool(value)
+                if self._model in ["aqara.feeder.acn001"] and self._attr == "feed_switch":
+                    self._state = False
+                else:
+                    self._state = bool(value)
         self.async_write_ha_state()
 
     def turn_on(self, **kwargs):
