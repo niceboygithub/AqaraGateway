@@ -37,6 +37,7 @@ DEVICES = [{
     # 'lumi.gateway.iragl01': ["Aqara", "Gateway M2", "ZHWG12LM"],
     # 'lumi.gateway.iragl7': ["Aqara", "Gateway M2", "HM2-G01"],
     'lumi.gateway.iragl5': ["Aqara", "Gateway M2", "ZHWG12LM"],  # tested
+    'lumi.gateway.agl001': ["Aqara", "Gateway M2", "HM2-G01"],   # new Global version
     'lumi.gateway.sacn01': ["Aqara", "Smart Hub H1", "QBCZWG11LM"],
     'lumi.gateway.aqcn02': ["Aqara", "Hub E1", "ZHWG16LM"],  # tested
     'lumi.camera.gwagl02': ["Aqara", "Camera Hub G2H", "ZNSXJ12LM"],  # tested
@@ -508,9 +509,15 @@ DEVICES = [{
         ['8.0.2001', 'battery', 'battery', 'sensor'],
     ]
 }, {
-    'lumi.sensor_natgas': ["Honeywell", "Gas Sensor", "JTQJ-BF-01LM/BW"],
+    'lumi.sensor_natgas': ["Aqara", "Gas Sensor", "JTQJ-BF-01LM/BW"],
     'params': [
         ['0.1.85', 'density', 'gas density', 'sensor'],
+        ['13.1.85', 'alarm', 'gas', 'binary_sensor'],
+    ]
+}, {
+    'lumi.sensor_gas.acn02': ["Honeywell", "Gas Sensor", "JT-BZ-01AQ/A"],
+    'params': [
+        ['0.5.85', 'density', 'gas density', 'sensor'],
         ['13.1.85', 'alarm', 'gas', 'binary_sensor'],
     ]
 }, {
@@ -1647,7 +1654,7 @@ class Utils:
         """ return the gateway infrared supported """
         if model in ('lumi.aircondition.acn05', 'lumi.gateway.iragl5',
                      'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
-                     'lumi.gateway.iragl8'):
+                     'lumi.gateway.iragl8', 'lumi.gateway.agl001'):
             return True
         return False
 
@@ -1658,7 +1665,7 @@ class Utils:
                      'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
                      'lumi.gateway.sacn01', 'lumi.camera.gwpagl01',
                      'lumi.camera.agl001', 'lumi.camera.gwag03',
-                     'lumi.gateway.iragl8'):
+                     'lumi.gateway.iragl8', 'lumi.gateway.agl001'):
             return True
         return False
 

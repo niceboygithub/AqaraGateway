@@ -90,7 +90,8 @@ REALTEK_MODELS = [
     'lumi.gateway.sacn01',
     'lumi.gateway.iragl5',
     'lumi.gateway.iragl7',
-    'lumi.gateway.iragl01'
+    'lumi.gateway.iragl01',
+    'lumi.gateway.agl001'
 ]
 # supported models and help to enable telnet
 SUPPORTED_MODELS = SIGMASTAR_MODELS + REALTEK_MODELS
