@@ -897,7 +897,6 @@ DEVICES_AIOT = [{
     ]
 }, {
     # with neutral wire
-    'lumi.switch.acn051': ["Aqara", "Fanxing Smart Switch", "ZNQBKG36LM"],
     'lumi.switch.acn055': ["Aqara", "Four Wall Switch Z1", "ZNQBKG41LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
@@ -914,7 +913,22 @@ DEVICES_AIOT = [{
         ['13.7.85', None, 'button_both_23', None],
         [None, None, 'switch', 'binary_sensor'],
     ]
-},{
+}, {
+	# with neutral wire
+    'lumi.switch.acn051': ["Aqara", "Fanxing Smart Switch (Four-button Version)", "CJKG15LM"], # @justbin95
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        ['13.21.85', None, 'button_1', None],
+        ['13.22.85', None, 'button_2', None],
+        ['13.23.85', None, 'button_3', None],
+        ['13.24.85', None, 'button_4', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
     # with neutral wire
     'lumi.switch.n4acn4': ["Aqara", "Scene Panel", "ZNCJMB14LM"],  # @miniknife88
     'params': [
