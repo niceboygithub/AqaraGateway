@@ -927,7 +927,7 @@ DEVICES_AIOT = [{
         ['13.23.85', None, 'button_3', None],
         ['13.24.85', None, 'button_4', None],
         [None, None, 'switch', 'binary_sensor'],
-	['3.51.85', None, 'motion', 'binary_sensor'],
+        ['3.51.85', None, 'motion', 'binary_sensor'],
     ]
 }, {
     # with neutral wire
