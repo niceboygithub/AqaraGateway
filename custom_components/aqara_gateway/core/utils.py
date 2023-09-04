@@ -828,7 +828,6 @@ DEVICES_AIOT = [{
     'lumi.switch.acn020': ["Aqara", "Single Wall Switch H1L", ""],
     'lumi.switch.acn029': ["Aqara", "Single Wall Switch H1M", "ZNQBKG24LM"],
     'lumi.switch.b1nacn01': ["Aqara", "Single Wall Switch T1", "QBKG19LM"],
-    'lumi.switch.acn048': ["Aqara", "Single Wall Switch Z1", "ZNQBKG38LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -844,7 +843,6 @@ DEVICES_AIOT = [{
     'lumi.switch.acn030': ["Aqara", "Double Wall Switch H1M", "ZNQBKG25LM"],
     'lumi.switch.b2nacn01': ["Aqara", "Double Wall Switch T1", "QBKG20LM"],
     'lumi.switch.acn045': ["Aqara", "Double Wall Switch J1", ""],
-    'lumi.switch.acn047': ["Aqara", "Double Wall Switch Z1", "ZNQBKG37LM"],
     'lumi.switch.acn049': ["Aqara", "Two-way Control module T2", "ZNQBKG39LM"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
@@ -864,7 +862,6 @@ DEVICES_AIOT = [{
     'lumi.switch.acn031': ["Aqara", "Triple Wall Switch H1M", "ZNQBKG26LM"],
     'lumi.switch.b3n01': ["Aqara", "Triple Wall Switch T1", "QBKG34LM"],
     'lumi.switch.acn046': ["Aqara", "Triple Wall Switch J1", ""],
-    'lumi.switch.acn054': ["Aqara", "Triple Wall Switch Z1", "ZNQBKG40LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -897,24 +894,72 @@ DEVICES_AIOT = [{
     ]
 }, {
     # with neutral wire
-    'lumi.switch.acn051': ["Aqara", "Fanxing Smart Switch", "ZNQBKG36LM"],
-    'lumi.switch.acn055': ["Aqara", "Four Wall Switch Z1", "ZNQBKG41LM"],
+    'lumi.switch.acn048': ["Aqara", "Single Wall Switch Z1", "ZNQBKG38LM"], # @justbin95
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['13.21.85', None, 'button_1', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # with neutral wire
+    'lumi.switch.acn047': ["Aqara", "Double Wall Switch Z1", "ZNQBKG37LM"], # @justbin95
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['13.21.85', None, 'button_1', None],
+        ['13.22.85', None, 'button_2', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # with neutral wire
+    'lumi.switch.acn054': ["Aqara", "Triple Wall Switch Z1", "ZNQBKG40LM"], # @justbin95
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
         ['4.3.85', 'channel_2', 'channel 3', 'switch'],
-        ['4.4.85', 'channel_3', 'channel 4', 'switch'],
-        ['13.1.85', None, 'button_1', None],
-        ['13.2.85', None, 'button_2', None],
-        ['13.3.85', None, 'button_3', None],
-        ['13.5.85', None, 'button_both_12', None],
-        ['13.6.85', None, 'button_both_13', None],
-        ['13.7.85', None, 'button_both_23', None],
+        ['13.21.85', None, 'button_1', None],
+        ['13.22.85', None, 'button_2', None],
+        ['13.23.85', None, 'button_3', None],
         [None, None, 'switch', 'binary_sensor'],
     ]
-},{
+}, {
+    # with neutral wire
+    'lumi.switch.acn055': ["Aqara", "Four Wall Switch Z1", "ZNQBKG41LM"], # @justbin95
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        ['13.21.85', None, 'button_1', None],
+        ['13.22.85', None, 'button_2', None],
+        ['13.23.85', None, 'button_3', None],
+        ['13.24.85', None, 'button_4', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+	# with neutral wire
+    'lumi.switch.acn051': ["Aqara", "Fanxing Smart Switch (Four-button Version)", "CJKG15LM"], # @justbin95
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        ['13.21.85', None, 'button_1', None],
+        ['13.22.85', None, 'button_2', None],
+        ['13.23.85', None, 'button_3', None],
+        ['13.24.85', None, 'button_4', None],
+        [None, None, 'switch', 'binary_sensor'],
+        ['3.51.85', None, 'motion', 'binary_sensor'],
+    ]
+}, {
     # with neutral wire
     'lumi.switch.n4acn4': ["Aqara", "Scene Panel", "ZNCJMB14LM"],  # @miniknife88
     'params': [
