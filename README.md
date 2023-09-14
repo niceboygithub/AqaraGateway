@@ -1,7 +1,7 @@
 
 <a href="https://www.buymeacoffee.com/niceboygithub" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
-# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN, G3 CN, G2H Pro, M2 2022) integration for Home Assistant
+# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN, G3 CN, G2H Pro, M2 2022, M2 old EU/Global) integration for Home Assistant
 
 Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM, ZNSXJ13LM, ZNSXJ15LM, ZHWG19LM)**.
 Gateway support **Zigbee 3**.
@@ -27,14 +27,14 @@ Or Download and copy `custom_components/aqara_gateway` folder to `custom_compone
 
 1. [⚙️ Configuration](https://my.home-assistant.io/redirect/config) > [🧩 Integrations](https://my.home-assistant.io/redirect/integrations) > [➕ Add Integration](https://my.home-assistant.io/redirect/config_flow_start?domain=aqara_gateway) > 🔍 Search `Aqara Gateway`
 
-    Or click (HA v2021.3.0+): [![add](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start?domain=aqara_gateway)
-   1. If the integration didn't show up in the list please REFRESH the page
-   2. If the integration is still not in the list, you need to clear the browser cache.
-2. Enter Gateway IP address.
-3. If you applied a password of telnet in gateway, please enter the password. Otherwise, ignore this field.
-4. Enter the xiaomi token of gateway if it is the first time to add integration. Otherwise, ignore this field.
-5. Click Send button, then wait this integration is configured completely.
-6. Done
+Or click (HA v2021.3.0+): [![add](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start?domain=aqara_gateway)
+1. If the integration didn't show up in the list please REFRESH the page
+2. If the integration is still not in the list, you need to clear the browser cache.
+3. Enter Gateway IP address.
+4. If you applied a password of telnet in gateway, please enter the password. Otherwise, ignore this field.
+5. Enter the xiaomi token of gateway if it is the first time to add integration. Otherwise, ignore this field.
+6. Click Send button, then wait this integration is configured completely.
+7. Done
 
 
 [More detail instructions](https://gist.github.com/InsaneWookie/1221cd6267745ea3c16f6a2a83ba3a44) from [@InsaneWookie](https://gist.github.com/InsaneWookie)
@@ -48,7 +48,7 @@ You can use [custom open telnet command](https://gist.github.com/zvldz/1bd6b2153
 
 After telnet to gateway via putty, there are two methods (Flash or Not) to enable telnet and public mqtt.
 
-## Not Flash modified firmware method (NOT for G2H, E1 hub, G3)
+## Not Flash modified firmware method (NOT for G2H, E1 hub, G3, G2H Pro)
 
 ```shell
 mkdir /data/bin
@@ -73,7 +73,7 @@ wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/cu
 
 ```
 
-## Not Flash modified firmware method (for G2H)
+## Not Flash modified firmware method (for G2H Pro)
 
 ```shell
 mkdir /data/bin
@@ -83,7 +83,7 @@ wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/cu
 
 ```
 
-## Not Flash modified firmware method (for E1 hub, G3, G2H Pro, M2 2022)
+## Not Flash modified firmware method (for E1 hub, G3, M2 2022)
 
 ```shell
 mkdir /data/bin
@@ -136,8 +136,11 @@ If there is no any error generated, then restart gateway by reboot command.
 ## For G2H
 There is a way to [enable telnetd](https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/binutils/README.md#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils).
 
-## For G3
+## For G3, G2H Pro
 There is a way to [enable telnetd](https://github.com/Wh1terat/aQRootG3) from #Wh1terat. After enabled telnet, you need use putty to telnet <ip of your G3>. Then enter the following commands.
+
+## For M2 old EU/Global
+Use [this tool](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/tools#gateway-global-tool) to clean telnet login password. The firmware before the version 4.0.4 was enabled telnetd as default. After clear the login password, you can this integration now.
 
 ```
 chmod a+w /data/scripts/post_init.sh

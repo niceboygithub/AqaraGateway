@@ -35,7 +35,7 @@ DEVICES = [{
     # 'lumi.acpartner.acn04': ["Aqara", "AirCondition P3", "KTBL12LM"],
     'lumi.gateway.aeu01': ["Aqara", "Gateway M1S", "HM1S-G01"],
     # 'lumi.gateway.iragl01': ["Aqara", "Gateway M2", "ZHWG12LM"],
-    # 'lumi.gateway.iragl7': ["Aqara", "Gateway M2", "HM2-G01"],
+    'lumi.gateway.iragl7': ["Aqara", "Gateway M2", "HM2-G01"],  # old Global/EU version
     'lumi.gateway.iragl5': ["Aqara", "Gateway M2", "ZHWG12LM"],  # tested
     'lumi.gateway.agl001': ["Aqara", "Gateway M2", "HM2-G01"],   # new Global version
     'lumi.gateway.sacn01': ["Aqara", "Smart Hub H1", "QBCZWG11LM"],
