@@ -525,6 +525,7 @@ DEVICES = [{
     'lumi.curtain.aq2': ["Aqara", "Roller Shade", "ZNGZDJ11LM"],
     'lumi.curtain.hagl07': ["Aqara", "Curtain C2", "ZNCLDJ14LM"],   # @darkbao
     'lumi.curtain.vagl02': ["Aqara", "Curtain T1", "ZNGZDJ15LM"],
+    'lumi.curtain.acn04': ["Aqara", "Curtain C3", "ZNCLDJ01LM"],
     'params': [
         ['1.1.85', 'curtain_level', 'position', None],
         ['14.2.85', None, 'motor', 'cover'],
