@@ -298,6 +298,19 @@ DEVICES = [{
 }, {
     # light with brightness and color temp, rgb color
     'lumi.light.rgbac1': ["Aqara", "RGBW LED Controller T1", "ZNTGMK11LM"],  # @miniknife88
+    'lumi.light.acn026': ["Aqara", "Downlight T2", "LTSZNSD04LM"],
+    'lumi.light.acn025': ["Aqara", "Spotlight T2 (36 degree)", "LTSZNSD03LM"],
+    'lumi.light.acn024': ["Aqara", "Spotlight T2 (24 degree)", "LTSZNSD02LM"],
+    'lumi.light.acn023': ["Aqara", "Spotlight T2 (15 degree)", "LTSZNSD01LM"],
+    'lumi.light.acn132': ["Aqara", "Colorful Light Strip T3", "LGYCDD01LM"],
+    'lumi.light.acn131': ["Aqara", "Downlight T3", "LGYCDD02LM"],
+    'lumi.light.acn130': ["Aqara", "Spotlight T3 (36 degree)", "LGYCDD03LM"],
+    'lumi.light.acn129': ["Aqara", "Spotlight T3 (24 degree)", "LGYCDD04LM"],
+    'lumi.light.acn128': ["Aqara", "Spotlight T3", "LGYCDD05LM"],
+    'aqara.light.acn004': ["Aqara", "Downlight T3", ""],
+    'aqara.light.acn003': ["Aqara", "Spotlight T3 (36 degree)", ""],
+    'aqara.light.acn002': ["Aqara", "Spotlight T3 (24 degree)", ""],
+    'aqara.light.acn001': ["Aqara", "Spotlight T3 (15 degree)", ""],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['4.1.85', 'power_status', 'light', 'light'],
@@ -331,6 +344,13 @@ DEVICES = [{
 }, {
     # light with brightness and color temp
     'lumi.dimmer.rcbac1': ["Aqara", "RGBW LED Dimmer", "ZNDDMK11LM"],  # @Kris
+    'lumi.light.acn032': ["Aqara", "Ceiling Lamp T1 (40W)", ""],
+    'lumi.light.acn031': ["Aqara", "Ceiling Lamp T1 ", ""],
+    'lumi.dimmer.acn005': ["Aqara", "RGBW LED Dimmer T1 (240W)", "AL010CNW03"],
+    'lumi.dimmer.acn004': ["Aqara", "RGBW LED Dimmer T1 (120W)", "AL010CNW02"],
+    'lumi.dimmer.acn003': ["Aqara", "RGBW LED Dimmer T1 (60W)", "AL010CNW01"],
+    'lumi.dimmer.acn002': ["Aqara", "RGBW LED Dimmer T2 (24W)", ""],
+    'lumi.dimmer.acn001': ["Aqara", "RGBW LED Dimmer T2", ""],
     'params': [
         ['1.10.85', None, 'present_mode', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
@@ -845,6 +865,7 @@ DEVICES_AIOT = [{
     'lumi.switch.b2nacn01': ["Aqara", "Double Wall Switch T1", "QBKG20LM"],
     'lumi.switch.acn045': ["Aqara", "Double Wall Switch J1", ""],
     'lumi.switch.acn049': ["Aqara", "Two-way Control module T2", "ZNQBKG39LM"],
+    'lumi.switch.acn047': ["Aqara", "Two-way Control module T2", "LLKZMK12LM"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
