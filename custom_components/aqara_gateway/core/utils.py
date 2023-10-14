@@ -474,10 +474,7 @@ DEVICES = [{
     'params': [
         ['3.51.85', None, 'occupancy', 'binary_sensor'],
         ['8.0.2115', None, 'detect_interval', None],
-        ['4.1.85', None, 'monitoring_mode', None],
-        ['4.2.85', None, 'reverted_mode', None],
         ['4.22.85', None, '4.22.85', None],
-        ['14.47.85', None, 'approaching_distance', None],
         ['14.48.85', None, '14.48.85', None],
         ['14.49.85', None, '14.49.85', None],
         ['14.92.85', None, 'edge_region', None],
@@ -486,6 +483,9 @@ DEVICES = [{
         ['14.56.85', None, 'detecting_region', None],
         ['13.21.85', None, 'occupancy_region', 'sensor'],
         ['13.27.85', None, 'movements', 'sensor'],
+        ['4.1.85', None, 'monitoring_mode', 'select'],
+        ['4.2.85', None, 'reverted_mode', 'select'],
+        ['14.47.85', None, 'approaching_distance', 'select'],
     ]
 }, {
     # water leak sensor
@@ -896,7 +896,7 @@ DEVICES_AIOT = [{
     'lumi.switch.b2nacn01': ["Aqara", "Double Wall Switch T1", "QBKG20LM"],
     'lumi.switch.acn045': ["Aqara", "Double Wall Switch J1", ""],
     'lumi.switch.acn049': ["Aqara", "Two-way Control module T2", "ZNQBKG39LM"],
-    'lumi.switch.acn047': ["Aqara", "Two-way Control module T2", "LLKZMK12LM"],
+ #   'lumi.switch.acn047': ["Aqara", "Two-way Control module T2", "LLKZMK12LM"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -1279,6 +1279,20 @@ DEVICES_AIOT = [{
         ['4.23.85', 'light', 'light_switch', 'switch'],
         ['4.24.85', 'auto_feed', 'auto_feed_switch', 'switch'],
         ['13.104.85', 'portion', 'portion', 'sensor']
+    ]
+}, {
+    'lumi.bhf_light.acn001': ["Aqara", "Smart Yuba T1", "ZNYB01LM"],
+    'params': [
+        ['1.7.85', 'light_level', 'brightness', None],
+        ['1.9.85', 'colour_temperature', 'color_temp', None],
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['4.21.85', 'power_status', 'power', None],
+        ['0.1.85', None, 'current_temperature', None],
+        ['1.8.85', None, 'target_temperature', None],
+        ['14.35.85', None, 'fan_mode', None],
+        ['14.47.85', None, 'swing_mode', None],
+        ['14.51.85', None, 'mode', None],
+        [None, 'yuba', 'yuba', 'climate'],
     ]
 }]
 
@@ -1776,6 +1790,25 @@ class Utils:
         ):
             feature['support_in_use'] = True
         return feature
+
+    @staticmethod
+    def get_select_options(zigbee_model: str, attr: str) -> Optional[dict]:
+        if zigbee_model in ['lumi.bhf_light.acn001']:
+            if attr == 'fan_mode':
+                return {"Low": 0, "Middle": 1, "High": 2}
+            if attr == 'swing_mode':
+                return {"Enable": 0, "Disable": 1}
+            if attr == 'operating_mode':
+                return {"Warm": 0, "Dry": 3, "Fan": 4, "Exhaust": 5}
+        if zigbee_model in ['lumi.motion.ac01']:
+            if attr == 'monitoring_mode':
+                return {"Undirected": 0, "Left and right": 1}
+            if attr == 'approaching_distance':
+                return {"Near": 0, "Middle": 1, "Far": 2}
+            if attr == 'reverted_mode':
+                return {"Disable": 0, "Enable": 1}
+
+        return {"Off": 0, "On": 1}
 
     @staticmethod
     def gateway_illuminance_supported(model: str) -> Optional[bool]:

@@ -41,9 +41,10 @@ from homeassistant.components.climate.const import (
     # FAN_MIDDLE,
     # FAN_OFF,
     # FAN_ON,
+    HVAC_MODE_AUTO,
     HVAC_MODE_COOL,
-    # HVAC_MODE_DRY,
-    # HVAC_MODE_FAN_ONLY,
+    HVAC_MODE_DRY,
+    HVAC_MODE_FAN_ONLY,
     HVAC_MODE_HEAT,
     # HVAC_MODE_HEAT_COOL,
     HVAC_MODE_OFF
@@ -132,6 +133,7 @@ DOMAINS = ['air_quality',
            'cover',
            'light',
            'remote',
+           'select',
            'sensor',
            'switch']
 
@@ -204,6 +206,20 @@ AC_STATE_FAN = {
     FAN_MEDIUM: 0x10,
     FAN_HIGH: 0x20,
     FAN_AUTO: 0x30
+}
+
+YUBA_STATE_HVAC = {
+    HVAC_MODE_OFF: 0,
+    HVAC_MODE_HEAT: 0,
+    HVAC_MODE_DRY: 3,
+    HVAC_MODE_FAN_ONLY: 4,
+    HVAC_MODE_AUTO: 5
+}
+
+YUBA_STATE_FAN = {
+    FAN_LOW: 0,
+    FAN_MEDIUM: 1,
+    FAN_HIGH: 2
 }
 
 # Cover
