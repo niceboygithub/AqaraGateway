@@ -4,7 +4,7 @@ import math
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import STATE_UNKNOWN, EVENT_HOMEASSISTANT_STOP
+from homeassistant.const import MAJOR_VERSION, MINOR_VERSION, STATE_UNKNOWN, EVENT_HOMEASSISTANT_STOP
 from homeassistant.core import HomeAssistant, Event
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity import Entity
@@ -59,9 +59,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         entry.add_update_listener(async_update_options)
 
     # init setup for each supported domains
-    for domain in DOMAINS:
-        hass.async_create_task(hass.config_entries.async_forward_entry_setup(
-            entry, domain))
+    if (MAJOR_VERSION, MINOR_VERSION) >= (2022, 8):
+        await hass.config_entries.async_forward_entry_setups(entry, DOMAINS)
+    else:
+        for domain in DOMAINS:
+            hass.async_create_task(hass.config_entries.async_forward_entry_setup(
+                entry, domain))
 
     gateway.start()
 
