@@ -55,7 +55,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         elif device['model'] == 'lumi.curtain.acn011':
             async_add_entities([AqaraVerticalBlindsController(gateway, device, attr)])
         else:
-            if device.get('mi_spec'):
+            if device.get('mi_spec') or device['model'] == 'lumi.airer.acn001':
                 async_add_entities([XiaomiCoverMIOT(gateway, device, attr)])
             else:
                 async_add_entities([XiaomiGenericCover(gateway, device, attr)])

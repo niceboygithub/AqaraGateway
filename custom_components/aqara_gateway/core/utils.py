@@ -1263,13 +1263,17 @@ DEVICES_AIOT = [{
         ['8.0.2001', 'battery', 'battery', 'sensor']
     ]
 }, {
-    'lumi.airer.acn001': ["Aqara", "Smart Clothes Drying Rack H1", ""],
+    'lumi.airer.acn001': ["Aqara", "Smart Clothes Drying Rack H1", "ZNLYJ13LM"],
     'params': [
-        ['4.21.85', 'light', 'light_switch', 'switch'],
+        ['1.7.85', 'light_level', 'brightness', None],
+        ['1.9.85', 'colour_temperature', 'color_temp', None],
+        ['4.21.85', 'power_status', 'light', 'light'],
         ['4.22.85', 'disinfect', 'disinfect_switch', 'switch'],
         ['4.66.85', 'hot_drying', 'hot_drying_switch', 'switch'],
         ['4.67.85', 'drying', 'drying_switch', 'switch'],
-        ['14.51.85', None, 'airer_control', 'cover'],
+        ['3.1.85', None, 'occupancy', 'binary_sensor'],
+        ['1.1.85', None, 'position', None],
+        ['14.1.85', None, 'motor', 'cover'],  # 0: stop, 1: up, 2: down
     ]
 }, {
     'aqara.feeder.acn001': ["Aqara", "Smart Feeder C1", "ZNCWWSQ01LM"],
