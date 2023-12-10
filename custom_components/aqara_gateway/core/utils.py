@@ -700,6 +700,7 @@ DEVICES = [{
     ]
 }, {
     'aqara.lock.acn004': ["Aqara", "Smart Door Lock D200", "ZNMS23LM"],
+    'aqara.lock.acn005': ["Aqara", "Smart Door Lock D200i", "ML-D01D"],
     'params': [
         ['13.17.85', None, 'lock', 'sensor'],
         ['13.18.85', None, 'key_type', None],
