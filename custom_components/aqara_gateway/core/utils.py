@@ -298,19 +298,6 @@ DEVICES = [{
 }, {
     # light with brightness and color temp, rgb color
     'lumi.light.rgbac1': ["Aqara", "RGBW LED Controller T1", "ZNTGMK11LM"],  # @miniknife88
-    'lumi.light.acn026': ["Aqara", "Downlight T2", "LTSZNSD04LM"],
-    'lumi.light.acn025': ["Aqara", "Spotlight T2 (36 degree)", "LTSZNSD03LM"],
-    'lumi.light.acn024': ["Aqara", "Spotlight T2 (24 degree)", "LTSZNSD02LM"],
-    'lumi.light.acn023': ["Aqara", "Spotlight T2 (15 degree)", "LTSZNSD01LM"],
-    'lumi.light.acn132': ["Aqara", "Colorful Light Strip T3", "LGYCDD01LM"],
-    'lumi.light.acn131': ["Aqara", "Downlight T3", "LGYCDD02LM"],
-    'lumi.light.acn130': ["Aqara", "Spotlight T3 (36 degree)", "LGYCDD03LM"],
-    'lumi.light.acn129': ["Aqara", "Spotlight T3 (24 degree)", "LGYCDD04LM"],
-    'lumi.light.acn128': ["Aqara", "Spotlight T3", "LGYCDD05LM"],
-    'aqara.light.acn004': ["Aqara", "Downlight T3", ""],
-    'aqara.light.acn003': ["Aqara", "Spotlight T3 (36 degree)", ""],
-    'aqara.light.acn002': ["Aqara", "Spotlight T3 (24 degree)", ""],
-    'aqara.light.acn001': ["Aqara", "Spotlight T3 (15 degree)", ""],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['4.1.85', 'power_status', 'light', 'light'],
@@ -336,6 +323,27 @@ DEVICES = [{
     'lumi.light.cwacn1': ["Aqara", "0-10V Dimmer", "ZNTGMK12LM"],  # @miniknife88
     'lumi.light.cwjwcn01': ["Aqara", "Jiawen 0-12V Dimmer", "Z204"],  # @Kris
     'lumi.light.acn004': ["Aqara", "Smart Dimmer Controller T1 Pro", "SSWQD02LM"],
+    'lumi.light.wjwcn01': ["Aqara", "Spot Light (Adjustable Brightness)", ""],
+    'lumi.light.acn026': ["Aqara", "Downlight T2", "LTSZNSD04LM"],
+    'lumi.light.acn025': ["Aqara", "Spotlight T2 (36 degree)", "LTSZNSD03LM"],
+    'lumi.light.acn024': ["Aqara", "Spotlight T2 (24 degree)", "LTSZNSD02LM"],
+    'lumi.light.acn023': ["Aqara", "Spotlight T2 (15 degree)", "LTSZNSD01LM"],
+    'lumi.light.acn132': ["Aqara", "Colorful Light Strip T3", "LGYCDD01LM"],
+    'lumi.light.acn131': ["Aqara", "Downlight T3", "LGYCDD02LM"],
+    'lumi.light.acn130': ["Aqara", "Spotlight T3 (36 degree)", "LGYCDD03LM"],
+    'lumi.light.acn129': ["Aqara", "Spotlight T3 (24 degree)", "LGYCDD04LM"],
+    'lumi.light.acn128': ["Aqara", "Spotlight T3", "LGYCDD05LM"],
+    'aqara.light.acn004': ["Aqara", "Downlight T3", ""],
+    'aqara.light.acn003': ["Aqara", "Spotlight T3 (36 degree)", ""],
+    'aqara.light.acn002': ["Aqara", "Spotlight T3 (24 degree)", ""],
+    'aqara.light.acn001': ["Aqara", "Spotlight T3 (15 degree)", ""],
+    'lumi.light.acn006': ["Aqara", "Smart Spot Light (24 Degree)", "ZNCXGDD01LM"],
+    'lumi.light.acn007': ["Aqara", "Smart Grille Light (6-Lamp)", "ZNCXGDD02LM"],
+    'lumi.light.acn008': ["Aqara", "Smart Grille Light (12-Lamp)", "ZNCXGDD03LM"],
+    'lumi.light.acn009': ["Aqara", "Smart Light (30cm)", "ZNCXGDD04LM"],
+    'lumi.light.acn010': ["Aqara", "Smart Light (60cm)", "ZNCXGDD05LM"],
+    'lumi.light.acn011': ["Aqara", "Smart Pendant Light", "ZNCXGDD06LM"],
+    'lumi.light.acn012': ["Aqara", "Smart Foldable Grille Light (6-Lamp)", "ZNCXGDD07LM"],
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
@@ -361,22 +369,6 @@ DEVICES = [{
         ['14.46.85', None, 'dual_color_temperature_mode', None],
         ['8.0.2022', None, 'ambilight', None],
         ['8.0.2150', None, 'dynamic', None],
-    ]
-}, {
-    # light with brightness and color temp
-    'lumi.light.wjwcn01': ["Aqara", "Spot Light (Adjustable Brightness)", ""],
-    'lumi.light.acn006': ["Aqara", "Smart Spot Light (24 Degree)", "ZNCXGDD01LM"],
-    'lumi.light.acn007': ["Aqara", "Smart Grille Light (6-Lamp)", "ZNCXGDD02LM"],
-    'lumi.light.acn008': ["Aqara", "Smart Grille Light (12-Lamp)", "ZNCXGDD03LM"],
-    'lumi.light.acn009': ["Aqara", "Smart Light (30cm)", "ZNCXGDD04LM"],
-    'lumi.light.acn010': ["Aqara", "Smart Light (60cm)", "ZNCXGDD05LM"],
-    'lumi.light.acn011': ["Aqara", "Smart Pendant Light", "ZNCXGDD06LM"],
-    'lumi.light.acn012': ["Aqara", "Smart Foldable Grille Light (6-Lamp)", "ZNCXGDD07LM"],
-    'lumi.light.acn013': ["Aqara", "Smart Magnetic Wall Washer Light (22cm)", "ZNCXGDD08LM"],
-    'params': [
-        ['4.1.85', 'power_status', 'light', 'light'],
-        ['14.1.85', 'light_level', 'brightness', None],
-        ['14.2.85', 'colour_temperature', 'color_temp', None],
     ]
 }, {
     # button switch, no retain
@@ -787,8 +779,11 @@ DEVICES = [{
     ]
 }, {
     'lumi.airrtc.vrfegl01': ["Xiaomi", "VRF Air Conditioning"],
+    'aqara.airrtc.ecn001': ["Aqara", "VRF Air Conditioning T1"],
     'params': [
-        ['13.1.85', None, 'channels', 'sensor']
+        ['13.1.85', None, 'channels', 'sensor'],
+        ['4.1.85', 'ac_state', 'climate 1', 'climate'],
+        ['4.2.85', 'ac_state', 'climate 2', 'climate'],
     ]
 }, {
     # button rotation
@@ -950,6 +945,7 @@ DEVICES_AIOT = [{
 }, {
     # with neutral wire
     'lumi.switch.acn048': ["Aqara", "Single Wall Switch Z1", "ZNQBKG38LM"], # @justbin95
+    'lumi.switch.acn056': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Single-button Version)", "ZNQBKG42LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -960,6 +956,7 @@ DEVICES_AIOT = [{
 }, {
     # with neutral wire
     'lumi.switch.acn047': ["Aqara", "Double Wall Switch Z1", "ZNQBKG37LM"], # @justbin95
+    'lumi.switch.acn057': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Double-button Version)", "ZNQBKG43LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -972,6 +969,7 @@ DEVICES_AIOT = [{
 }, {
     # with neutral wire
     'lumi.switch.acn054': ["Aqara", "Triple Wall Switch Z1", "ZNQBKG40LM"], # @justbin95
+    'lumi.switch.acn058': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Triple-button Version)", "ZNQBKG44LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -986,6 +984,7 @@ DEVICES_AIOT = [{
 }, {
     # with neutral wire
     'lumi.switch.acn055': ["Aqara", "Four Wall Switch Z1", "ZNQBKG41LM"], # @justbin95
+    'lumi.switch.acn059': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Four-button Version)", "ZNQBKG45LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -1000,7 +999,7 @@ DEVICES_AIOT = [{
     ]
 }, {
 	# with neutral wire
-    'lumi.switch.acn051': ["Aqara", "Fanxing Smart Switch (Four-button Version)", "CJKG15LM"], # @justbin95
+    'lumi.switch.acn051': ["Aqara", "Fanxing Smart Switch V1 (Four-button Version)", "CJKG15LM"], # @justbin95
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -1300,8 +1299,30 @@ DEVICES_AIOT = [{
         ['14.51.85', None, 'mode', None],
         [None, 'yuba', 'yuba', 'climate'],
     ]
+}, {
+    'aqara.toilet.acn002': ["Aqara", "Smart Toilet T1", "ZNTL01LM"],
+    'params': [
+        ['4.1.85', 'ctrl_ch0_status', 'power', 'switch'],
+        ['4.2.85', 'ctrl_ch1_status', 'pee', 'switch'],
+        ['4.7.85', 'switch_nostatus', 'flush', 'switch'],
+        ['4.22.85', 'ctrl_ch22_status', 'automatic flip cover', 'switch'],
+        ['4.23.85', 'ctrl_ch23_status', 'automatic close cover', 'switch'],
+        ['4.39.85', 'set_direction', 'clean direction', 'select'],
+        ['4.50.85', 'set_device_mode5', 'water temperature', 'select'],
+        ['4.51.85', 'set_device_mode6', 'wash level', 'select'],
+        ['4.53.85', 'set_device_mode8', 'warn dry', 'select'],
+    ]
+}, {
+    'aqara.bed.hhcn03': ["Aqara", "Smart Bed W1", "ZNBD01LM"],
+    'params': [
+        ['4.7.85', 'switch_nostatus', 'stop', 'switch'],
+        ['4.20.85', 'set_lock', 'child lock', 'switch'],
+        ['4.23.85', 'set_mode', 'massage', 'switch'],
+        ['4.31.85', 'bool_switch_first', 'back and leg', 'switch'],
+    ]
 }]
 
+# params: [lumi res name, xiaomi prop name, hass attr name, hass domain]
 DEVICES_MIOT = [{
     # with neutral wire
     'lumi.switch.n1acn1': ["Aqara", "Single Wall Switch H1 Pro", "QBKG30LM"],  # @Kris
@@ -1813,7 +1834,15 @@ class Utils:
                 return {"Near": 0, "Middle": 1, "Far": 2}
             if attr == 'reverted_mode':
                 return {"Disable": 0, "Enable": 1}
-
+        if zigbee_model in ['aqara.toilet.acn002']:
+            if attr == 'clean direction':
+                return {"Off": 0, "Auto": 1, "Manual": 1}
+            if attr == 'water temperature':
+                return {"Normal": 0, "31°C": 1, "33°C": 2, "35°C": 3, "37°C": 4, "39°C": 5}
+            if attr == 'wash level':
+                return {"Weak": 0, "Middle Weak": 1, "Middle": 2, "Middle Strong": 3, "Strong": 4}
+            if attr == 'warn dry':
+                return {"Off": 0, "Normal": 1, "Low": 2, "Middle Low": 3, "Middle": 4, "Middle High": 5, "High": 6}
         return {"Off": 0, "On": 1}
 
     @staticmethod
