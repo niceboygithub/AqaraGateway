@@ -363,7 +363,7 @@ DEVICES = [{
         ['8.0.2150', None, 'dynamic', None],
     ]
 }, {
-    # light with brightness
+    # light with brightness and color temp
     'lumi.light.wjwcn01': ["Aqara", "Spot Light (Adjustable Brightness)", ""],
     'lumi.light.acn006': ["Aqara", "Smart Spot Light (24 Degree)", "ZNCXGDD01LM"],
     'lumi.light.acn007': ["Aqara", "Smart Grille Light (6-Lamp)", "ZNCXGDD02LM"],
@@ -376,6 +376,7 @@ DEVICES = [{
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
+        ['14.2.85', 'colour_temperature', 'color_temp', None],
     ]
 }, {
     # button switch, no retain
