@@ -75,7 +75,7 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
 
     def __init__(self, gateway, device, atrr):
         """Initialize the XiaomiGenericCover."""
-        self._pos = 0
+        self._pos = None
         self._state = None
         self._chip_temperature = None
         self._fw_ver = None
@@ -104,9 +104,11 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
         return self._state == STATE_CLOSING
 
     @property
-    def is_closed(self):
+    def is_closed(self) -> bool | None:
         """Return if the cover is closed."""
-        return self.current_cover_position == 0
+        if (position := self.current_cover_position) is None:
+            return None
+        return position == 0
 
     def update(self, data: dict = None):
         """ update state """
