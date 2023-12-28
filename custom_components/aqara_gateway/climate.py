@@ -1,18 +1,11 @@
 """Support for Xiaomi Aqara Climate."""
 import logging
-from typing import Optional
 
-from homeassistant.const import ATTR_TEMPERATURE, PRECISION_WHOLE, TEMP_CELSIUS
+from homeassistant.const import ATTR_TEMPERATURE, PRECISION_WHOLE, UnitOfTemperature
 from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate.const import (
-    HVAC_MODE_AUTO,
-    HVAC_MODE_COOL,
-    HVAC_MODE_DRY,
-    HVAC_MODE_HEAT,
-    HVAC_MODE_OFF,
-    SUPPORT_TARGET_TEMPERATURE,
-    SUPPORT_FAN_MODE,
-    SUPPORT_SWING_MODE,
+    HVACMode,
+    ClimateEntityFeature,
     SWING_OFF,
     SWING_ON
 )
@@ -77,17 +70,17 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
     @property
     def temperature_unit(self):
         """ return temperature uint """
-        return TEMP_CELSIUS
+        return UnitOfTemperature.CELSIUS
 
     @property
     def hvac_mode(self) -> str:
         """ return hvac mode """
-        return self._hvac_mode if self._is_on else HVAC_MODE_OFF
+        return self._hvac_mode if self._is_on else HVACMode.OFF
 
     @property
     def hvac_modes(self):
         """ return hvac modes """
-        return [HVAC_MODE_OFF, HVAC_MODE_COOL, HVAC_MODE_HEAT]
+        return [HVACMode.OFF, HVACMode.COOL, HVACMode.HEAT]
 
     @property
     def current_temperature(self):
@@ -112,7 +105,7 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
     @property
     def supported_features(self):
         """ return supported features """
-        return SUPPORT_TARGET_TEMPERATURE | SUPPORT_FAN_MODE
+        return ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.FAN_MODE
 
     def update(self, data: dict = None):
         # pylint: disable=broad-except
@@ -196,12 +189,12 @@ class AqaraClimateYuba(AqaraGenericClimate, ClimateEntity):
     @property
     def hvac_modes(self):
         """ return hvac modes """
-        return [HVAC_MODE_OFF, HVAC_MODE_DRY, HVAC_MODE_HEAT, HVAC_MODE_AUTO]
+        return [HVACMode.OFF, HVACMode.DRY, HVACMode.HEAT, HVACMode.AUTO]
 
     @property
     def supported_features(self):
         """ return supported features """
-        return SUPPORT_TARGET_TEMPERATURE | SUPPORT_FAN_MODE | SUPPORT_SWING_MODE
+        return ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.FAN_MODE | ClimateEntityFeature.SWING_MODE
 
     @property
     def swing_mode(self) -> str | None:

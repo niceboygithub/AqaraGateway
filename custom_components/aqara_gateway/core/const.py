@@ -1,54 +1,30 @@
 """Constants of the Xiaomi Aqara component."""
 
 from homeassistant.const import (
-    # ATTR_BATTERY_LEVEL,
-    # ATTR_TEMPERATURE,
     CONDUCTIVITY,
-    DEVICE_CLASS_BATTERY,
-    DEVICE_CLASS_HUMIDITY,
-    DEVICE_CLASS_ILLUMINANCE,
-    DEVICE_CLASS_POWER,
-    DEVICE_CLASS_PRESSURE,
-    DEVICE_CLASS_TEMPERATURE,
-    DEVICE_CLASS_CO2,
-    DEVICE_CLASS_PM25,
-    DEVICE_CLASS_PM10,
-    DEVICE_CLASS_PM1,
-    ENERGY_WATT_HOUR,
-    ENERGY_KILO_WATT_HOUR,
     LIGHT_LUX,
     PERCENTAGE,
-    POWER_WATT,
-    PRESSURE_HPA,
-    TEMP_CELSIUS,
     CONCENTRATION_PARTS_PER_BILLION,
     CONCENTRATION_PARTS_PER_MILLION,
     STATE_OPEN,
     STATE_OPENING,
-    # STATE_CLOSED,
     STATE_CLOSING,
     STATE_LOCKED,
-    STATE_UNLOCKED
-    )
+    STATE_UNLOCKED,
+    UnitOfEnergy,
+    UnitOfPower,
+    UnitOfPressure,
+    UnitOfTemperature,
+)
 
 from homeassistant.components.climate.const import (
     FAN_AUTO,
-    # FAN_DIFFUSE,
-    # FAN_FOCUS,
     FAN_HIGH,
     FAN_LOW,
     FAN_MEDIUM,
-    # FAN_MIDDLE,
-    # FAN_OFF,
-    # FAN_ON,
-    HVAC_MODE_AUTO,
-    HVAC_MODE_COOL,
-    HVAC_MODE_DRY,
-    HVAC_MODE_FAN_ONLY,
-    HVAC_MODE_HEAT,
-    # HVAC_MODE_HEAT_COOL,
-    HVAC_MODE_OFF
-    )
+    HVACMode,
+)
+from homeassistant.components.sensor import SensorDeviceClass
 
 DOMAIN = "aqara_gateway"
 
@@ -138,18 +114,18 @@ DOMAINS = ['air_quality',
            'switch']
 
 UNITS = {
-    DEVICE_CLASS_BATTERY: PERCENTAGE,
-    DEVICE_CLASS_HUMIDITY: PERCENTAGE,
-    DEVICE_CLASS_ILLUMINANCE: LIGHT_LUX,  # zb light and motion and ble flower - lux
-    DEVICE_CLASS_POWER: POWER_WATT,
-    DEVICE_CLASS_PRESSURE: PRESSURE_HPA,
-    DEVICE_CLASS_TEMPERATURE: TEMP_CELSIUS,
-    DEVICE_CLASS_CO2: CONCENTRATION_PARTS_PER_MILLION,
-    DEVICE_CLASS_PM25: 'µg/m³',
-    DEVICE_CLASS_PM10: 'µg/m³',
-    DEVICE_CLASS_PM1: 'µg/m³',
+    SensorDeviceClass.BATTERY: PERCENTAGE,
+    SensorDeviceClass.HUMIDITY: PERCENTAGE,
+    SensorDeviceClass.ILLUMINANCE: LIGHT_LUX,  # zb light and motion and ble flower - lux
+    SensorDeviceClass.POWER: UnitOfPower.WATT,
+    SensorDeviceClass.PRESSURE: UnitOfPressure.HPA,
+    SensorDeviceClass.TEMPERATURE: UnitOfTemperature.CELSIUS,
+    SensorDeviceClass.CO2: CONCENTRATION_PARTS_PER_MILLION,
+    SensorDeviceClass.PM25: 'µg/m³',
+    SensorDeviceClass.PM10: 'µg/m³',
+    SensorDeviceClass.PM1: 'µg/m³',
     'conductivity': CONDUCTIVITY,
-    'consumption': ENERGY_KILO_WATT_HOUR,
+    'consumption': UnitOfEnergy.KILO_WATT_HOUR,
     'gas density': '% LEL',
     'smoke density': '% obs/ft',
     'moisture': PERCENTAGE,
@@ -192,13 +168,13 @@ CONF_INVERT_STATE = 'invert_state'
 CONF_OCCUPANCY_TIMEOUT = 'occupancy_timeout'
 
 # Climate
-HVAC_MODES = [HVAC_MODE_HEAT, HVAC_MODE_COOL, HVAC_MODE_OFF]
+HVAC_MODES = [HVACMode.HEAT, HVACMode.COOL, HVACMode.OFF]
 FAN_MODES = [FAN_LOW, FAN_MEDIUM, FAN_HIGH, FAN_AUTO]
 
 AC_STATE_HVAC = {
-    HVAC_MODE_OFF: 0x01,
-    HVAC_MODE_HEAT: 0x10,
-    HVAC_MODE_COOL: 0x11
+    HVACMode.OFF: 0x01,
+    HVACMode.HEAT: 0x10,
+    HVACMode.COOL: 0x11
 }
 
 AC_STATE_FAN = {
@@ -209,11 +185,11 @@ AC_STATE_FAN = {
 }
 
 YUBA_STATE_HVAC = {
-    HVAC_MODE_OFF: 0,
-    HVAC_MODE_HEAT: 0,
-    HVAC_MODE_DRY: 3,
-    HVAC_MODE_FAN_ONLY: 4,
-    HVAC_MODE_AUTO: 5
+    HVACMode.OFF: 0,
+    HVACMode.HEAT: 0,
+    HVACMode.DRY: 3,
+    HVACMode.FAN_ONLY: 4,
+    HVACMode.AUTO: 5
 }
 
 YUBA_STATE_FAN = {

@@ -4,11 +4,9 @@ import time
 from homeassistant.components.automation import ATTR_LAST_TRIGGERED
 from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
-    DEVICE_CLASS_DOOR,
-    DEVICE_CLASS_MOISTURE
+    BinarySensorDeviceClass,
 )
 from homeassistant.config import DATA_CUSTOMIZE
-from homeassistant.core import callback
 from homeassistant.helpers.event import async_call_later
 from homeassistant.util.dt import now
 from homeassistant.const import (
@@ -45,8 +43,8 @@ from .core.const import (
 
 
 DEVICE_CLASS = {
-    'contact': DEVICE_CLASS_DOOR,
-    'water_leak': DEVICE_CLASS_MOISTURE,
+    'contact': BinarySensorDeviceClass.DOOR,
+    'water_leak': BinarySensorDeviceClass.MOISTURE,
 }
 
 
