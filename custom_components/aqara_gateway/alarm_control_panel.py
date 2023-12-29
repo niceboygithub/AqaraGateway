@@ -1,17 +1,14 @@
 """ Aqara Gateway Alarm Control Panel """
 
 from homeassistant.components.alarm_control_panel import (
-    SUPPORT_ALARM_ARM_AWAY,
-    SUPPORT_ALARM_ARM_HOME,
-    SUPPORT_ALARM_ARM_NIGHT,
     AlarmControlPanelEntity,
+    AlarmControlPanelEntityFeature,
 )
 from homeassistant.const import (
     STATE_ALARM_ARMED_AWAY,
     STATE_ALARM_ARMED_HOME,
     STATE_ALARM_ARMED_NIGHT,
     STATE_ALARM_DISARMED,
-    STATE_ALARM_ARMING,
 )
 
 from . import DOMAIN, GatewayGenericDevice
@@ -62,8 +59,8 @@ class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
         self._shell.login()
         self._get_state()
         super().__init__(gateway, device, attr)
-        self._attr_supported_features = (SUPPORT_ALARM_ARM_HOME |
-                SUPPORT_ALARM_ARM_AWAY | SUPPORT_ALARM_ARM_NIGHT)
+        self._attr_supported_features = (AlarmControlPanelEntityFeature.ARM_HOME |
+                AlarmControlPanelEntityFeature.ARM_AWAY | AlarmControlPanelEntityFeature.ARM_NIGHT)
 
     @property
     def should_poll(self):
@@ -85,8 +82,8 @@ class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
     @property
     def supported_features(self):
         """Flag supported features."""
-        return (SUPPORT_ALARM_ARM_HOME | SUPPORT_ALARM_ARM_AWAY |
-                SUPPORT_ALARM_ARM_NIGHT)
+        return (AlarmControlPanelEntityFeature.ARM_HOME | AlarmControlPanelEntityFeature.ARM_AWAY |
+                AlarmControlPanelEntityFeature.ARM_NIGHT)
 
     @property
     def code_arm_required(self):
