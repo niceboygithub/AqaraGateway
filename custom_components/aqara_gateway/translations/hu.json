@@ -19,7 +19,8 @@
                     "token": "Hozz\u00e1f\u00e9r\u00e9si token",
                     "model": "Model",
                     "debug": "Debug",
-                    "noffline": "Ignore Offline message"
+                    "noffline": "Ignore Offline message",
+                    "patched_firmware": "Patched Firmware"
                 },
                 "description": "K\u00e9rlek, add meg az Aqara Gateway csom\u00f3pontod kapcsol\u00f3d\u00e1si be\u00e1ll\u00edt\u00e1sait."
             }

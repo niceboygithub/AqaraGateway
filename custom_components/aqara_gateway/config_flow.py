@@ -19,7 +19,8 @@ from homeassistant.util.network import is_ip_address
 from .core import gateway
 from .core.const import (
     DOMAIN, OPT_DEVICE_NAME, CONF_MODEL, OPT_DEBUG,
-    CONF_DEBUG, CONF_STATS, CONF_NOFFLINE, SUPPORTED_MODELS
+    CONF_DEBUG, CONF_STATS, CONF_NOFFLINE, SUPPORTED_MODELS,
+    CONF_PATCHED_FW
 )
 from .core.utils import Utils
 
@@ -37,6 +38,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         self._token: Optional[str] = None
         self._model: Optional[str] = None
         self._device_info: Optional[str] = None
+        self._patched_fw: Optional[bool] = False
 
     @staticmethod
     @callback
@@ -60,7 +62,8 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                 return self.async_abort(reason="connection_error")
             ret = gateway.is_aqaragateway(self._host,
                                             self._password,
-                                            self._model)
+                                            self._model,
+                                            self._patched_fw)
             if "error" in ret['status']:
                 return self.async_abort(reason="connection_error")
             self._name = ret.get('name', '')
@@ -69,7 +72,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
             if ret['token']:
                 self._token = ret['token']
 
-            await self.async_set_unique_id(self._name)
+            await self.async_set_unique_id(f"aqara_gateway_{self._name}")
 
             return self._async_get_entry()
 
@@ -89,6 +92,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
                             default=self._model or 'm1s')] = vol.In(
                                 OPT_DEVICE_NAME)
         fields[vol.Optional(CONF_NOFFLINE, default=True)] = bool
+        fields[vol.Optional(CONF_PATCHED_FW, default=False)] = bool
 
         return self.async_show_form(
             step_id="user",
@@ -116,6 +120,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         self._password = user_input.get(CONF_PASSWORD, "")
         self._token = user_input.get(CONF_TOKEN, "")
         self._model = user_input.get(CONF_MODEL, "")
+        self._patched_fw = user_input.get(CONF_PATCHED_FW, False)
 
     async def _async_add(self, user_input):
         if user_input is None:

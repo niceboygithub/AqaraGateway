@@ -258,3 +258,5 @@ class TelnetShellG2HPro(TelnetShellG3):
 class TelnetShellM2POE(TelnetShellG3):
     pass
 
+class TelnetShellM3(TelnetShellG3):
+    pass

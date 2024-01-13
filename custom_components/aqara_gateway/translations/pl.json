@@ -19,7 +19,8 @@
                     "token": "Token dost\u0119pu",
                     "model": "Model",
                     "debug": "Debug",
-                    "noffline": "Ignore Offline message"
+                    "noffline": "Ignore Offline message",
+                    "patched_firmware": "Patched Firmware"
                 },
                 "description": "Wprowad\u017a ustawienia po\u0142\u0105czenia Aqara Gateway."
             }

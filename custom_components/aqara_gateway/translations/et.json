@@ -18,7 +18,8 @@
                     "token": "Juurdep\u00e4\u00e4sut\u00f5end",
                     "model": "Model",
                     "debug": "Debug",
-                    "noffline": "Ignore Offline message"
+                    "noffline": "Ignore Offline message",
+                    "patched_firmware": "Patched Firmware"
                 },
                 "description": "Sisesta oma Aqara Gateway s\u00f5lme \u00fchenduse s\u00e4tted."
             }

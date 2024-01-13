@@ -14,7 +14,7 @@ from homeassistant.helpers.device_registry import DeviceRegistry
 from homeassistant.helpers.typing import HomeAssistantType
 from homeassistant.exceptions import PlatformNotReady
 
-from .const import DOMAIN, SIGMASTAR_MODELS
+from .const import DOMAIN, SIGMASTAR_MODELS, AIOT_MODELS
 
 SOFT_HACK_REALTEK = {"ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
 SOFT_HACK_SIGMASTAR = {"ssid": "\"\"", "pswd": "123123 ; passwd -d root ; /bin/riu_w 101e 53 3012 ; telnetd"}
@@ -46,6 +46,7 @@ DEVICES = [{
     'lumi.camera.gwpgl1': ["Aqara", "Camera Hub G3", "CH-H03"],
     'lumi.camera.agl001': ["Aqara", "Camera Hub G2H Pro", "ZNSXJ15LM"],
     'lumi.gateway.iragl8': ["Aqara", "Gateway M2 2022", "ZHWG19LM"],  # tested
+    'lumi.gateway.acn012': ["Aqara", "Gateway M3", "ZHWG24LM"],
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],
@@ -1879,11 +1880,7 @@ class Utils:
     @staticmethod
     def gateway_is_aiot_only(model: str) -> Optional[bool]:
         """ return the gateway is aiot only """
-        if model in ('lumi.camera.gwagl02', 'lumi.gateway.iragl5',
-                     'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
-                     'lumi.gateway.sacn01', 'lumi.camera.gwpagl01',
-                     'lumi.camera.agl001', 'lumi.camera.gwag03',
-                     'lumi.gateway.iragl8', 'lumi.gateway.agl001'):
+        if model in AIOT_MODELS:
             return True
         return False
 

@@ -33,6 +33,7 @@ CONF_DEBUG = "debug"
 CONF_MODEL = "model"
 CONF_STATS = "stats"
 CONF_NOFFLINE = "noffline"
+CONF_PATCHED_FW = "patched_firmware"
 
 OPT_DEBUG = {
     'true': "Basic logs",
@@ -48,7 +49,8 @@ OPT_DEVICE_NAME = {
     'm1s': "Aqara Gateway M1S",
     'e1': "Aqara Hub E1",
     'm2': "Aqara Gateway M2",
-    'm2 2022': "Aqara Gateway M2 2022"
+    'm2 2022': "Aqara Gateway M2 2022",
+    'm3': "Aqara Gateway M3"
 }
 
 SIGMASTAR_MODELS = [
@@ -58,7 +60,8 @@ SIGMASTAR_MODELS = [
     'lumi.camera.gwpagl01',
     'lumi.camera.agl001',
     'lumi.gateway.acn004',
-    'lumi.gateway.iragl8'
+    'lumi.gateway.iragl8',
+    'lumi.gateway.acn012'
 ]
 
 REALTEK_MODELS = [
@@ -72,6 +75,19 @@ REALTEK_MODELS = [
 ]
 # supported models and help to enable telnet
 SUPPORTED_MODELS = SIGMASTAR_MODELS + REALTEK_MODELS
+AIOT_MODELS = [
+    'lumi.camera.gwagl02',
+    'lumi.gateway.iragl5',
+    'lumi.gateway.iragl7',
+    'lumi.gateway.iragl01',
+    'lumi.gateway.sacn01',
+    'lumi.camera.gwpagl01',
+    'lumi.camera.agl001',
+    'lumi.camera.gwag03',
+    'lumi.gateway.iragl8',
+    'lumi.gateway.agl001',
+    'lumi.gateway.acn012'
+]
 
 DATA_KEY = "aqara_gateway"
 

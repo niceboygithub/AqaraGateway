@@ -20,7 +20,8 @@ from .shell import (
     TelnetShellE1, 
     TelnetShellG3, 
     TelnetShellG2HPro,
-    TelnetShellM2POE
+    TelnetShellM2POE,
+    TelnetShellM3
 )
 from .utils import DEVICES, Utils, GLOBAL_PROP
 from .const import CONF_MODEL, DOMAIN, SIGMASTAR_MODELS, REALTEK_MODELS, SUPPORTED_MODELS
@@ -198,6 +199,9 @@ class Gateway(Thread):
                                       self.options.get(CONF_PASSWORD, ''))
             elif "m2 2022" in device_name:
                 shell = TelnetShellM2POE(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
+            elif "m3" in device_name:
+                shell = TelnetShellM3(self.host,
                                       self.options.get(CONF_PASSWORD, ''))
             else:
                 shell = TelnetShell(self.host,
@@ -423,6 +427,9 @@ class Gateway(Thread):
             elif "m2 2022" in device_name:
                 shell = TelnetShellM2POE(self.host,
                                       self.options.get(CONF_PASSWORD, ''))
+            elif "m3" in device_name:
+                shell = TelnetShellM3(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
             else:
                 shell = TelnetShell(self.host,
                                     self.options.get(CONF_PASSWORD, ''))
@@ -518,6 +525,9 @@ class Gateway(Thread):
                                       self.options.get(CONF_PASSWORD, ''))
             elif "m2 2022" in device_name:
                 shell = TelnetShellM2POE(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
+            elif "m3" in device_name:
+                shell = TelnetShellM3(self.host,
                                       self.options.get(CONF_PASSWORD, ''))
             else:
                 shell = TelnetShell(self.host,
@@ -851,7 +861,8 @@ def prepare_aqaragateway(shell, model):
 
 def is_aqaragateway(host: str,
                     password: str,
-                    device_name: str) -> Optional[dict]:
+                    device_name: str,
+                    patched_fw: bool) -> Optional[dict]:
     """return name if is supported gateway"""
     result = {}
     result['status'] = 'error'
@@ -885,6 +896,8 @@ def is_aqaragateway(host: str,
                     shell = TelnetShellG3(host, password)
                 elif "m2 2022" in device_name.lower():
                     shell = TelnetShellM2POE(host, password)
+                elif "m3" in device_name.lower():
+                    shell = TelnetShellM3(host, password)
                 else:
                     shell = TelnetShell(host, password)
                 shell.login()
@@ -903,7 +916,7 @@ def is_aqaragateway(host: str,
             result['model'] = model
             result['status'] = 'ok'
             result['token'] = token
-            if model in SUPPORTED_MODELS:
+            if model in SUPPORTED_MODELS and not patched_fw:
                 prepare_aqaragateway(shell, model)
         if shell:
             shell.close()

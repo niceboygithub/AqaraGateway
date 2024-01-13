@@ -19,7 +19,8 @@
                     "token": "Token de acceso",
                     "model": "Model",
                     "debug": "Debug",
-                    "noffline": "Ignore Offline message"
+                    "noffline": "Ignore Offline message",
+                    "patched_firmware": "Patched Firmware"
                 },
                 "description": "Introduce la configuraci\u00f3n de la conexi\u00f3n de tu nodo Aqara Gateway."
             }

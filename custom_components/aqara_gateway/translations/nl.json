@@ -19,7 +19,8 @@
                     "token": "Toegangstoken",
                     "model": "Model",
                     "debug": "Debug",
-                    "noffline": "Ignore Offline message"
+                    "noffline": "Ignore Offline message",
+                    "patched_firmware": "Patched Firmware"
                 },
                 "description": "Voer de verbindingsinstellingen in van uw Aqara Gateway."
             }
