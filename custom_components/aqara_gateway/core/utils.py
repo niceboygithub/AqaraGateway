@@ -47,6 +47,7 @@ DEVICES = [{
     'lumi.camera.agl001': ["Aqara", "Camera Hub G2H Pro", "ZNSXJ15LM"],
     'lumi.gateway.iragl8': ["Aqara", "Gateway M2 2022", "ZHWG19LM"],  # tested
     'lumi.gateway.acn012': ["Aqara", "Gateway M3", "ZHWG24LM"],
+    'lumi.gateway.agl004': ["Aqara", "Gateway M3", "HM-G01D"],
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],

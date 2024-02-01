@@ -48,7 +48,7 @@ You can use [custom open telnet command](https://gist.github.com/zvldz/1bd6b2153
 
 After telnet to gateway via putty, there are two methods (Flash or Not) to enable telnet and public mqtt.
 
-## Not Flash modified firmware method (NOT for G2H, E1 hub, G3, G2H Pro)
+## Not Flash modified firmware method (NOT for G2H, E1 hub, G3, G2H Pro, M2 2022, M3)
 
 ```shell
 mkdir /data/bin
@@ -81,15 +81,27 @@ cd /data/bin
 wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"; chmod +x /tmp/curl
 /tmp/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/binutils/mosquitto_g2hpro; chmod a+x /data/bin/mosquitto
 
+mkdir /data/scripts
+cd /data/scripts
+echo -e "#!/bin/sh\n\nfw_manager.sh -r\nfw_manager.sh -t -k" > /data/scripts/post_init.sh
+chmod +x /data/scripts/post_init.sh
+chattr +i /data/scripts; chattr +i /data/scripts/post_init.sh
+
 ```
 
-## Not Flash modified firmware method (for E1 hub, G3, M2 2022)
+## Not Flash modified firmware method (for E1 hub, G3, M2 2022, M3)
 
 ```shell
 mkdir /data/bin
 cd /data/bin
 wget -O /tmp/curl "http://master.dl.sourceforge.net/project/aqarahub/binutils/curl?viasf=1"; chmod +x /tmp/curl
 /tmp/curl -s -k -L -o /data/bin/mosquitto https://raw.githubusercontent.com/niceboygithub/AqaraCameraHubfw/main/binutils/mosquitto_e1; chmod a+x /data/bin/mosquitto
+
+mkdir /data/scripts
+cd /data/scripts
+echo -e "#!/bin/sh\n\nfw_manager.sh -r\nfw_manager.sh -t -k" > /data/scripts/post_init.sh
+chmod +x /data/scripts/post_init.sh
+chattr +i /data/scripts; chattr +i /data/scripts/post_init.sh
 
 ```
 
@@ -133,14 +145,20 @@ If there is no any error generated, then restart gateway by reboot command.
 
 *Note: It updates firmware only if the checksum of the downloaded file is correct.*
 
+## For M2 old EU/Global
+Use [this tool](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/tools#gateway-global-tool) to clean telnet login password. The firmware before the version 4.0.4 was enabled telnetd as default. After clear the login password, you can this integration now.
+
+```
+chmod a+w /data/scripts/post_init.sh
+echo -e "#!/bin/sh\n\nfw_manager.sh -t -k" > /data/scripts/post_init.sh
+chattr +i post_init.sh
+```
+
 ## For G2H
 There is a way to [enable telnetd](https://github.com/niceboygithub/AqaraCameraHubfw/blob/main/binutils/README.md#aqara-camera-hub-g2g2h-znsxj12lm-related-binutils).
 
 ## For G3, G2H Pro
 There is a way to [enable telnetd](https://github.com/Wh1terat/aQRootG3) from #Wh1terat. After enabled telnet, you need use putty to telnet <ip of your G3>. Then enter the following commands.
-
-## For M2 old EU/Global
-Use [this tool](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/tools#gateway-global-tool) to clean telnet login password. The firmware before the version 4.0.4 was enabled telnetd as default. After clear the login password, you can this integration now.
 
 ```
 chmod a+w /data/scripts/post_init.sh
@@ -167,6 +185,11 @@ mkdir -p /data/ota_dir
 touch /data/ota_dir/lumi_fw.tar
 chattr +i /data/ota_dir/lumi_fw.tar
 ```
+
+*Flash G3 customized firmware*
+
+USING AT YOUR OWN RISK.
+Go to this [link](https://github.com/niceboygithub/AqaraCameraHubfw/tree/main/modified/G3) and follow the intrusion after enabled telnet.
 
 
 ## How to check this component is working properly.
