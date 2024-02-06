@@ -354,8 +354,6 @@ DEVICES = [{
 }, {
     # light with brightness and color temp
     'lumi.dimmer.rcbac1': ["Aqara", "RGBW LED Dimmer", "ZNDDMK11LM"],  # @Kris
-    'lumi.light.acn032': ["Aqara", "Ceiling Lamp T1 (40W)", ""],
-    'lumi.light.acn031': ["Aqara", "Ceiling Lamp T1 ", ""],
     'lumi.dimmer.acn005': ["Aqara", "RGBW LED Dimmer T1 (240W)", "AL010CNW03"],
     'lumi.dimmer.acn004': ["Aqara", "RGBW LED Dimmer T1 (120W)", "AL010CNW02"],
     'lumi.dimmer.acn003': ["Aqara", "RGBW LED Dimmer T1 (60W)", "AL010CNW01"],
@@ -371,6 +369,20 @@ DEVICES = [{
         ['14.46.85', None, 'dual_color_temperature_mode', None],
         ['8.0.2022', None, 'ambilight', None],
         ['8.0.2150', None, 'dynamic', None],
+    ]
+}, {
+    # light with brightness and color temp
+    'lumi.light.acn031': ["Aqara", "Ceiling Lamp T1 ", "HCXDD11LM"],
+    'lumi.light.acn032': ["Aqara", "Ceiling Lamp T1 (40W)", "HCXDD12LM"],
+    'params': [
+        ['1.10.85', None, 'present_mode', None],
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['14.1.85', 'light_level', 'brightness', None],
+        ['14.2.85', 'colour_temperature', 'color_temp', None],
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['1.7.85', 'light_level', 'brightness', None],
+        ['1.9.85', 'colour_temperature', 'color_temp', None],
+        ['4.2.85', 'power_status', 'sub light', 'light'],
     ]
 }, {
     # button switch, no retain
@@ -986,8 +998,23 @@ DEVICES_AIOT = [{
     ]
 }, {
     # with neutral wire
-    'lumi.switch.acn055': ["Aqara", "Four Wall Switch Z1", "ZNQBKG41LM"], # @justbin95
     'lumi.switch.acn059': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Four-button Version)", "ZNQBKG45LM"],
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        ['13.1.85', None, 'button', None],
+        ['13.21.85', None, 'button_1', None],
+        ['13.22.85', None, 'button_2', None],
+        ['13.23.85', None, 'button_3', None],
+        ['13.24.85', None, 'button_4', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    # with neutral wire
+    'lumi.switch.acn055': ["Aqara", "Four Wall Switch Z1", "ZNQBKG41LM"], # @justbin95
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
