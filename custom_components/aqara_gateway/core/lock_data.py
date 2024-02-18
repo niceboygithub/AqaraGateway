@@ -87,6 +87,9 @@ LOCK_NOTIFICATION = {
     "unlock by bluetooth": {"default": "Unlocked with Bluetooht by user"},
     "unlock by homekit": {"default": "Unlocked with HomeKit by user"},
     "unlock by key": {"default": "Unlocked with key by user"},
+    "unlock by nfc": {"default": "Unlocked with NFC by user"},
+    "unlock by face": {"default": "Unlocked with Face by user"},
+    "unlock by temporary password": {"default": "Unlocked with Temporary Password"},
     "away mode": {
         "default": "Away mode changed",
         "0": "Away-from-home mode is removed",
