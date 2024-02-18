@@ -228,15 +228,38 @@ class AqaraRollerShadeE1(XiaomiGenericCover):
 
 class AqaraVerticalBlindsController(XiaomiGenericCover):
 
-    _attr_current_cover_tilt_position: int = 0
+    _attr_supported_features: CoverEntityFeature = (
+        CoverEntityFeature.OPEN
+        | CoverEntityFeature.CLOSE
+        | CoverEntityFeature.STOP
+        | CoverEntityFeature.SET_POSITION
+        | CoverEntityFeature.OPEN_TILT
+        | CoverEntityFeature.CLOSE_TILT
+        | CoverEntityFeature.STOP_TILT
+        | CoverEntityFeature.SET_TILT_POSITION
+    )
+
+    _tilt_angle: int | None = None  # -90~90
 
     def update(self, data: dict = None):
         """ update state """
-        super().update(data)
         if TILT_POSITION in data:
             value = data[TILT_POSITION]  # value is -90~90
-            self._attr_current_cover_tilt_position = int((value + 90) / 180 * 100)  # 0~100
-            self.schedule_update_ha_state()
+            self._tilt_angle = value
+        if POSITION in data:
+            # clear `opening` or `closing` when receiving `position`
+            self._state = STATE_UNKNOWN
+        super().update(data)
+
+    @property
+    def current_cover_tilt_position(self) -> int | None:
+        """Return current position of cover tilt.
+
+        None is unknown, 0 is closed, 100 is fully open.
+        """
+        if self._tilt_angle is None:
+            return None
+        return int((90 - abs(self._tilt_angle)) / 90 * 100)
 
     def open_cover_tilt(self, **kwargs: Any) -> None:
         """Open the cover tilt."""
@@ -249,7 +272,10 @@ class AqaraVerticalBlindsController(XiaomiGenericCover):
     def set_cover_tilt_position(self, **kwargs):
         """Move the cover tilt to a specific position."""
         tilt_position = kwargs.get(ATTR_TILT_POSITION)  # 0~100
-        self.gateway.send(self.device, {'tilt_position': tilt_position / 100 * 180 - 90})  # -90~90
+        if (self._tilt_angle or 0) >= 0:
+            self.gateway.send(self.device, {'tilt_position': 90 - (tilt_position / 100 * 90)})  # 0~90
+        else:
+            self.gateway.send(self.device, {'tilt_position': (tilt_position / 100 * 90) - 90})  # -90~0
 
     def stop_cover_tilt(self, **kwargs: Any) -> None:
         self.gateway.send(self.device, {'tilt_motor': 2})
