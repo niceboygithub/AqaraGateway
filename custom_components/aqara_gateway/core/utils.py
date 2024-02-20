@@ -681,10 +681,10 @@ DEVICES = [{
     'aqara.lock.agl002': ["Aqara", "Door Lock A100", "ZNMS02ES"],
     'params': [
         ['8.0.2148', None, 'timestamp', None],
-        ['13.17.85', 'lock_state', 'lock', 'sensor'],
+        ['13.17.85', 'lock_state', 'lock', 'binary_sensor'],  # Door State
         ['13.18.85', None, 'key_type', None],
-        ['13.31.85', None, 'lock_event', None],
-        ['13.33.85', None, 'latch_state', None],
+        ['13.31.85', None, 'lock by handle', 'binary_sensor'],  # Lock State
+        ['13.33.85', None, 'latch_state', 'binary_sensor'],  # Latch State
         ['13.37.85', None, 'verification failed', None],
         ['13.41.85', None, 'unlock from inside', None],
         ['13.42.85', None, 'unlock by fringprint', None],
@@ -714,10 +714,10 @@ DEVICES = [{
     'aqara.lock.acn004': ["Aqara", "Smart Door Lock D200", "ZNMS23LM"],
     'aqara.lock.acn005': ["Aqara", "Smart Door Lock D200i", "ML-D01D"],
     'params': [
-        ['13.17.85', None, 'lock', 'sensor'],
+        ['13.17.85', None, 'lock', 'binary_sensor'],  # Door State
         ['13.18.85', None, 'key_type', None],
-        ['13.31.85', None, 'lock_event', None],
-        ['13.33.85', None, 'latch_state', None],
+        ['13.31.85', None, 'auto locking', 'binary_sensor'],  # Lock State
+        ['13.33.85', None, 'latch_state', 'binary_sensor'],  # Latch State
         ['13.37.85', None, 'verification failed', None],
         ['13.43.85', None, 'unlock by password', None],
         ['13.44.85', None, 'unlock by nfc', None],  # not tested
