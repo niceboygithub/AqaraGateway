@@ -1,9 +1,9 @@
 
 <a href="https://www.buymeacoffee.com/niceboygithub" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
-# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN, G3 CN, G2H Pro, M2 2022, M2 old EU/Global) integration for Home Assistant
+# Aqara Gateway/Hub (G2H, M1S CN, P3 CN, M2 CN, H1 CN, E1 CN, G3 CN, G2H Pro, M2 2022, M2 old EU/Global, M1S 2022, M3) integration for Home Assistant
 
-Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM, ZNSXJ13LM, ZNSXJ15LM, ZHWG19LM)**.
+Control Zigbee devices from Home Assistant with **Aqara Gateway (KTBL12LM, ZHWG15LM, ZHWG12LM, ZNSXJ12LM, ZNSXJ12LM, ZNSXJ13LM, ZNSXJ15LM, ZHWG19LM, ZHWG20LM, ZHWG24LM)**.
 Gateway support **Zigbee 3**.
 
 This integration was based on the development of [@AlexxIT](https://github.com/AlexxIT/XiaomiGateway3/), Thanks Alex.
@@ -14,7 +14,7 @@ This integration was based on the development of [@AlexxIT](https://github.com/A
 
 For Gateway M2 and Switch H1 Hub, to flash modified firmware to M2, please use [AqaraGateway.exe](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe) to flash customize firmware. Need to open the case of gateway and wired out the UART of [M2](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/images/M2/m2_uart.png) or [H1](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/images/H1/h1_uart.png).
 
-For Gateway M1S CN, AirCondition P3 CN, Hub E1 CN, please switch to **Mi Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor).
+For Gateway M1S CN, AirCondition P3 CN, Hub E1 CN, Gateway M1S 2022 CN, please switch to **Mi Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor).
 
 ## Installation
 
@@ -42,7 +42,7 @@ Or click (HA v2021.3.0+): [![add](https://my.home-assistant.io/badges/config_flo
 
 ## Manually Enable Telnet
 **ATTENTION**: There is a good news to enable telnet manually. The magic is "5 clicks, pause, 2 clicks, pause, 2 clicks, pause, 2 clicks, pause, 2 clicks, pause, 2 clicks, pause, 2 clicks, pause" from [here](https://github.com/AlexxIT/XiaomiGateway3/issues/1057#issuecomment-1543550411).
-The Lumi removed the method "set_ip_info" in the new version of M1S "Mi version 4.0.3_0012, Aqara version 3.5.2_0010.0636" and other hubs also. If you were already upgrade to this verison, the only way to enabled customed firwmware by [AqaraGateway.exe](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe).
+The Lumi removed the method "set_ip_info" in the new version of M1S "Mi version 4.0.3_0012, Aqara version 3.5.2_0010.0636" and other hubs also. If you were already upgrade to this verison, the only way to enabled customed firwmware by [AqaraGateway.exe](https://github.com/niceboygithub/AqaraM1SM2fw/raw/main/tools/aqaragateway.exe) or use [gw_global_tool](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/tools#gateway-global-tool) to clean password and flash customed firmware.
 
 You can use [custom open telnet command](https://gist.github.com/zvldz/1bd6b21539f84339c218f9427e022709) way 2 or way 3 to enable telnet in *Mija Home mode*, then flash modification firmwares to [M1S](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/M1S), [P3](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/modified/P3), [E1](https://github.com/niceboygithub/AqaraCameraHubfw/tree/main/modified/E1),  if you want use them in Aqara Home. No need to open the case of gateway.
 
@@ -150,8 +150,8 @@ Use [this tool](https://github.com/niceboygithub/AqaraM1SM2fw/tree/main/tools#ga
 
 ```
 chmod a+w /data/scripts/post_init.sh
-echo -e "#!/bin/sh\n\nfw_manager.sh -t -k" > /data/scripts/post_init.sh
-chattr +i post_init.sh
+echo -e "#!/bin/sh\n\nfw_manager.sh -r \nfw_manager.sh -t -k" > /data/scripts/post_init.sh
+chattr +i /data/scripts; chattr +i /data/scripts/post_init.sh
 ```
 
 ## For G2H
@@ -163,7 +163,7 @@ There is a way to [enable telnetd](https://github.com/Wh1terat/aQRootG3) from #W
 ```
 chmod a+w /data/scripts/post_init.sh
 echo -e "#!/bin/sh\n\nasetprop sys.camera_ptz_moving true\nfw_manager.sh -r\nfw_manager.sh -t -k" > /data/scripts/post_init.sh
-chattr +i post_init.sh
+chattr +i /data/scripts; chattr +i /data/scripts/post_init.sh
 ```
 
 Due to [Lumi closed the exploit](https://github.com/Wh1terat/aQRootG3#warningwarning-warning) and removed post_init.sh feature after version 3.4.1. It won't support after the version 3.3.9 of G3 firmware. If you want to enable telnet of G3, you need to downgrade the firmware to the version 3.3.4. The method to downgrade is as the following steps.
@@ -183,7 +183,7 @@ Due to [Lumi closed the exploit](https://github.com/Wh1terat/aQRootG3#warningwar
 ```
 mkdir -p /data/ota_dir
 touch /data/ota_dir/lumi_fw.tar
-chattr +i /data/ota_dir/lumi_fw.tar
+chattr +i /data/ota_dir;chattr +i /data/ota_dir/lumi_fw.tar
 ```
 
 *Flash G3 customized firmware*
@@ -191,6 +191,9 @@ chattr +i /data/ota_dir/lumi_fw.tar
 USING AT YOUR OWN RISK.
 Go to this [link](https://github.com/niceboygithub/AqaraCameraHubfw/tree/main/modified/G3) and follow the intrusion after enabled telnet.
 
+
+## For M1S 2022
+Only support the firmware version above 4.x and flashed the modified firmware. You need to use UART to clear the password of root and flash modified firmware.
 
 ## How to check this component is working properly.
 Go to Configuration->Info->system_health

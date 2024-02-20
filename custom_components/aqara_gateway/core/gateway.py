@@ -21,6 +21,7 @@ from .shell import (
     TelnetShellG3, 
     TelnetShellG2HPro,
     TelnetShellM2POE,
+    TelnetShellM1S22,
     TelnetShellM3
 )
 from .utils import DEVICES, Utils, GLOBAL_PROP
@@ -199,6 +200,9 @@ class Gateway(Thread):
                                       self.options.get(CONF_PASSWORD, ''))
             elif "m2 2022" in device_name:
                 shell = TelnetShellM2POE(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
+            elif "m1s 2022" in device_name:
+                shell = TelnetShellM1S22(self.host,
                                       self.options.get(CONF_PASSWORD, ''))
             elif "m3" in device_name:
                 shell = TelnetShellM3(self.host,
@@ -427,6 +431,9 @@ class Gateway(Thread):
             elif "m2 2022" in device_name:
                 shell = TelnetShellM2POE(self.host,
                                       self.options.get(CONF_PASSWORD, ''))
+            elif "m1s 2022" in device_name:
+                shell = TelnetShellM1S22(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
             elif "m3" in device_name:
                 shell = TelnetShellM3(self.host,
                                       self.options.get(CONF_PASSWORD, ''))
@@ -525,6 +532,9 @@ class Gateway(Thread):
                                       self.options.get(CONF_PASSWORD, ''))
             elif "m2 2022" in device_name:
                 shell = TelnetShellM2POE(self.host,
+                                      self.options.get(CONF_PASSWORD, ''))
+            elif "m1s 2022" in device_name:
+                shell = TelnetShellM1S22(self.host,
                                       self.options.get(CONF_PASSWORD, ''))
             elif "m3" in device_name:
                 shell = TelnetShellM3(self.host,
@@ -896,6 +906,8 @@ def is_aqaragateway(host: str,
                     shell = TelnetShellG3(host, password)
                 elif "m2 2022" in device_name.lower():
                     shell = TelnetShellM2POE(host, password)
+                elif "m1s 2022" in device_name.lower():
+                    shell = TelnetShellM1S22(host, password)
                 elif "m3" in device_name.lower():
                     shell = TelnetShellM3(host, password)
                 else:

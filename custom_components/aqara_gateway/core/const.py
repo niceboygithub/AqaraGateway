@@ -47,6 +47,7 @@ OPT_DEVICE_NAME = {
     'h1': "Aqara Smart Hub H1",
     'p3': "Aqara AirCondition P3",
     'm1s': "Aqara Gateway M1S",
+    'm1s 2022': "Aqara Gateway M1S 2022",
     'e1': "Aqara Hub E1",
     'm2': "Aqara Gateway M2",
     'm2 2022': "Aqara Gateway M2 2022",
