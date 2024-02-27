@@ -110,6 +110,10 @@ class GatewayBinarySensor(GatewayGenericDevice, BinarySensorEntity):
 
         self.schedule_update_ha_state()
 
+    def reset_state(self):
+        self._state = ''
+        self.async_write_ha_state()
+
 
 class GatewayNatgasSensor(GatewayBinarySensor, BinarySensorEntity):
     """Representation of a Xiaomi/Aqara Natgas Sensor."""
@@ -159,10 +163,6 @@ class GatewayNatgasSensor(GatewayBinarySensor, BinarySensorEntity):
                     self._state = not value
 
         self.schedule_update_ha_state()
-    
-    def reset_state(self):
-        self._state = ''
-        self.async_write_ha_state()
 
 
 class GatewayMotionSensor(GatewayBinarySensor):
