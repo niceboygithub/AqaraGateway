@@ -1,17 +1,18 @@
 """ Aqara Gateway """
+import asyncio
 # pylint: disable=broad-except
 import logging
 import socket
 import time
 import json
 import re
-from threading import Thread
 from typing import Optional
 from random import randint
 from paho.mqtt.client import Client, MQTTMessage
 
-from homeassistant.core import Event
-from homeassistant.const import CONF_NAME, CONF_PASSWORD
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import Event, HomeAssistant
+from homeassistant.const import CONF_NAME, CONF_PASSWORD, MAJOR_VERSION, MINOR_VERSION
 from homeassistant.components.light import ATTR_HS_COLOR, ATTR_RGB_COLOR, ATTR_BRIGHTNESS
 
 from .shell import (
@@ -34,13 +35,14 @@ MD5_MOSQUITTO_NEW_ARMV7L = '329fbbc41bad4df99760af6a9a6be150'
 MD5_MOSQUITTO_G2HPRO_ARMV7L = '9cd591ec76f85c4d96b744eb99943eb3'
 MD5_MOSQUITTO_MIPSEL = 'e0ce4757cfcccb079d89134381fd11b0'
 
-class Gateway(Thread):
+class Gateway:
     # pylint: disable=too-many-instance-attributes, unused-argument
     """ Aqara Gateway """
 
-    def __init__(self, hass, host: str, config: dict, **options):
+    main_task: asyncio.Task | None = None  # for HA < 2023.3
+
+    def __init__(self, hass: HomeAssistant, host: str, config: dict, **options):
         """Initialize the Xiaomi/Aqara device."""
-        super().__init__(daemon=True)
         self.hass = hass
         self.host = host
         self.options = options
@@ -94,9 +96,12 @@ class Gateway(Thread):
         """ stop function """
         self.enabled = False
 
-    async def async_connect(self) -> str:
+        if self.main_task:  # HA < 2023.3
+            self.main_task.cancel()
+
+    async def async_connect(self):
         """Connect to the host. Does not process messages yet."""
-        result: int = None
+        result: int | None = None
         try:
             result = await self.hass.async_add_executor_job(
                 self._mqttc.connect,
@@ -125,7 +130,13 @@ class Gateway(Thread):
 
         await self.hass.async_add_executor_job(stop)
 
-    def run(self):
+    def start(self, hass: HomeAssistant, config_entry: ConfigEntry):
+        if (MAJOR_VERSION, MINOR_VERSION) >= (2023, 3):
+            config_entry.async_create_background_task(hass, self.run(), f"{DOMAIN} gateway.run")
+        else:
+            self.main_task = hass.loop.create_task(self.run())
+
+    async def run(self):
         """ Main thread loop. """
         telnetshell = False
         if "telnet" not in self.hass.data[DOMAIN]:
@@ -136,14 +147,14 @@ class Gateway(Thread):
             if not self._check_port(23):
                 if self.host in self.hass.data[DOMAIN]["telnet"]:
                     self.hass.data[DOMAIN]["telnet"].remove(self.host)
-                time.sleep(30)
+                await asyncio.sleep(30)
                 continue
 
             telnetshell = True
             devices = self._prepare_gateway(get_devices=True)
             if isinstance(devices, list):
                 self._gw_topic = "gw/{}/".format(devices[0]['mac'][2:].upper())
-                self.setup_devices(devices)
+                await self.setup_devices(devices)
                 break
 
         if telnetshell:
@@ -154,7 +165,7 @@ class Gateway(Thread):
             if not self._mqtt_connect() or not self._prepare_gateway():
                 if self.host in self.hass.data[DOMAIN]["mqtt"]:
                     self.hass.data[DOMAIN]["mqtt"].remove(self.host)
-                time.sleep(60)
+                await asyncio.sleep(60)
                 continue
 
             self._mqttc.loop_start()
@@ -319,7 +330,7 @@ class Gateway(Thread):
 
         return devices
 
-    def setup_devices(self, devices: list):
+    async def setup_devices(self, devices: list):
         """Add devices to hass."""
         for device in devices:
             timeout = 300
@@ -349,7 +360,7 @@ class Gateway(Thread):
 
                     # wait domain init
                     while domain not in self.setups and timeout > 0:
-                        time.sleep(1)
+                        await asyncio.sleep(1)
                         timeout = timeout - 1
                     attr = param[2]
                     if (attr in ('illuminance', 'light') and
@@ -360,7 +371,7 @@ class Gateway(Thread):
 
             if self.options.get('stats'):
                 while 'sensor' not in self.setups:
-                    time.sleep(1)
+                    await asyncio.sleep(1)
                 self.setups['sensor'](self, device, device['type'])
 
     def add_stats(self, ieee: str, handler):
@@ -467,7 +478,7 @@ class Gateway(Thread):
             self.hass.data[DOMAIN]["mqtt"].remove(self.host)
         self.available = False
 #        self.process_gateway_stats()
-        self.run()
+        self.hass.create_task(self.run())
 
     def on_message(self, client: Client, userdata, msg: MQTTMessage):
         # pylint: disable=unused-argument
@@ -575,7 +586,7 @@ class Gateway(Thread):
                             'model_ver': dev['model_ver'],
                             'status': dev['status']
                         }
-                        self.setup_devices([device])
+                        self.hass.create_task(self.setup_devices([device]))
                         break
 
     def _process_message(self, data: dict):
@@ -739,7 +750,7 @@ class Gateway(Thread):
             device['mac'] = '0x' + device['mac']
             device['type'] = 'zigbee'
             device['init'] = payload
-            self.setup_devices([device])
+            self.hass.create_task(self.setup_devices([device]))
 
     async def _handle_device_remove(self, payload: dict):
         """Remove device from Hass. """

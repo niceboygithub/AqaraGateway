@@ -4,7 +4,7 @@ import math
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import MAJOR_VERSION, MINOR_VERSION, STATE_UNKNOWN, EVENT_HOMEASSISTANT_STOP
+from homeassistant.const import MAJOR_VERSION, MINOR_VERSION, EVENT_HOMEASSISTANT_STOP
 from homeassistant.core import HomeAssistant, Event
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity import Entity
@@ -66,7 +66,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             hass.async_create_task(hass.config_entries.async_forward_entry_setup(
                 entry, domain))
 
-    gateway.start()
+    gateway.start(hass, entry)
 
     await hass.data[DOMAIN][entry.entry_id].async_connect()
 
