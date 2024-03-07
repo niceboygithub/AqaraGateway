@@ -132,9 +132,9 @@ class Gateway:
 
     def start(self, hass: HomeAssistant, config_entry: ConfigEntry):
         if (MAJOR_VERSION, MINOR_VERSION) >= (2023, 3):
-            config_entry.async_create_background_task(hass, self.run(), f"{DOMAIN} gateway.run")
+            config_entry.async_create_background_task(hass, self.async_run(), f"{DOMAIN} gateway.async_run")
         else:
-            self.main_task = hass.loop.create_task(self.run())
+            self.main_task = hass.loop.create_task(self.async_run())
 
     async def async_run(self):
         """ Main thread loop. """
