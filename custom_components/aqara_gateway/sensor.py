@@ -69,35 +69,35 @@ GATEWAY_PLATFORMS = ["binary_sensor",
 GATEWAY_PLATFORMS_NO_KEY = ["binary_sensor", "sensor"]
 
 
-async def async_setup_entry(hass, entry, add_entities):
+async def async_setup_entry(hass, entry, async_add_entities):
     """ setup config entry """
     def setup(gateway: Gateway, device: dict, attr: str):
         if attr == 'gateway':
-            add_entities([GatewayStats(gateway, device, attr)])
+            async_add_entities([GatewayStats(gateway, device, attr)])
         elif attr == 'zigbee':
-            add_entities([ZigbeeStats(gateway, device, attr)])
+            async_add_entities([ZigbeeStats(gateway, device, attr)])
         elif attr == 'gas density':
-            add_entities([GatewayGasSensor(gateway, device, attr)])
+            async_add_entities([GatewayGasSensor(gateway, device, attr)])
         elif attr == 'lock':
-            add_entities([GatewayLockSensor(gateway, device, attr)])
+            async_add_entities([GatewayLockSensor(gateway, device, attr)])
         elif attr == 'key_id':
-            add_entities([GatewayKeyIDSensor(gateway, device, attr)])
+            async_add_entities([GatewayKeyIDSensor(gateway, device, attr)])
         elif attr == 'lock_event':
-            add_entities([GatewayLockEventSensor(gateway, device, attr)])
+            async_add_entities([GatewayLockEventSensor(gateway, device, attr)])
         elif attr in ('hear_rate', 'breath_rate', 'body_movements'):
-            add_entities([GatewaySleepMonitorSensor(gateway, device, attr)])
+            async_add_entities([GatewaySleepMonitorSensor(gateway, device, attr)])
         elif attr == 'illuminance':
             if (device['type'] == 'gateway' and
                     Utils.gateway_illuminance_supported(device['model'])):
-                add_entities([GatewaySensor(gateway, device, attr)])
+                async_add_entities([GatewaySensor(gateway, device, attr)])
             elif device['type'] == 'zigbee':
-                add_entities([GatewaySensor(gateway, device, attr)])
+                async_add_entities([GatewaySensor(gateway, device, attr)])
         elif attr == 'movements':
-            add_entities([GatewayMoveSensor(gateway, device, attr)])
+            async_add_entities([GatewayMoveSensor(gateway, device, attr)])
         elif attr == 'occupancy_region':
-            add_entities([GatewayOccupancyRegionSensor(gateway, device, attr)])
+            async_add_entities([GatewayOccupancyRegionSensor(gateway, device, attr)])
         else:
-            add_entities([GatewaySensor(gateway, device, attr)])
+            async_add_entities([GatewaySensor(gateway, device, attr)])
 
     aqara_gateway: Gateway = hass.data[DOMAIN][entry.entry_id]
     aqara_gateway.add_setup('sensor', setup)

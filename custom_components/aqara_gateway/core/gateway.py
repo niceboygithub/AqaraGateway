@@ -136,7 +136,7 @@ class Gateway:
         else:
             self.main_task = hass.loop.create_task(self.run())
 
-    async def run(self):
+    async def async_run(self):
         """ Main thread loop. """
         telnetshell = False
         if "telnet" not in self.hass.data[DOMAIN]:
@@ -154,7 +154,7 @@ class Gateway:
             devices = self._prepare_gateway(get_devices=True)
             if isinstance(devices, list):
                 self._gw_topic = "gw/{}/".format(devices[0]['mac'][2:].upper())
-                await self.setup_devices(devices)
+                await self.async_setup_devices(devices)
                 break
 
         if telnetshell:
@@ -330,7 +330,7 @@ class Gateway:
 
         return devices
 
-    async def setup_devices(self, devices: list):
+    async def async_setup_devices(self, devices: list):
         """Add devices to hass."""
         for device in devices:
             timeout = 300
@@ -478,7 +478,7 @@ class Gateway:
             self.hass.data[DOMAIN]["mqtt"].remove(self.host)
         self.available = False
 #        self.process_gateway_stats()
-        self.hass.create_task(self.run())
+        self.hass.create_task(self.async_run())
 
     def on_message(self, client: Client, userdata, msg: MQTTMessage):
         # pylint: disable=unused-argument
@@ -586,7 +586,7 @@ class Gateway:
                             'model_ver': dev['model_ver'],
                             'status': dev['status']
                         }
-                        self.hass.create_task(self.setup_devices([device]))
+                        self.hass.create_task(self.async_setup_devices([device]))
                         break
 
     def _process_message(self, data: dict):
@@ -750,7 +750,7 @@ class Gateway:
             device['mac'] = '0x' + device['mac']
             device['type'] = 'zigbee'
             device['init'] = payload
-            self.hass.create_task(self.setup_devices([device]))
+            self.hass.create_task(self.async_setup_devices([device]))
 
     async def _handle_device_remove(self, payload: dict):
         """Remove device from Hass. """
