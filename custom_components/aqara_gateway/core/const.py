@@ -119,16 +119,18 @@ POWER_CONSUMED = "power_consumed"
 POWER = "power"
 VOLTAGE = "voltage"
 
-DOMAINS = ['air_quality',
-           'alarm_control_panel',
-           'binary_sensor',
-           'climate',
-           'cover',
-           'light',
-           'remote',
-           'select',
-           'sensor',
-           'switch']
+DOMAINS = [
+    'air_quality',
+    'alarm_control_panel',
+    'binary_sensor',
+    'climate',
+    'cover',
+    'light',
+    'remote',
+    'select',
+    'sensor',
+    'switch'
+]
 
 UNITS = {
     SensorDeviceClass.BATTERY: PERCENTAGE,

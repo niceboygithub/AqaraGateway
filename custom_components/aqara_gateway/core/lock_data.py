@@ -69,14 +69,14 @@ LOCK_NOTIFICATION = {
     "someone detected": {"default": "Someone is lingering at the door"},
     "li battery notify":
         {"default": "Li Battery notify",
-         "0": "Li Battery is abnormal",
-         "1": "Li Battery is normal"},
+            "0": "Li Battery is abnormal",
+            "1": "Li Battery is normal"},
     "battery notify":
         {"default": "Battery notify",
-         "0": "Battery is die",
-         "1": "Battery level is low",
-         "2": "Battery level is middle",
-         "3": "Battery level is full"},
+            "0": "Battery is die",
+            "1": "Battery level is low",
+            "2": "Battery level is middle",
+            "3": "Battery level is full"},
     "camera connected": {"default": "Camera is connected"},
     "open in away mode": {
         "default":

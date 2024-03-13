@@ -45,7 +45,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     # migrate data (also after first setup) to options
     if entry.data:
         hass.config_entries.async_update_entry(entry, data={},
-                                               options=entry.data)
+                                                options=entry.data)
 
     await _setup_logger(hass)
 
@@ -194,7 +194,7 @@ class GatewayGenericDevice(Entity):
 
         self._unique_id = f"{self.device['mac']}_{self._attr}"
         self._name = (self.device['device_name'] + ' ' +
-                      self._attr.replace('_', ' ').title())
+                        self._attr.replace('_', ' ').title())
 
         self.entity_id = f"{DOMAIN}.{self._unique_id}"
 

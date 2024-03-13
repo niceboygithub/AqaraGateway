@@ -60,14 +60,6 @@ from .core.lock_data import (
     DEVICE_MAPPINGS,
     )
 
-GATEWAY_PLATFORMS = ["binary_sensor",
-                     "sensor",
-                     "switch",
-                     "light",
-                     "cover",
-                     "lock"]
-GATEWAY_PLATFORMS_NO_KEY = ["binary_sensor", "sensor"]
-
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """ setup config entry """

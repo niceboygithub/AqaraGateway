@@ -9,6 +9,7 @@ from typing import Optional
 from aiohttp import web
 from miio import Device, DeviceException
 
+from homeassistant.components import persistent_notification
 from homeassistant.components.http import HomeAssistantView
 from homeassistant.helpers.device_registry import DeviceRegistry
 from homeassistant.helpers.typing import HomeAssistantType
@@ -1908,8 +1909,8 @@ class Utils:
     def gateway_infrared_supported(model: str) -> Optional[bool]:
         """ return the gateway infrared supported """
         if model in ('lumi.aircondition.acn05', 'lumi.gateway.iragl5',
-                     'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
-                     'lumi.gateway.iragl8', 'lumi.gateway.agl001'):
+                        'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
+                        'lumi.gateway.iragl8', 'lumi.gateway.agl001'):
             return True
         return False
 
@@ -2000,7 +2001,7 @@ class AqaraGatewayDebug(logging.Handler, HomeAssistantView):
         self.url = "/{}".format(uuid.uuid4())
 
         hass.http.register_view(self)
-        hass.components.persistent_notification.async_create(
+        persistent_notification.async_create(
             NOTIFY_TEXT % self.url, title=TITLE)
 
     def handle(self, rec: logging.LogRecord) -> None:

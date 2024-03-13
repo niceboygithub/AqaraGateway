@@ -153,7 +153,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="discovery_confirm",
             description_placeholders={"name": self._name,
-                                      "device_info": self._device_info}
+                                        "device_info": self._device_info}
         )
 
     async def async_step_zeroconf(self, discovery_info: DiscoveryInfoType):

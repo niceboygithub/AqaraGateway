@@ -8,7 +8,7 @@ from telnetlib import Telnet
 
 
 WGET = "(wget http://master.dl.sourceforge.net/project/aqarahub/{0}?viasf=1 " \
-       "-O /data/bin/{1} && chmod +x /data/bin/{1})"
+            "-O /data/bin/{1} && chmod +x /data/bin/{1})"
 
 CHECK_SOCAT = "(md5sum /data/socat | grep 92b77e1a93c4f4377b4b751a5390d979)"
 DOWNLOAD_SOCAT = "(wget -O /data/socat http://pkg.simple-ha.ru/mipsel/socat && chmod +x /data/socat)"
@@ -41,7 +41,8 @@ class TelnetShell(Telnet):
             self.read_until(b"Password: ", timeout=1)
             self.write(self._password.encode() + b"\n")
         self.run_command("stty -echo")
-        self.read_until(b"/ # ", timeout=10)
+        self.write(b"\n")
+        self.read_until(b" # ", timeout=2)
 
 #        self.run_command("export PS1='# '")
 
@@ -50,8 +51,8 @@ class TelnetShell(Telnet):
         # pylint: disable=broad-except
         try:
             self.write(command.encode() + b"\n")
-            suffix = "\r\n{}".format(self._suffix)
-            raw = self.read_until(suffix.encode(), timeout=30)
+            suffix = "\n{}".format(self._suffix)
+            raw = self.read_until(suffix.encode(), timeout=15)
         except Exception:
             raw = b''
         return raw if as_bytes else raw.decode()
@@ -92,12 +93,16 @@ class TelnetShell(Telnet):
     def check_public_mosquitto(self) -> bool:
         """ get processes list """
         raw = self.run_command("mosquitto")
-        if "Binding listener to interface" in raw:
-            return False
-        return True
+        if 'Binding listener to interface ""' in raw:
+            return True
+        if 'Binding listener to interface ' not in raw:
+            return True
+        return False
 
-    def get_running_ps(self) -> str:
+    def get_running_ps(self, ps=None) -> str:
         """ get processes list """
+        if isinstance(ps, str):
+            return self.run_command(f"ps | grep {ps}")
         return self.run_command("ps")
 
     def redirect_ha_master2mqtt(self, pattern: str):
