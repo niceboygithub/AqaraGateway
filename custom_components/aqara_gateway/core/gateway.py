@@ -163,11 +163,12 @@ class Gateway:
                 self.hass.data[DOMAIN]["telnet"].append(self.host)
 
         while not self.available:
-            if not self._mqtt_connect() or not self._prepare_gateway():
+            if not self._mqtt_connect():
                 if self.host in self.hass.data[DOMAIN]["mqtt"]:
                     self.hass.data[DOMAIN]["mqtt"].remove(self.host)
-                await asyncio.sleep(10)
-                continue
+                if not self._prepare_gateway():
+                    await asyncio.sleep(10)
+                    continue
 
             self._mqttc.loop_start()
             self.available = True
@@ -228,9 +229,10 @@ class Gateway:
             if not public_mosquitto:
                 self.debug("mosquitto is not running as public!")
 
-            if "mosquitto" not in processes or not public_mosquitto:
-                if "/data/bin/mosquitto -d" not in processes:
-                    shell.run_public_mosquitto()
+            if "mosquitto" not in processes:
+                if not public_mosquitto:
+                    if "/data/bin/mosquitto -d" not in processes:
+                        shell.run_public_mosquitto()
 
             if get_devices:
                 devices = self._get_devices(shell)

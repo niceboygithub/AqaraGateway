@@ -51,7 +51,7 @@ class TelnetShell(Telnet):
         # pylint: disable=broad-except
         try:
             self.write(command.encode() + b"\n")
-            suffix = "\n{}".format(self._suffix)
+            suffix = "\r\n{}".format(self._suffix)
             raw = self.read_until(suffix.encode(), timeout=15)
         except Exception:
             raw = b''
@@ -208,7 +208,7 @@ class TelnetShellG2H(TelnetShell):
             self.run_command(password)
 
         self.run_command("stty -echo")
-        self.read_until(b"/ # ", timeout=10)
+        self.read_until(self._suffix.encode(), timeout=10)
         self._suffix = "# "
 
 
@@ -225,14 +225,15 @@ class TelnetShellE1(TelnetShell):
         self.read_until(b"Password: ", timeout=10)
         self.write(b"\n\r")
 
-        self.read_until(b"/ # ", timeout=30)
+        self.read_until(b"/ # ", timeout=10)
         self._suffix = "/ # "
 
         self.run_command("stty -echo")
-        self.read_until(b"/ # ", timeout=10)
+        self.read_until(self._suffix.encode(), timeout=10)
 
 
 class TelnetShellG3(TelnetShell):
+    _suffix = "~ # "
 
     def login(self):
         """ login function """
@@ -253,17 +254,40 @@ class TelnetShellG3(TelnetShell):
 
         self.run_command("cd /")
         self._suffix = "/ # "
+
         self.run_command("stty -echo")
+        self.read_until(self._suffix.encode(), timeout=10)
 
 
 class TelnetShellG2HPro(TelnetShellG3):
     pass
 
-class TelnetShellM2POE(TelnetShellG3):
+class TelnetShellM2POE(TelnetShell):
+    _suffix = "/ # "
+
+    def login(self):
+        """ login function """
+        self._aqara_property = True
+
+        self.write(b"\n")
+        self.read_until(b"login: ", timeout=10)
+        password = self._password
+        if ((self._password is None) or
+            (isinstance(self._password, str) and len(self._password) <= 1)
+        ):
+            password = '\n'
+
+        self.write(b"root\n\r")
+        if password:
+            self.read_until(b"Password: ", timeout=3)
+            self.write(password.encode() + b"\n")
+
+        self.read_until(b"/ # ", timeout=10)
+        self.run_command("stty -echo")
+        self.read_until(self._suffix.encode(), timeout=10)
+
+class TelnetShellM1S22(TelnetShellM2POE):
     pass
 
-class TelnetShellM1S22(TelnetShellG3):
-    pass
-
-class TelnetShellM3(TelnetShellG3):
+class TelnetShellM3(TelnetShellM2POE):
     pass
