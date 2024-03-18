@@ -39,9 +39,10 @@ class GatewayRemote(GatewayGenericDevice, ToggleEntity):
         attr,
     ):
         """Initialize the Gateway Remote."""
+        super().__init__(gateway, device, attr)
         self.hass = hass
         self.async_refresh_toggle = None
-        super().__init__(gateway, device, attr)
+        self._state = False
 
     async def async_added_to_hass(self):
         """ add to home assistant """

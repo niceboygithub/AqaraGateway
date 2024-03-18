@@ -3,7 +3,7 @@ import binascii
 import struct
 
 import homeassistant.util.color as color_util
-from homeassistant.components.light import LightEntity, SUPPORT_BRIGHTNESS, \
+from homeassistant.components.light import ColorMode, LightEntity, SUPPORT_BRIGHTNESS, \
     ATTR_BRIGHTNESS, SUPPORT_COLOR_TEMP, ATTR_COLOR_TEMP, ATTR_RGB_COLOR, \
     SUPPORT_COLOR, ATTR_HS_COLOR
 
@@ -58,15 +58,21 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
         self._fw_ver = None
         self._hw_ver = None
         self._lqi = None
+        color_modes = {ColorMode.ONOFF}
         for parm in device['params']:
             if parm[2] == "brightness":
                 self._attr_supported_features |= SUPPORT_BRIGHTNESS
+                color_modes = {ColorMode.BRIGHTNESS}
             if parm[2] == "color_temp":
                 self._attr_supported_features |= SUPPORT_COLOR_TEMP
+                color_modes = {ColorMode.COLOR_TEMP}
             if parm[2] == "rgb_color":
                 self._attr_supported_features |= SUPPORT_COLOR
+                color_modes = {ColorMode.RGB}
         if self.device['type'] == 'gateway':
             self._attr_supported_features = SUPPORT_COLOR | SUPPORT_BRIGHTNESS
+            color_modes = {ColorMode.RGB}
+        self._attr_supported_color_modes = color_modes
 
     @property
     def is_on(self) -> bool:
