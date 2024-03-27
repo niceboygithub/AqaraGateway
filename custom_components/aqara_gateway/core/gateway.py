@@ -483,7 +483,6 @@ class Gateway:
     def on_disconnect(self, client, userdata, ret):
         # pylint: disable=unused-argument
         """ on disconnect to mqtt server """
-        self._mqttc.disconnect()
         if self.host in self.hass.data[DOMAIN]["mqtt"]:
             self.hass.data[DOMAIN]["mqtt"].remove(self.host)
         self.available = False
