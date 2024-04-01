@@ -2002,7 +2002,7 @@ class AqaraGatewayDebug(logging.Handler, HomeAssistantView):
 
         hass.http.register_view(self)
         persistent_notification.async_create(
-            NOTIFY_TEXT % self.url, title=TITLE)
+            hass, message=NOTIFY_TEXT % self.url, title=TITLE)
 
     def handle(self, rec: logging.LogRecord) -> None:
         date_time = datetime.fromtimestamp(rec.created).strftime(
