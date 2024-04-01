@@ -70,12 +70,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     await hass.data[DOMAIN][entry.entry_id].async_connect()
 
-    async def async_stop_mqtt(_event: Event):
-        """Stop MQTT component."""
-        await hass.data[DOMAIN][entry.entry_id].async_disconnect()
-
-    hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, async_stop_mqtt)
-
     return True
 
 
@@ -104,6 +98,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     gateway = hass.data[DOMAIN][entry.entry_id]
     gateway.stop()
+    await gateway.async_disconnect()
 
     return all([
         await hass.config_entries.async_forward_entry_unload(entry, domain)
