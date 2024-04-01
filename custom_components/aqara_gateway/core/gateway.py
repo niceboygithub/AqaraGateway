@@ -491,6 +491,9 @@ class Gateway:
         self.hass.create_task(self.async_run())
 
     def on_message(self, client: Client, userdata, msg: MQTTMessage):
+        self.hass.loop.call_soon_threadsafe(self._on_message, msg)
+
+    def _on_message(self, msg: MQTTMessage):
         # pylint: disable=unused-argument
         """ on getting messages from mqtt server """
 
