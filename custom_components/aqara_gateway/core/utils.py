@@ -41,6 +41,7 @@ DEVICES = [{
     'lumi.gateway.agl001': ["Aqara", "Gateway M2", "HM2-G01"],   # new Global version
     'lumi.gateway.sacn01': ["Aqara", "Smart Hub H1", "QBCZWG11LM"],
     'lumi.gateway.aqcn02': ["Aqara", "Hub E1", "ZHWG16LM"],  # tested
+    'lumi.gateway.aqcn03': ["Aqara", "Hub E1", "HE1-G01"],  # E1 Global version
     'lumi.camera.gwagl02': ["Aqara", "Camera Hub G2H", "ZNSXJ12LM"],  # tested
     'lumi.camera.gwag03': ["Aqara", "Camera Hub G2H", "CH-H01"],  # tested
     'lumi.camera.gwpagl01': ["Aqara", "Camera Hub G3", "ZNSXJ13LM"],  # tested
@@ -712,6 +713,37 @@ DEVICES = [{
         ['13.68.85', None, 'homekit reset', None],
         ['13.88.85', None, 'door', None],
         ['14.83.85', None, 'bluetooth', None],
+        [None, None, 'lock_event', 'sensor'],
+    ]
+}, {
+    'aqara.lock.aqgl01': ["Aqara", "Smart Door Lock D100", "ZNMS20LM"],
+    'params': [
+        ['13.17.85', None, 'lock', 'sensor'],
+        ['13.18.85', None, 'key_type', None],
+        ['13.31.85', None, 'lock_event', None],
+        ['13.33.85', None, 'latch_state', None],
+        ['13.37.85', None, 'verification failed', None],
+        ['13.43.85', None, 'unlock by password', None],
+        ['13.44.85', None, 'unlock by nfc', None],  # not tested
+        ['13.45.85', None, 'unlock by homekit', None],
+        ['13.46.85', None, 'unlock by temporary password', None],
+        ['13.47.85', None, 'unlock by key', None],
+        ['13.48.85', None, 'unlock by emergency knob', None],
+        ['13.51.85', None, 'unlock from inside', None],
+        ['13.53.85', None, 'unlock by face', None],
+        ['13.54.85', None, 'away mode', None],
+        [None, None, 'key_id', 'sensor'],
+        ['13.55.85', None, 'voltage', None],
+        ['13.56.85', None, 'battery', 'sensor'],
+        ['13.57.85', None, 'battery notify', None],
+        ['13.62.85', None, 'timestamp', None],
+        ['13.63.85', None, 'user added', None],
+        ['13.64.85', None, 'user removed', None],
+        ['13.65.85', None, 'all user removed', None],  # not tested
+        ['13.66.85', None, 'nfc added', None],  # not tested
+        ['13.67.85', None, 'nfc removed', None],  # not tested
+        ['13.68.85', None, 'homekit reset', None],  # not tested
+        ['13.88.85', None, 'door', None],
         [None, None, 'lock_event', 'sensor'],
     ]
 }, {
