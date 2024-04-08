@@ -227,8 +227,10 @@ class Gateway:
             shell.login()
             processes = shell.get_running_ps("mosquitto")
             public_mosquitto = shell.check_public_mosquitto()
-            if not public_mosquitto:
+            if not public_mosquitto and "/data/bin/mosquitto" not in processes:
                 self.debug("mosquitto is not running as public!")
+                shell.run_public_mosquitto()
+                processes = shell.get_running_ps("mosquitto")
 
             if "mosquitto" not in processes:
                 if not public_mosquitto:
