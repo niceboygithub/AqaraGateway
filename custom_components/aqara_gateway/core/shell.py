@@ -15,9 +15,6 @@ DOWNLOAD_SOCAT = "(wget -O /data/socat http://pkg.simple-ha.ru/mipsel/socat && c
 RUN_SOCAT_BT_IRDA = "/data/socat tcp-l:8888,reuseaddr,fork /dev/ttyS2"
 RUN_SOCAT_ZIGBEE = "/data/socat tcp-l:8888,reuseaddr,fork /dev/ttyS1"
 
-HA_MASTER2MQTT = "(ha_master -H -r /lib/libha_ir_m2.so -a /lib/libha_auto.so -g /lib/libha_energy.so | awk '/%s/{print $0;fflush()}' | mosquitto_pub -t log/ha_master -l &)"
-HA_BLE2MQTT = "(ha_ble | awk '{print $0;fflush();}' | mosquitto_pub -t log/ha_ble -l &)"
-
 
 class TelnetShell(Telnet):
     """ Telnet Shell """
@@ -25,7 +22,7 @@ class TelnetShell(Telnet):
     _suffix = "# "
     # pylint: disable=unsubscriptable-object
 
-    def __init__(self, host: str, password=None):
+    def __init__(self, host: str, password=""):
         """ init function """
         super().__init__(host, timeout=5)
         self._host = host
@@ -86,9 +83,8 @@ class TelnetShell(Telnet):
         """ run mosquitto as public """
         if self.file_exist("/data/bin/mosquitto"):
             self.run_command("killall mosquitto")
-            time.sleep(.5)
+            self.run_command("sleep .1")
             self.run_command("/data/bin/mosquitto -d")
-            time.sleep(.5)
 
     def check_public_mosquitto(self) -> bool:
         """ get processes list """
@@ -104,18 +100,6 @@ class TelnetShell(Telnet):
         if isinstance(ps, str):
             return self.run_command(f"ps | grep {ps}")
         return self.run_command("ps")
-
-    def redirect_ha_master2mqtt(self, pattern: str):
-        """ redirect ha_master logs to mqtt """
-        self.run_command("killall ha_master")
-        time.sleep(.1)
-        self.run_command(HA_MASTER2MQTT % pattern)
-
-    def redirect_ha_ble2mqtt(self):
-        """ redirect ha_ble logs to mqtt """
-        self.run_command("killall ha_ble")
-        time.sleep(.1)
-        self.run_command(HA_BLE2MQTT)
 
     def read_file(self, filename: str, as_base64=False, with_newline=True):
         """ read file content """
@@ -241,16 +225,11 @@ class TelnetShellG3(TelnetShell):
 
         self.write(b"\n")
         self.read_until(b"login: ", timeout=3)
-        password = self._password
-        if ((self._password is None) or
-            (isinstance(self._password, str) and len(self._password) <= 1)
-        ):
-            password = '\n'
 
         self.write(b"root\n\r")
-        if password:
+        if self._password:
             self.read_until(b"Password: ", timeout=3)
-            self.write(password.encode() + b"\n")
+            self.write(self._password.encode() + b"\n")
 
         self.run_command("cd /")
         self._suffix = "/ # "
@@ -271,16 +250,11 @@ class TelnetShellM2POE(TelnetShell):
 
         self.write(b"\n")
         self.read_until(b"login: ", timeout=10)
-        password = self._password
-        if ((self._password is None) or
-            (isinstance(self._password, str) and len(self._password) <= 1)
-        ):
-            password = '\n'
 
         self.write(b"root\n\r")
-        if password:
+        if self._password:
             self.read_until(b"Password: ", timeout=3)
-            self.write(password.encode() + b"\n")
+            self.write(self._password.encode() + b"\n")
 
         self.read_until(b"/ # ", timeout=10)
         self.run_command("stty -echo")
