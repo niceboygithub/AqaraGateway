@@ -59,10 +59,13 @@ SIGMASTAR_MODELS = [
     'lumi.camera.gwagl02',
     'lumi.camera.gwag03',
     'lumi.camera.gwpagl01',
+    'lumi.camera.gwpgl1',
     'lumi.camera.agl001',
     'lumi.gateway.acn004',
+    'lumi.gateway.aqcn03',
     'lumi.gateway.iragl8',
-    'lumi.gateway.acn012'
+    'lumi.gateway.acn012',
+    'lumi.gateway.agl004'
 ]
 
 REALTEK_MODELS = [
