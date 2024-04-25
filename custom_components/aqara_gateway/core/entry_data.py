@@ -1,14 +1,9 @@
 """Runtime entry data for Aqara stored in hass.data."""
-import asyncio
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Optional
 
 import attr
-
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_send
-from homeassistant.helpers.storage import Store
-from homeassistant.helpers.typing import HomeAssistantType
 
 
 @attr.s
@@ -30,7 +25,7 @@ class RuntimeEntryData:
 
     @callback
     def async_update_entity(
-        self, hass: HomeAssistantType, component_key: str, key: int
+        self, hass: HomeAssistant, component_key: str, key: int
     ) -> None:
         """Schedule the update of an entity."""
         signal = f"aqaragateway_{self.entry_id}_update_{component_key}_{key}"
@@ -38,7 +33,7 @@ class RuntimeEntryData:
 
     @callback
     def async_remove_entity(
-        self, hass: HomeAssistantType, component_key: str, key: int
+        self, hass: HomeAssistant, component_key: str, key: int
     ) -> None:
         """Schedule the removal of an entity."""
         signal = f"aqaragateway_{self.entry_id}_remove_{component_key}_{key}"
