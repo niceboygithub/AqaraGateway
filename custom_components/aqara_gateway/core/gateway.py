@@ -148,6 +148,7 @@ class Gateway:
             if not self._check_port(23):
                 if self.host in self.hass.data[DOMAIN]["telnet"]:
                     self.hass.data[DOMAIN]["telnet"].remove(self.host)
+                _LOGGER.error(f"Can not connecto the telnet of the gateway ({self.host})!")
                 await asyncio.sleep(30)
                 continue
 
@@ -168,7 +169,8 @@ class Gateway:
                 if self.host in self.hass.data[DOMAIN]["mqtt"]:
                     self.hass.data[DOMAIN]["mqtt"].remove(self.host)
                 if not self._prepare_gateway():
-                    await asyncio.sleep(10)
+                    _LOGGER.error(f"Can not connecto the mqtt of the gateway ({self.host})!")
+                    await asyncio.sleep(30)
                     continue
 
             self._mqttc.loop_start()
