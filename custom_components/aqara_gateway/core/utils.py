@@ -7,15 +7,14 @@ from datetime import datetime
 from typing import Optional
 
 from aiohttp import web
-from miio import Device, DeviceException
-
 from homeassistant.components import persistent_notification
 from homeassistant.components.http import HomeAssistantView
-from homeassistant.helpers.device_registry import DeviceRegistry
-from homeassistant.helpers.typing import HomeAssistantType
+from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import PlatformNotReady
+from homeassistant.helpers.device_registry import DeviceRegistry
+from miio import Device, DeviceException
 
-from .const import DOMAIN, SIGMASTAR_MODELS, AIOT_MODELS
+from .const import AIOT_MODELS, SIGMASTAR_MODELS
 
 SOFT_HACK_REALTEK = {"ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
 SOFT_HACK_SIGMASTAR = {"ssid": "\"\"", "pswd": "123123 ; passwd -d root ; /bin/riu_w 101e 53 3012 ; telnetd"}
@@ -1840,7 +1839,7 @@ class Utils:
         return None
 
     @staticmethod
-    def remove_device(hass: HomeAssistantType, did: str):
+    def remove_device(hass: HomeAssistant, did: str):
         """Remove device by did from Hass"""
         if not isinstance(did, str):
             return
@@ -2026,7 +2025,7 @@ class AqaraGatewayDebug(logging.Handler, HomeAssistantView):
 
     text = ''
 
-    def __init__(self, hass: HomeAssistantType):
+    def __init__(self, hass: HomeAssistant):
         super().__init__()
 
         # random url because without authorization!!!
