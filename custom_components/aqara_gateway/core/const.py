@@ -175,7 +175,7 @@ ICONS = {
     'ble': 'mdi:bluetooth',
     'tvoc': 'mdi:cloud',
     'li battery': 'mdi:battery',
-    'key_id': 'mdi:lock',
+    'key_id': 'mdi:key',
     'lock': 'mdi:lock',
     'lock_event': 'mdi:lock',
     'hear_rate': 'mdi:heart-pulse',
