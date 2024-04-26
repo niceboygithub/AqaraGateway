@@ -1932,7 +1932,11 @@ class Utils:
     def gateway_alarm_mode_supported(model: str) -> Optional[bool]:
         """ return the gateway alarm mode supported """
         #  basic_cli not support
-        if model not in ('lumi.camera.gwagl02', 'lumi.camera.gwag03', 'lumi.camera.gwpagl01'):
+        if model not in (
+            'lumi.camera.gwagl02', 'lumi.camera.gwag03',
+            'lumi.camera.gwpagl01', 'lumi.camera.gwpgl1',
+            'lumi.camera.agl001'
+        ):
             return True
         return False
 
@@ -1941,7 +1945,9 @@ class Utils:
         """ return the gateway infrared supported """
         if model in ('lumi.aircondition.acn05', 'lumi.gateway.iragl5',
                         'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
-                        'lumi.gateway.iragl8', 'lumi.gateway.agl001'):
+                        'lumi.gateway.iragl8', 'lumi.gateway.agl001',
+                        'lumi.camera.gwpagl01', 'lumi.camera.gwpgl1',
+                        'lumi.gateway.acn012', 'lumi.gateway.agl004'):
             return True
         return False
 

@@ -27,14 +27,20 @@ from .shell import (
     TelnetShellM3
 )
 from .utils import DEVICES, Utils, GLOBAL_PROP
-from .const import CONF_MODEL, DOMAIN, SIGMASTAR_MODELS, REALTEK_MODELS, SUPPORTED_MODELS
+from .const import (
+    CONF_MODEL,
+    DOMAIN,
+    SIGMASTAR_MODELS,
+    REALTEK_MODELS,
+    SUPPORTED_MODELS,
+    MD5_MOSQUITTO_ARMV7L,
+    MD5_MOSQUITTO_NEW_ARMV7L,
+    MD5_MOSQUITTO_G2HPRO_ARMV7L,
+    MD5_MOSQUITTO_MIPSEL
+)
 
 _LOGGER = logging.getLogger(__name__)
 
-MD5_MOSQUITTO_ARMV7L = '0422c48517dc464a2e986a1038dc448a'
-MD5_MOSQUITTO_NEW_ARMV7L = '329fbbc41bad4df99760af6a9a6be150'
-MD5_MOSQUITTO_G2HPRO_ARMV7L = '9cd591ec76f85c4d96b744eb99943eb3'
-MD5_MOSQUITTO_MIPSEL = 'e0ce4757cfcccb079d89134381fd11b0'
 
 class Gateway:
     # pylint: disable=too-many-instance-attributes, unused-argument
@@ -231,13 +237,13 @@ class Gateway:
             public_mosquitto = shell.check_public_mosquitto()
             if not public_mosquitto and "/data/bin/mosquitto" not in processes:
                 self.debug("mosquitto is not running as public!")
-                shell.run_public_mosquitto()
+                shell.run_public_mosquitto(self._model)
                 processes = shell.get_running_ps("mosquitto")
 
             if "mosquitto" not in processes:
                 if not public_mosquitto:
-                    if "/data/bin/mosquitto -d" not in processes:
-                        shell.run_public_mosquitto()
+                    if "/data/bin/mosquitto" not in processes:
+                        shell.run_public_mosquitto(self._model)
 
             if get_devices:
                 devices = self._get_devices(shell)

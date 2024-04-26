@@ -6,6 +6,12 @@ import base64
 from typing import Union
 from telnetlib import Telnet
 
+from .const import (
+    SIGMASTAR_MODELS,
+    MD5_MOSQUITTO_NEW_ARMV7L,
+    MD5_MOSQUITTO_G2HPRO_ARMV7L,
+    MD5_MOSQUITTO_MIPSEL
+)
 
 WGET = "(wget http://master.dl.sourceforge.net/project/aqarahub/{0}?viasf=1 " \
             "-O /data/bin/{1} && chmod +x /data/bin/{1})"
@@ -79,12 +85,20 @@ class TelnetShell(Telnet):
             return True
         return False
 
-    def run_public_mosquitto(self):
+    def run_public_mosquitto(self, model):
         """ run mosquitto as public """
-        if self.file_exist("/data/bin/mosquitto"):
-            self.run_command("killall mosquitto")
-            self.run_command("sleep .1")
-            self.run_command("/data/bin/mosquitto -d")
+        if not self.file_exist("/data/bin/mosquitto"):
+            command = "mkdir -p /data/bin"
+            self.write(command.encode() + b"\n")
+            if model in ('lumi.camera.agl001'):
+                self.check_bin('mosquitto', MD5_MOSQUITTO_G2HPRO_ARMV7L , 'bin/armv7l/mosquitto_g2hpro')
+            elif model in SIGMASTAR_MODELS:
+                self.check_bin('mosquitto', MD5_MOSQUITTO_NEW_ARMV7L , 'bin/armv7l/mosquitto_new')
+            else:
+                self.check_bin('mosquitto', MD5_MOSQUITTO_MIPSEL, 'bin/mipsel/mosquitto')
+        self.run_command("killall mosquitto")
+        self.run_command("sleep .1")
+        self.run_command("/data/bin/mosquitto -d")
 
     def check_public_mosquitto(self) -> bool:
         """ get processes list """

@@ -77,8 +77,15 @@ REALTEK_MODELS = [
     'lumi.gateway.iragl01',
     'lumi.gateway.agl001'
 ]
+
 # supported models and help to enable telnet
 SUPPORTED_MODELS = SIGMASTAR_MODELS + REALTEK_MODELS
+
+MD5_MOSQUITTO_ARMV7L = '0422c48517dc464a2e986a1038dc448a'
+MD5_MOSQUITTO_NEW_ARMV7L = '329fbbc41bad4df99760af6a9a6be150'
+MD5_MOSQUITTO_G2HPRO_ARMV7L = '9cd591ec76f85c4d96b744eb99943eb3'
+MD5_MOSQUITTO_MIPSEL = 'e0ce4757cfcccb079d89134381fd11b0'
+
 AIOT_MODELS = [
     'lumi.camera.gwagl02',
     'lumi.gateway.iragl5',
