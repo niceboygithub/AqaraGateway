@@ -17,14 +17,15 @@ from homeassistant.const import CONF_NAME, CONF_PASSWORD, MAJOR_VERSION, MINOR_V
 from homeassistant.components.light import ATTR_HS_COLOR, ATTR_RGB_COLOR, ATTR_BRIGHTNESS
 
 from .shell import (
-    TelnetShell, 
-    TelnetShellG2H, 
-    TelnetShellE1, 
-    TelnetShellG3, 
+    TelnetShell,
+    TelnetShellG2H,
+    TelnetShellE1,
+    TelnetShellG3,
     TelnetShellG2HPro,
     TelnetShellM2POE,
     TelnetShellM1S22,
-    TelnetShellM3
+    TelnetShellM3,
+    TelnetShellM1S2
 )
 from .utils import DEVICES, Utils, GLOBAL_PROP
 from .const import (
@@ -228,6 +229,9 @@ class Gateway:
                                         self.options.get(CONF_PASSWORD, ''))
             elif "m3" in device_name:
                 shell = TelnetShellM3(self.host,
+                                        self.options.get(CONF_PASSWORD, ''))
+            elif "m1s gen2" in device_name:
+                shell = TelnetShellM1S2(self.host,
                                         self.options.get(CONF_PASSWORD, ''))
             else:
                 shell = TelnetShell(self.host,
@@ -469,6 +473,9 @@ class Gateway:
             elif "m3" in device_name:
                 shell = TelnetShellM3(self.host,
                                         self.options.get(CONF_PASSWORD, ''))
+            elif "m1s gen2" in device_name:
+                shell = TelnetShellM1S2(self.host,
+                                        self.options.get(CONF_PASSWORD, ''))
             else:
                 shell = TelnetShell(self.host,
                                     self.options.get(CONF_PASSWORD, ''))
@@ -572,6 +579,9 @@ class Gateway:
                                         self.options.get(CONF_PASSWORD, ''))
             elif "m3" in device_name:
                 shell = TelnetShellM3(self.host,
+                                        self.options.get(CONF_PASSWORD, ''))
+            elif "m1s gen2" in device_name:
+                shell = TelnetShellM1S2(self.host,
                                         self.options.get(CONF_PASSWORD, ''))
             else:
                 shell = TelnetShell(self.host,
@@ -948,6 +958,8 @@ def is_aqaragateway(host: str,
                     shell = TelnetShellM1S22(host, password)
                 elif "m3" in device_name.lower():
                     shell = TelnetShellM3(host, password)
+                elif "m1s gen2" in device_name.lower():
+                    shell = TelnetShellM1S22(host, password)
                 else:
                     shell = TelnetShell(host, password)
                 shell.login()

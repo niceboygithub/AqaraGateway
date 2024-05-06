@@ -51,7 +51,8 @@ OPT_DEVICE_NAME = {
     'e1': "Aqara Hub E1",
     'm2': "Aqara Gateway M2",
     'm2 2022': "Aqara Gateway M2 2022",
-    'm3': "Aqara Gateway M3"
+    'm3': "Aqara Gateway M3",
+    'm1s gen2': "Aqara Gateway M1S Gen2",
 }
 
 SIGMASTAR_MODELS = [
@@ -63,6 +64,7 @@ SIGMASTAR_MODELS = [
     'lumi.camera.agl001',
     'lumi.gateway.acn004',
     'lumi.gateway.aqcn03',
+    'lumi.gateway.acn008',
     'lumi.gateway.iragl8',
     'lumi.gateway.acn012',
     'lumi.gateway.agl004'

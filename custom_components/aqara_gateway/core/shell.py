@@ -277,5 +277,8 @@ class TelnetShellM2POE(TelnetShell):
 class TelnetShellM1S22(TelnetShellM2POE):
     pass
 
+class TelnetShellM1S2(TelnetShellM2POE):
+    pass
+
 class TelnetShellM3(TelnetShellM2POE):
     pass
