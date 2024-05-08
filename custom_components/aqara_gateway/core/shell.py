@@ -252,9 +252,6 @@ class TelnetShellG3(TelnetShell):
         self.read_until(self._suffix.encode(), timeout=10)
 
 
-class TelnetShellG2HPro(TelnetShellG3):
-    pass
-
 class TelnetShellM2POE(TelnetShell):
     _suffix = "/ # "
 
@@ -274,11 +271,3 @@ class TelnetShellM2POE(TelnetShell):
         self.run_command("stty -echo")
         self.read_until(self._suffix.encode(), timeout=10)
 
-class TelnetShellM1S22(TelnetShellM2POE):
-    pass
-
-class TelnetShellM1S2(TelnetShellM2POE):
-    pass
-
-class TelnetShellM3(TelnetShellM2POE):
-    pass

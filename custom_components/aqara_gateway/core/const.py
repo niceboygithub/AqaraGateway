@@ -53,6 +53,7 @@ OPT_DEVICE_NAME = {
     'm2 2022': "Aqara Gateway M2 2022",
     'm3': "Aqara Gateway M3",
     'm1s gen2': "Aqara Gateway M1S Gen2",
+    'v1': "Aqara Outlet Hub V1",
 }
 
 SIGMASTAR_MODELS = [
@@ -67,7 +68,8 @@ SIGMASTAR_MODELS = [
     'lumi.gateway.acn008',
     'lumi.gateway.iragl8',
     'lumi.gateway.acn012',
-    'lumi.gateway.agl004'
+    'lumi.gateway.agl004',
+    'lumi.gateway.acn011'
 ]
 
 REALTEK_MODELS = [
@@ -99,7 +101,8 @@ AIOT_MODELS = [
     'lumi.camera.gwag03',
     'lumi.gateway.iragl8',
     'lumi.gateway.agl001',
-    'lumi.gateway.acn012'
+    'lumi.gateway.acn012',
+    'lumi.gateway.acn011'
 ]
 
 DATA_KEY = "aqara_gateway"
