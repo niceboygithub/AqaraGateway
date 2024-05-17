@@ -674,7 +674,7 @@ DEVICES = [{
         ['13.42.85', None, 'unlock by fingerprint', None],
         ['13.43.85', None, 'unlock by password', None],
         ['13.44.85', None, 'unlock by nfc', None],
-        ['13.45.85', None, 'unlock by homekit', None],
+        ['13.45.85', None, 'unlock by homekit', None], # not tested
         ['13.46.85', None, 'unlock by temporary password', None],
         ['13.49.85', None, 'open in away mode', None],
         ['13.54.85', None, 'away mode', None],
