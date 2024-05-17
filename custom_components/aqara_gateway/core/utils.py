@@ -670,7 +670,14 @@ DEVICES = [{
     'params': [
         ['4.20.85', None, 'latch_state', None],
         ['13.31.85', 'lock_state', 'lock', 'sensor'],
+        ['13.51.85', None, 'unlock from inside', None],
         ['13.42.85', None, 'unlock by fingerprint', None],
+        ['13.43.85', None, 'unlock by password', None],
+        ['13.44.85', None, 'unlock by nfc', None],
+        ['13.45.85', None, 'unlock by homekit', None], # not tested
+        ['13.46.85', None, 'unlock by temporary password', None],
+        ['13.49.85', None, 'open in away mode', None],
+        ['13.54.85', None, 'away mode', None],
         [None, None, 'key_id', 'sensor'],
         ['13.55.85', 'voltage', 'voltage', None],
         ['13.56.85', 'li battery', 'li battery', 'sensor'],
