@@ -50,6 +50,7 @@ DEVICES = [{
     'lumi.gateway.acn004': ["Aqara", "Gateway M1S 2022", "ZHWG20LM"],  # tested
     'lumi.gateway.acn012': ["Aqara", "Gateway M3", "ZHWG24LM"],
     'lumi.gateway.agl004': ["Aqara", "Gateway M3", "HM-G01D"],
+    'lumi.gateway.acn008': ["Aqara", "Gateway M1S Gen2", "ZHWG22LM"],
     'lumi.gateway.acn011': ["Aqara", "Outlet Hub V1", "AHWG11LM"],
     'params': [
         ['8.0.2012', None, 'power_tx', None],
