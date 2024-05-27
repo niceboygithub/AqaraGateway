@@ -220,6 +220,10 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         if model not in SUPPORTED_MODELS:
             return self.async_abort(reason="connection_error")
 
+        if not self._check_port(23):
+            return self.async_abort(reason="connection_error")
+
+
         if (fwcloud == "miot" and
                 discovery_info.get('type') == '_aqara-setup._tcp.local.'):
             return await self.async_step_user()
