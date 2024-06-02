@@ -83,6 +83,9 @@ LOCK_NOTIFICATION = {
         "default":
             "In the Away-from-home Mode, someone opens the door indoors"},
     "lock by handle": {"default": "Lock by door handle"},
+    "auto locking":
+        {"default": "Auto locking state changed",
+         "1": "Auto locking"},
     "unlock by password": {"default": "Unlocked with Keypad by user"},
     "unlock by fingerprint": {"default": "Unlocked with Fingerprint by user"},
     "unlock by bluetooth": {"default": "Unlocked with Bluetooth by user"},
