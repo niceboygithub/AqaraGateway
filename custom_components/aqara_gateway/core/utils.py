@@ -817,7 +817,6 @@ DEVICES = [{
 	]
 }, {
     'lumi.airrtc.tcpecn01': ["Aqara", "Thermostat S1", "KTWKQ02ES"],
-    'lumi.ctrl_hvac.es1': ["Aqara", "Thermostat", "KTWKQ01ES"],
     # https://github.com/AlexxIT/XiaomiGateway3/issues/101
     'lumi.airrtc.tcpecn02': ["Aqara", "Thermostat S2", "KTWKQ03ES"],
     'params': [
