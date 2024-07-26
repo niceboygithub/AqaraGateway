@@ -488,6 +488,7 @@ DEVICES = [{
     ]
 }, {
     'lumi.motion.ac01': ["Aqara", "Presence Detector FP1", "RTCGQ12LM"],
+    'lumi.sensor_occupy.agl1': ["Aqara", "AI Presence Detector FP1E", "RTCZCGQ13LM"],
     'params': [
         ['3.51.85', None, 'occupancy', 'binary_sensor'],
         ['8.0.2115', None, 'detect_interval', None],
@@ -940,6 +941,7 @@ DEVICES_AIOT = [{
     'lumi.switch.acn020': ["Aqara", "Single Wall Switch H1L", ""],
     'lumi.switch.acn029': ["Aqara", "Single Wall Switch H1M", "ZNQBKG24LM"],
     'lumi.switch.b1nacn01': ["Aqara", "Single Wall Switch T1", "QBKG19LM"],
+    'lumi.plug.sacn02': ["Aqara", "Wall Outlet T1", "QBCZ14LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
