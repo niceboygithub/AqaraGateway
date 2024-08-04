@@ -211,7 +211,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
 
         # Check if already configured
         if node_name:
-            await self.async_set_unique_id(node_name)
+            await self.async_set_unique_id(f"aqara_gateway_{node_name}")
 
         self._abort_if_unique_id_configured(
             updates={CONF_HOST: self._host}

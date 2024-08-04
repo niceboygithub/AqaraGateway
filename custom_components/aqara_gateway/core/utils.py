@@ -539,8 +539,17 @@ DEVICES = [{
         ['8.0.2097', None, 'detect_interval', None],
     ]
 }, {
-    'lumi.sensor_smoke': ["Honeywell", "Smoke Sensor", "JTYJ-GD-01LM/BW"],
     'lumi.sensor_smoke.acn03': ["Aqara", "Smoke Sensor", "JTYJ-GD-02LM/BW"],
+    'params': [
+        ['4.12.85', None, 'mute', 'binary_sensor'],
+        ['4.15.85', None, 'self test', 'binary_sensor'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+        ['8.0.2232', 'alarm', 'smoke', 'binary_sensor'],
+        ['8.0.2234', 'alarm', 'error', 'binary_sensor'],
+        ['13.28.85', None, 'smoke level', 'sensor'],
+    ]
+}, {
+    'lumi.sensor_smoke': ["Honeywell", "Smoke Sensor", "JTYJ-GD-01LM/BW"],
     'params': [
         ['0.1.85', 'density', 'smoke density', 'sensor'],
         ['13.1.85', 'alarm', 'smoke', 'binary_sensor'],
