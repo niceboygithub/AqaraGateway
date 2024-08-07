@@ -159,6 +159,10 @@ class GatewayNatgasSensor(GatewayBinarySensor, BinarySensorEntity):
                     self._state = not value
 
         self.schedule_update_ha_state()
+    
+    def reset_state(self):
+        self._state = ''
+        self.async_write_ha_state()
 
 
 class GatewayMotionSensor(GatewayBinarySensor):
@@ -598,10 +602,6 @@ class GatewayButtonSwitch(GatewayBinarySensor, BinarySensorEntity):
 
         self.schedule_update_ha_state()
 
-    def reset_state(self):
-        self._state = ''
-        self.async_write_ha_state()
-
 
 class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
     """ Xiaomi/Aqara Action Cube """
@@ -714,9 +714,8 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
                 'entity_id': self.entity_id, 'click_type': self._state
             })
 
-            time.sleep(.1)
-
-            self._state = ''
+            # reset the state to empty after 0.1 second
+            self.hass.loop.call_later(.1, self.reset_state)
 
         self.schedule_update_ha_state()
 
