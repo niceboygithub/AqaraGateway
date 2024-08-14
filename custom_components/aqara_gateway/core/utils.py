@@ -384,6 +384,7 @@ DEVICES = [{
     # light with brightness and color temp
     'lumi.light.acn031': ["Aqara", "Ceiling Lamp T1 ", "HCXDD11LM"],
     'lumi.light.acn032': ["Aqara", "Ceiling Lamp T1 (40W)", "HCXDD12LM"],
+    'lumi.light.acn033': ["Aqara", "Ceiling Lamp H1", "HCXDD13LM"],
     'params': [
         ['1.10.85', None, 'present_mode', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
