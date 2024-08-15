@@ -682,8 +682,9 @@ DEVICES = [{
 }, {
     'aqara.lock.dacn03': ["Aqara", "Door Lock H100", "ZNMS21LM"],
     'params': [
-        ['4.20.85', None, 'latch_state', None],
+        ['4.20.85', None, 'latch_state', 'binary_sensor'],  # Latch State
         ['13.31.85', 'lock_state', 'lock', 'sensor'],
+        [None, None, 'door_state', 'binary_sensor'],  # Door State
         ['13.51.85', None, 'unlock from inside', None],
         ['13.42.85', None, 'unlock by fingerprint', None],
         ['13.43.85', None, 'unlock by password', None],
