@@ -389,7 +389,6 @@ DEVICES = [{
         ['1.10.85', None, 'present_mode', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['14.1.85', 'light_level', 'brightness', None],
-        ['14.2.85', 'colour_temperature', 'color_temp', None],
         ['4.1.85', 'power_status', 'light', 'light'],
         ['1.7.85', 'light_level', 'brightness', None],
         ['1.9.85', 'colour_temperature', 'color_temp', None],
@@ -1205,6 +1204,29 @@ DEVICES_AIOT = [{
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
         # ['5.7', '5.7', 'voltage', 'sensor'],
+    ]
+}, {    # light with brightness and color temp
+    'lumi.light.acn031': ["Aqara", "Ceiling Lamp T1 ", "HCXDD11LM"],
+    'lumi.light.acn032': ["Aqara", "Ceiling Lamp T1 (40W)", "HCXDD12LM"],
+    'params': [
+        ['1.10.85', None, 'present_mode', None],
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['14.1.85', 'light_level', 'brightness', None],
+        ['14.2.85', 'colour_temperature', 'color_temp', None],
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['1.7.85', 'light_level', 'brightness', None],
+        ['1.9.85', 'colour_temperature', 'color_temp', None],
+        ['4.2.85', 'power_status', 'sub light', 'light'],
+    ]
+}, {
+    # light with brightness and color temp
+    'lumi.light.acn033': ["Aqara", "Ceiling Lamp H1", "HXCDD13LM"],
+    'params': [
+        ['1.10.85', None, 'present_mode', None],
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['1.7.85', 'light_level', 'brightness', None],
+        ['1.9.85', 'colour_temperature', 'color_temp', None],
+        ['4.1.85', 'power_status', 'light', 'light'],
     ]
 }, {
     'lumi.motion.agl04': ["Aqara", "Precision Motion Sensor", "RTCGQ13LM"],
