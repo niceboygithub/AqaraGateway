@@ -622,13 +622,14 @@ DEVICES = [{
         ['13.7.85', None, 'unlock by key', None],
         [None, None, 'key_id', 'sensor'],
         ['13.8.85', None, 'open in away mode', None],
-        ['13.10.85', None, 'lock by handle', None],
-        ['13.11.85', None, 'latch_state', None],
-        ['13.12.85', None, 'away mode', None],
+        ['13.10.85', None, 'lock by handle', 'binary_sensor'],  # Lock State
+        ['13.11.85', None, 'latch_state', 'binary_sensor'],  # Latch State
+        ['13.12.85', None, 'away mode', 'binary_sensor'],
         ['13.13.85', None, 'someone detected', None],
         ['13.14.85', None, 'too much failure', None],
         ['13.15.85', None, 'key_type', None],
         ['13.20.85', 'lock_state', 'lock', 'sensor'],
+        [None, None, 'door_state', 'binary_sensor'],  # Door State
         ['13.30.85', None, 'li battery notify', None],
         ['13.31.85', 'voltage', 'voltage', None],
         ['13.32.85', 'li battery', 'li battery', 'sensor'],
@@ -649,17 +650,18 @@ DEVICES = [{
     'params': [
         ['8.0.2148', None, 'timestamp', None],
         ['13.17.85', 'lock_state', 'lock', 'sensor'],
+        [None, None, 'door_state', 'binary_sensor'],  # Door State
         ['13.18.85', None, 'key_type', None],
-        ['13.31.85', None, 'lock_event', None],
+        ['13.31.85', None, 'lock by handle', 'binary_sensor'],  # Lock State
         ['13.32.85', None, 'verification failed', None],
-        ['13.33.85', None, 'latch_state', None],
+        ['13.33.85', None, 'latch_state', 'binary_sensor'],  # Latch State
         ['13.41.85', None, 'unlock from inside', None],
         ['13.42.85', None, 'unlock by fingerprint', None],
         ['13.43.85', None, 'unlock by password', None],
         ['13.44.85', None, 'unlock by nfc', None],
         ['13.45.85', None, 'unlock by homekit', None],
         ['13.49.85', None, 'open in away mode', None],
-        ['13.54.85', None, 'away mode', None],
+        ['13.54.85', None, 'away mode', 'binary_sensor'],
         [None, None, 'key_id', 'sensor'],
         ['13.55.85', 'voltage', 'voltage', None],
         ['13.56.85', 'battery', 'battery', 'sensor'],
@@ -679,8 +681,9 @@ DEVICES = [{
 }, {
     'aqara.lock.dacn03': ["Aqara", "Door Lock H100", "ZNMS21LM"],
     'params': [
-        ['4.20.85', None, 'latch_state', None],
+        ['4.20.85', None, 'latch_state', 'binary_sensor'],  # Latch State
         ['13.31.85', 'lock_state', 'lock', 'sensor'],
+        [None, None, 'door_state', 'binary_sensor'],  # Door State
         ['13.51.85', None, 'unlock from inside', None],
         ['13.42.85', None, 'unlock by fingerprint', None],
         ['13.43.85', None, 'unlock by password', None],
@@ -688,7 +691,7 @@ DEVICES = [{
         ['13.45.85', None, 'unlock by homekit', None], # not tested
         ['13.46.85', None, 'unlock by temporary password', None],
         ['13.49.85', None, 'open in away mode', None],
-        ['13.54.85', None, 'away mode', None],
+        ['13.54.85', None, 'away mode', 'binary_sensor'],
         [None, None, 'key_id', 'sensor'],
         ['13.55.85', 'voltage', 'voltage', None],
         ['13.56.85', 'li battery', 'li battery', 'sensor'],
@@ -705,10 +708,11 @@ DEVICES = [{
     'params': [
         ['8.0.2148', None, 'timestamp', None],
         ['13.17.85', 'lock_state', 'lock', 'sensor'],
+        [None, None, 'door_state', 'binary_sensor'],  # Door State
         ['13.18.85', None, 'key_type', None],
-        ['13.31.85', None, 'lock_event', None],
-        ['13.32.85', None, 'verification failed', None],
-        ['13.33.85', None, 'latch_state', None],
+        ['13.31.85', None, 'lock by handle', 'binary_sensor'],  # Lock State
+        ['13.33.85', None, 'latch_state', 'binary_sensor'],  # Latch State
+        ['13.37.85', None, 'verification failed', None],
         ['13.41.85', None, 'unlock from inside', None],
         ['13.42.85', None, 'unlock by fingerprint', None],
         ['13.43.85', None, 'unlock by password', None],
@@ -716,7 +720,7 @@ DEVICES = [{
         ['13.45.85', None, 'unlock by homekit', None],
         ['13.46.85', None, 'unlock by temporary password', None],
         ['13.49.85', None, 'open in away mode', None],
-        ['13.54.85', None, 'away mode', None],
+        ['13.54.85', None, 'away mode', 'binary_sensor'],
         [None, None, 'key_id', 'sensor'],
         ['13.55.85', 'voltage', 'voltage', None],
         ['13.56.85', 'battery', 'battery', 'sensor'],
@@ -737,9 +741,10 @@ DEVICES = [{
     'aqara.lock.aqgl01': ["Aqara", "Smart Door Lock D100", "ZNMS20LM"],
     'params': [
         ['13.17.85', None, 'lock', 'sensor'],
+        [None, None, 'door_state', 'binary_sensor'],  # Door State
         ['13.18.85', None, 'key_type', None],
-        ['13.31.85', None, 'lock_event', None],
-        ['13.33.85', None, 'latch_state', None],
+        ['13.31.85', None, 'auto locking', 'binary_sensor'],  # Lock State
+        ['13.33.85', None, 'latch_state', 'binary_sensor'],  # Latch State
         ['13.37.85', None, 'verification failed', None],
         ['13.43.85', None, 'unlock by password', None],
         ['13.44.85', None, 'unlock by nfc', None],  # not tested
@@ -749,7 +754,7 @@ DEVICES = [{
         ['13.48.85', None, 'unlock by emergency knob', None],
         ['13.51.85', None, 'unlock from inside', None],
         ['13.53.85', None, 'unlock by face', None],
-        ['13.54.85', None, 'away mode', None],
+        ['13.54.85', None, 'away mode', 'binary_sensor'],
         [None, None, 'key_id', 'sensor'],
         ['13.55.85', None, 'voltage', None],
         ['13.56.85', None, 'battery', 'sensor'],
@@ -769,9 +774,10 @@ DEVICES = [{
     'aqara.lock.acn005': ["Aqara", "Smart Door Lock D200i", "ML-D01D"],
     'params': [
         ['13.17.85', None, 'lock', 'sensor'],
+        [None, None, 'door_state', 'binary_sensor'],  # Door State
         ['13.18.85', None, 'key_type', None],
-        ['13.31.85', None, 'lock_event', None],
-        ['13.33.85', None, 'latch_state', None],
+        ['13.31.85', None, 'auto locking', 'binary_sensor'],  # Lock State
+        ['13.33.85', None, 'latch_state', 'binary_sensor'],  # Latch State
         ['13.37.85', None, 'verification failed', None],
         ['13.43.85', None, 'unlock by password', None],
         ['13.44.85', None, 'unlock by nfc', None],  # not tested
@@ -779,7 +785,7 @@ DEVICES = [{
         ['13.46.85', None, 'unlock by temporary password', None],
         ['13.51.85', None, 'unlock from inside', None],
         ['13.53.85', None, 'unlock by face', None],
-        ['13.54.85', None, 'away mode', None],
+        ['13.54.85', None, 'away mode', 'binary_sensor'],
         [None, None, 'key_id', 'sensor'],
         ['13.55.85', None, 'voltage', None],
         ['13.56.85', None, 'battery', 'sensor'],
@@ -798,9 +804,10 @@ DEVICES = [{
     'aqara.lock.acn002': ["Aqara", "Door Lock S100", "ZNMS22LM"],
     'params': [
         ['13.17.85', 'lock_state', 'lock', 'sensor'],
+        [None, None, 'door_state', 'binary_sensor'],  # Door State
         ['13.18.85', None, 'key_type', None],
-        ['13.31.85', None, 'lock_event', None],
-        ['13.33.85', None, 'latch_state', None],
+        ['13.31.85', None, 'lock by handle', 'binary_sensor'],  # Lock State
+        ['13.33.85', None, 'latch_state', 'binary_sensor'],  # Latch State
         ['13.37.85', None, 'verification failed', None],
         ['13.41.85', None, 'unlock from inside', None],
         ['13.42.85', None, 'unlock by fingerprint', None],
@@ -809,7 +816,7 @@ DEVICES = [{
         ['13.45.85', None, 'unlock by homekit', None],
         ['13.46.85', None, 'unlock by temporary password', None],
         ['13.49.85', None, 'open in away mode', None],
-        ['13.54.85', None, 'away mode', None],
+        ['13.54.85', None, 'away mode', 'binary_sensor'],
         [None, None, 'key_id', 'sensor'],
         ['13.55.85', 'voltage', 'voltage', None],
         ['13.56.85', 'battery', 'battery', 'sensor'],

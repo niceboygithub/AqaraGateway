@@ -65,6 +65,12 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             async_add_entities([GatewayMotionSensor(gateway, device, attr)])
         elif attr == 'moisture':
             async_add_entities([GatewaWaterLeakSensor(gateway, device, attr)])
+        elif attr == 'door_state':  # door state
+            async_add_entities([GatewayLockDoorState(gateway, device, attr)])
+        elif attr in ['auto locking', 'lock by handle']:  # lock state
+            async_add_entities([GatewayLockLockState(gateway, device, attr)])
+        elif attr == 'latch_state':  # latch state
+            async_add_entities([GatewayLockLatchState(gateway, device, attr)])
         else:
             async_add_entities([GatewayBinarySensor(gateway, device, attr)])
 
@@ -719,3 +725,90 @@ class GatewayAction(GatewayBinarySensor, BinarySensorEntity):
 
         self.schedule_update_ha_state()
 
+
+# guess door/lock/latch state from 'door' attr
+# True means open or unlocked
+# False means closed or locked
+STATES_FROM_DOOR = {
+    2: {"door": True, "lock": True, "latch": True},  # The door is not closed
+    3: {"door": False, "lock": True, "latch": True},  # The door is not locked
+    4: {"door": False, "lock": False, "latch": True},  # The door is locked
+    5: {"door": False, "lock": True, "latch": False},  # The door is auti-locked
+    6: {"door": False, "lock": True, "latch": True},  # The door is unlocked
+    7: {"door": False, "lock": False, "latch": False},  # The door is locked and auti-locked
+}
+
+
+class GatewayLockDoorState(GatewayBinarySensor):
+    """
+    Door state of an Aqara Door Lock.
+    _attr: 'door_state'
+    """
+
+    # Get door state from 'door_state' attr
+    # True means open, False means closed
+    DOOR_STATE_MAP = {
+        0: True,  # Door is open
+        1: False,  # Door is closed
+        2: True,  # Door is not close
+        4: True,  # Lock is damaged
+        5: True,  # Door is concealed
+    }
+
+    @property
+    def device_class(self):
+        return BinarySensorDeviceClass.DOOR
+
+    def update(self, data: dict = None):
+        if "lock" in data:
+            value = data["lock"]
+            if value in GatewayLockDoorState.DOOR_STATE_MAP:
+                self._state = GatewayLockDoorState.DOOR_STATE_MAP[value]
+                self.async_write_ha_state()
+        elif "door" in data:
+            value = data["door"]
+            if value in STATES_FROM_DOOR:
+                self._state = STATES_FROM_DOOR[value]["door"]
+                self.async_write_ha_state()
+
+
+class GatewayLockLockState(GatewayBinarySensor):
+    """
+    Lock state of an Aqara Door Lock.
+    _attr: 'auto locking' or 'lock by handle'
+    """
+
+    @property
+    def device_class(self):
+        return BinarySensorDeviceClass.LOCK
+
+    def update(self, data: dict = None):
+        if self._attr in data:  # _attr: 'auto locking' or 'lock by handle'
+            self._state = not data[self._attr]  # 1: Locked
+            self.async_write_ha_state()
+        elif "door" in data:
+            value = data["door"]
+            if value in STATES_FROM_DOOR:
+                self._state = STATES_FROM_DOOR[value]["lock"]
+                self.async_write_ha_state()
+
+
+class GatewayLockLatchState(GatewayBinarySensor):
+    """
+    Latch state of an Aqara Door Lock.
+    _attr: 'latch_state'
+    """
+
+    @property
+    def device_class(self):
+        return BinarySensorDeviceClass.LOCK
+
+    def update(self, data: dict = None):
+        if self._attr in data:  # _attr: 'latch_state'
+            self._state = not data[self._attr]  # 0: Unlocked 1: Locked
+            self.async_write_ha_state()
+        elif "door" in data:
+            value = data["door"]
+            if value in STATES_FROM_DOOR:
+                self._state = STATES_FROM_DOOR[value]["latch"]
+                self.async_write_ha_state()
