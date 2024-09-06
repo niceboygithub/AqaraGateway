@@ -97,6 +97,7 @@ DEVICES = [{
     # on/off, power measurement
     'lumi.plug.sacn03': ["Aqara", "Socket H1 USB", "QBCZ15LM"],  # @miniknife88
     'lumi.plug.acn003': ["Aqara", "Socket X1 USB", "QBCZ16LM"],
+    'lumi.plug.acn005': ["Aqara", "Socket H2", "ZNQBCZ11LM"],  # @kiminih
     'params': [
         ['0.11.85', 'load_voltage', 'power', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
