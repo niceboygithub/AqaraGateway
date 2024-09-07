@@ -1,11 +1,12 @@
 """Constants of the Xiaomi Aqara component."""
 
 from homeassistant.const import (
-    CONDUCTIVITY,
     LIGHT_LUX,
     PERCENTAGE,
     CONCENTRATION_PARTS_PER_BILLION,
     CONCENTRATION_PARTS_PER_MILLION,
+    MAJOR_VERSION,
+    MINOR_VERSION,
     STATE_OPEN,
     STATE_OPENING,
     STATE_CLOSING,
@@ -16,6 +17,12 @@ from homeassistant.const import (
     UnitOfPressure,
     UnitOfTemperature,
 )
+
+if (MAJOR_VERSION, MINOR_VERSION) >= (2024, 7):
+    from homeassistant.const import UnitOfConductivity
+    CONDUCTIVITY = UnitOfConductivity.MICROSIEMENS
+else:
+    from homeassistant.const import CONDUCTIVITY
 
 from homeassistant.components.climate.const import (
     FAN_AUTO,
