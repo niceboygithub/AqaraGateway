@@ -51,6 +51,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     if "model" not in entry.options or "password" not in entry.options:
         raise ConfigEntryNotReady
 
+    if (len(entry.options.get("host")) < 0) or (len(entry.options.get("model")) < 0):
+        raise ConfigEntryNotReady
+
     await _setup_logger(hass)
 
     config = hass.data[DOMAIN]['config']
