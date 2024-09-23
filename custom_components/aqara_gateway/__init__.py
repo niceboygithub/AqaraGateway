@@ -10,6 +10,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_registry import EntityRegistry
+from homeassistant.helpers.system_info import async_get_system_info
 
 from .core.gateway import Gateway
 from .core.utils import AqaraGatewayDebug
@@ -179,7 +180,7 @@ async def _setup_logger(hass: HomeAssistant):
         handler = AqaraGatewayDebug(hass)
         _LOGGER.addHandler(handler)
 
-        info = await hass.helpers.system_info.async_get_system_info()
+        info = await async_get_system_info(hass)
         info.pop('timezone')
         _LOGGER.debug(f"SysInfo: {info}")
 
