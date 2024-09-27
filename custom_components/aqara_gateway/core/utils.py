@@ -1260,6 +1260,7 @@ DEVICES_AIOT = [{
     'lumi.remote.b286acn03': ["Aqara", "Double Wall Button T1", "WXKG04LM"],   # @darkbao
     'lumi.remote.b28ac1': ["Aqara", "Double Wall Button H1", "WXKG15LM"],
     'lumi.remote.acn004': ["Aqara", "Double Wall Button E1", "WXKG17LM"],
+    'lumi.remote.acn009': ["Aqara", "Double Wall Button H1M", "WXKG22LM"],
     'params': [
         ['4.13.85', None, 'mode', None],
         ['13.1.85', None, 'button_1', None],
