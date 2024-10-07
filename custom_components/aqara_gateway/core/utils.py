@@ -298,6 +298,7 @@ DEVICES = [{
     'lumi.light.acn014': ["Aqara", "Bulb T1", "ZNLDP14LM"],
     'lumi.light.acn015': ["Aqara", "Sun Light H1", "QKD01LM"],
     'lumi.light.acn003': ["Aqara", "L1-350 Ceiling Light", "ZNXDD01LM"],
+    'lumi.light.acn036': ["Aqara", "Spotlight V1", "ZNSD01LM"],
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['1.6.85', None, 'ms_to_turn_on', None],
