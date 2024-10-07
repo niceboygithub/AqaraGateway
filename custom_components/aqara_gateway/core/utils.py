@@ -354,6 +354,7 @@ DEVICES = [{
     'lumi.light.acn010': ["Aqara", "Smart Light (60cm)", "ZNCXGDD05LM"],
     'lumi.light.acn011': ["Aqara", "Smart Pendant Light", "ZNCXGDD06LM"],
     'lumi.light.acn012': ["Aqara", "Smart Foldable Grille Light (6-Lamp)", "ZNCXGDD07LM"],
+    'lumi.light.acn036': ["Aqara", "Spotlight V1", "ZNSD01LM"],
     'params': [
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
