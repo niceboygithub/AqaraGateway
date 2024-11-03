@@ -74,6 +74,15 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             color_modes = {ColorMode.RGB}
         self._attr_supported_color_modes = color_modes
 
+        if ColorMode.COLOR_TEMP in color_modes:
+            self._attr_color_mode = ColorMode.COLOR_TEMP
+        elif ColorMode.BRIGHTNESS in color_modes:
+            self._attr_color_mode = ColorMode.BRIGHTNESS
+        elif ColorMode.ONOFF in color_modes:
+            self._attr_color_mode = ColorMode.ONOFF
+        else:
+            self._attr_color_mode = ColorMode.UNKNOWN
+
     @property
     def is_on(self) -> bool:
         """return state """
