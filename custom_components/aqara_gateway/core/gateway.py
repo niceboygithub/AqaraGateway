@@ -13,7 +13,7 @@ from datetime import datetime
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Event, HomeAssistant
-from homeassistant.const import CONF_NAME, CONF_PASSWORD, MAJOR_VERSION, MINOR_VERSION
+from homeassistant.const import CONF_NAME, CONF_PASSWORD, CONF_HOST, MAJOR_VERSION, MINOR_VERSION
 from homeassistant.components.light import ATTR_HS_COLOR, ATTR_RGB_COLOR, ATTR_BRIGHTNESS
 
 from .shell import (
@@ -45,23 +45,25 @@ class Gateway:
 
     main_task: asyncio.Task | None = None  # for HA < 2023.3
 
-    def __init__(self, hass: HomeAssistant, host: str, config: dict, **options):
+    def __init__(self, hass: HomeAssistant, entry: ConfigEntry, config: dict):
         """Initialize the Xiaomi/Aqara device."""
         self.hass = hass
-        self.host = host
-        self.options = options
+        self.host = entry.options[CONF_HOST]
+        self.options = entry.options
         # if mqtt server connected
         self.enabled = False
         self.available = False
+
+        self._config_entry = entry
 
         self._mqttc = Client()
         self._mqttc.on_connect = self.on_connect
         self._mqttc.on_disconnect = self.on_disconnect
         self._mqttc.on_message = self.on_message
 
-        self._debug = options.get('debug', '')  # for fast access
-        self.parent_scan_interval = (-1 if options.get('parent') is None
-                                        else options['parent'])
+        self._debug = self.options.get('debug', '')  # for fast access
+        self.parent_scan_interval = (-1 if self.options.get('parent') is None
+                                        else self.options['parent'])
         self.default_devices = config['devices'] if config else None
 
         self.devices = {}
@@ -70,7 +72,7 @@ class Gateway:
         self._extra_state_attributes = {}
         self._info_ts = None
         self._gateway_did = ''
-        self._model = options.get(CONF_MODEL, '')  # long model, will replace to short later
+        self._model = self.options.get(CONF_MODEL, '')  # long model, will replace to short later
         self.cloud = 'aiot'  # for fast access
 
     @property
@@ -134,7 +136,9 @@ class Gateway:
 
         await self.hass.async_add_executor_job(stop)
 
-    def start(self, hass: HomeAssistant, config_entry: ConfigEntry):
+    def start(self):
+        hass = self.hass
+        config_entry = self._config_entry
         if (MAJOR_VERSION, MINOR_VERSION) >= (2023, 3):
             config_entry.async_create_background_task(hass, self.async_run(), f"{DOMAIN} gateway.async_run")
         else:

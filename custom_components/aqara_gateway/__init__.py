@@ -62,7 +62,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     config = hass.data[DOMAIN]['config']
 
     hass.data[DOMAIN][entry.entry_id] = \
-        gateway = Gateway(hass, **entry.options, config=config)
+        gateway = Gateway(hass, entry, config=config)
 
     # add update handler
     if not entry.update_listeners:
@@ -76,7 +76,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             hass.async_create_task(hass.config_entries.async_forward_entry_setup(
                 entry, domain))
 
-    gateway.start(hass, entry)
+    gateway.start()
 
     await hass.data[DOMAIN][entry.entry_id].async_connect()
 
