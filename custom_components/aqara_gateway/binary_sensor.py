@@ -6,7 +6,10 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
     BinarySensorDeviceClass,
 )
-from homeassistant.config import DATA_CUSTOMIZE
+try:
+    from homeassistant.core_config import DATA_CUSTOMIZE
+except:
+    from homeassistant.config import DATA_CUSTOMIZE
 from homeassistant.helpers.event import async_call_later
 from homeassistant.util.dt import now
 from homeassistant.const import (
