@@ -15,7 +15,7 @@ from homeassistant.const import (
     UnitOfTemperature,
 )
 
-if (MAJOR_VERSION, MINOR_VERSION) >= (2024, 7):
+if (MAJOR_VERSION, MINOR_VERSION) >= (2024, 11):
     from homeassistant.const import UnitOfConductivity
     CONDUCTIVITY = UnitOfConductivity.MICROSIEMENS_PER_CM
 else:
