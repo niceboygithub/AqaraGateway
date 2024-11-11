@@ -1,5 +1,6 @@
 """Constants of the Xiaomi Aqara component."""
 
+from homeassistant.components.lock import LockState
 from homeassistant.const import (
     LIGHT_LUX,
     PERCENTAGE,
@@ -7,11 +8,8 @@ from homeassistant.const import (
     CONCENTRATION_PARTS_PER_MILLION,
     MAJOR_VERSION,
     MINOR_VERSION,
-    STATE_OPEN,
     STATE_OPENING,
     STATE_CLOSING,
-    STATE_LOCKED,
-    STATE_UNLOCKED,
     UnitOfEnergy,
     UnitOfPower,
     UnitOfPressure,
@@ -20,7 +18,7 @@ from homeassistant.const import (
 
 if (MAJOR_VERSION, MINOR_VERSION) >= (2024, 7):
     from homeassistant.const import UnitOfConductivity
-    CONDUCTIVITY = UnitOfConductivity.MICROSIEMENS
+    CONDUCTIVITY = UnitOfConductivity.MICROSIEMENS_PER_CM
 else:
     from homeassistant.const import CONDUCTIVITY
 
@@ -334,21 +332,21 @@ LOCK_STATUS = {
 }
 
 LOCK_STATE = {
-    "0": STATE_UNLOCKED,
-    "1": STATE_LOCKED,
-    "2": STATE_OPEN,
+    "0": LockState.UNLOCKED,
+    "1": LockState.LOCKED,
+    "2": LockState.OPEN,
 }
 
 LOCK_STATUS_TYPE = {
-    "0": STATE_UNLOCKED,
-    "1": STATE_LOCKED,
-    "2": STATE_OPEN,
+    "0": LockState.UNLOCKED,
+    "1": LockState.LOCKED,
+    "2": LockState.OPEN,
     "3": "door_bell",
 }
 
 LATCH_STATUS_TYPE = {
-    "0": STATE_UNLOCKED,
-    "1": STATE_LOCKED,
+    "0": LockState.UNLOCKED,
+    "1": LockState.LOCKED,
 }
 
 SWITCH_ATTRIBUTES = (
