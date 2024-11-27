@@ -32,7 +32,8 @@ DEVICE_MAPPINGS = {
     "aqara.lock.acn002": (
         WITH_LI_BATTERY | SUPPORT_ALARM |
         SUPPORT_DOORBELL | SUPPORT_WIFI | SUPPORT_CAMERA),
-    "aqara.lock.agl002": SUPPORT_ALARM | SUPPORT_DOORBELL
+    "aqara.lock.agl002": SUPPORT_ALARM | SUPPORT_DOORBELL,
+    "aqara.lock.acn10": SUPPORT_ALARM
 }
 
 LOCK_NOTIFICATION = {

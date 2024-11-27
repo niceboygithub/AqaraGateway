@@ -835,6 +835,37 @@ DEVICES = [{
         [None, None, 'lock_event', 'sensor'],
 	]
 }, {
+    'aqara.lock.acn10': ["Aqara", "Door Lock U100", "DL-D01/DL-D01D"],
+    'params': [
+        ['13.17.85', 'lock_state', 'lock', 'sensor'],
+        [None, None, 'door_state', 'binary_sensor'],  # Door State
+        ['13.18.85', None, 'key_type', None],
+        ['13.31.85', None, 'lock by handle', 'binary_sensor'],  # Lock State
+        ['13.33.85', None, 'latch_state', 'binary_sensor'],  # Latch State
+        ['13.37.85', None, 'verification failed', None],
+        ['13.41.85', None, 'unlock from inside', None],
+        ['13.43.85', None, 'unlock by password', None],
+        ['13.44.85', None, 'unlock by nfc', None],
+        ['13.45.85', None, 'unlock by homekit', None],
+        ['13.46.85', None, 'unlock by temporary password', None],
+        ['13.49.85', None, 'open in away mode', None],
+        ['13.54.85', None, 'away mode', 'binary_sensor'],
+        [None, None, 'key_id', 'sensor'],
+        ['13.55.85', 'voltage', 'voltage', None],
+        ['13.56.85', 'battery', 'battery', 'sensor'],
+        ['13.57.85', None, 'battery notify', None],
+        ['13.62.85', None, 'timestamp', None],
+        ['13.63.85', None, 'user added', None],
+        ['13.64.85', None, 'user removed', None],
+        ['13.65.85', None, 'all user removed', None],
+        ['13.66.85', None, 'nfc added', None],
+        ['13.67.85', None, 'nfc removed', None],
+        ['13.68.85', None, 'homekit reset', None],
+        ['13.88.85', None, 'door', None],
+        ['14.83.85', None, 'bluetooth', None],
+        [None, None, 'lock_event', 'sensor'],
+	]
+}, {
     'lumi.airrtc.tcpecn01': ["Aqara", "Thermostat S1", "KTWKQ02ES"],
     'lumi.ctrl_hvac.es1': ["Aqara", "Thermostat", "KTWKQ01ES"],
     # https://github.com/AlexxIT/XiaomiGateway3/issues/101
