@@ -1,5 +1,6 @@
 """Constants of the Xiaomi Aqara component."""
 
+from homeassistant.components.cover import CoverState
 from homeassistant.components.lock import LockState
 from homeassistant.const import (
     LIGHT_LUX,
@@ -8,8 +9,6 @@ from homeassistant.const import (
     CONCENTRATION_PARTS_PER_MILLION,
     MAJOR_VERSION,
     MINOR_VERSION,
-    STATE_OPENING,
-    STATE_CLOSING,
     UnitOfEnergy,
     UnitOfPower,
     UnitOfPressure,
@@ -238,7 +237,7 @@ YUBA_STATE_FAN = {
 }
 
 # Cover
-RUN_STATES = {0: STATE_CLOSING, 1: STATE_OPENING, 2: "stop", 3: "hinder_stop"}
+RUN_STATES = {0: CoverState.CLOSING, 1: CoverState.OPENING, 2: "stop", 3: "hinder_stop"}
 
 # Switch Sensor
 # https://github.com/Koenkk/zigbee-herdsman-converters/blob/master/converters/fromZigbee.js#L4738
@@ -342,6 +341,7 @@ LOCK_STATUS_TYPE = {
     "1": LockState.LOCKED,
     "2": LockState.OPEN,
     "3": "door_bell",
+    "6": LockState.JAMMED,
 }
 
 LATCH_STATUS_TYPE = {

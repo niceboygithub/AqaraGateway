@@ -51,11 +51,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     if "model" not in entry.options or "password" not in entry.options:
         _LOGGER.error("The model is missing while setupping entry!")
-        raise ConfigEntryNotReady
+        return False
 
     if (len(entry.options.get("host")) < 0) or (len(entry.options.get("model")) < 0):
         _LOGGER.error("The IP or the model is missing while setupping etnry!")
-        raise ConfigEntryNotReady
+        return False
 
     await _setup_logger(hass)
 

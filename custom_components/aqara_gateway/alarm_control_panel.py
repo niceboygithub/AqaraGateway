@@ -3,12 +3,7 @@
 from homeassistant.components.alarm_control_panel import (
     AlarmControlPanelEntity,
     AlarmControlPanelEntityFeature,
-)
-from homeassistant.const import (
-    STATE_ALARM_ARMED_AWAY,
-    STATE_ALARM_ARMED_HOME,
-    STATE_ALARM_ARMED_NIGHT,
-    STATE_ALARM_DISARMED,
+    AlarmControlPanelState
 )
 
 from . import DOMAIN, GatewayGenericDevice
@@ -16,8 +11,8 @@ from .core.gateway import Gateway
 from .core.utils import Utils
 from .core.shell import TelnetShell, TelnetShellE1, TelnetShellM2POE
 
-ALARM_STATES = [STATE_ALARM_ARMED_HOME, STATE_ALARM_ARMED_AWAY,
-                STATE_ALARM_ARMED_NIGHT, STATE_ALARM_DISARMED]
+ALARM_STATES = [AlarmControlPanelState.ARMED_HOME, AlarmControlPanelState.ARMED_AWAY,
+                AlarmControlPanelState.ARMED_NIGHT, AlarmControlPanelState.DISARMED]
 
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
@@ -39,7 +34,8 @@ async def async_unload_entry(hass, entry):
 
 class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
     """Representation of a Aqara Gateway Alarm."""
-    _state = STATE_ALARM_DISARMED
+    _attr_alarm_state = AlarmControlPanelState.DISARMED
+    _state = None
     _shell = None
 
     def __init__(
@@ -69,11 +65,6 @@ class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
         if self._shell:
             return True
         return False
-
-    @property
-    def state(self):
-        """return state."""
-        return self._state
 
     @property
     def icon(self):
@@ -127,7 +118,7 @@ class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
         self.schedule_update_ha_state()
 
     def _get_state(self):
-        self._state = STATE_ALARM_DISARMED
+        self._attr_alarm_state = AlarmControlPanelState.DISARMED
         raw = self._shell.get_prop('persist.app.arming_guard')
         if raw == 'true':
             raw = self._shell.get_prop('persist.app.arming_state')
