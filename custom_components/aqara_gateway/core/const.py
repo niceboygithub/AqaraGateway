@@ -223,11 +223,10 @@ AC_STATE_FAN = {
 }
 
 YUBA_STATE_HVAC = {
-    HVACMode.OFF: 0,
-    HVACMode.HEAT: 0,
+    HVACMode.HEAT_COOL: 5,
     HVACMode.DRY: 3,
     HVACMode.FAN_ONLY: 4,
-    HVACMode.AUTO: 5
+    HVACMode.HEAT: 0
 }
 
 YUBA_STATE_FAN = {

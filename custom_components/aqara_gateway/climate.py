@@ -117,12 +117,10 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
                 # with power off all data come with empty values
                 # https://github.com/AlexxIT/XiaomiGateway3/issues/101#issuecomment-747305596
                 if self._is_on:
-                    if 'mode' in data:  # 0 - heat, 1 - cool, 15 - off
-                        self._hvac_mode = list(
-                            YUBA_STATE_HVAC.keys())[list(YUBA_STATE_HVAC.values()).index(data['mode'])]
-                    if 'fan_mode' in data:  # 0 - low, 3 - auto, 15 - off
-                        self._fan_mode = list(
-                            YUBA_STATE_FAN.keys())[list(YUBA_STATE_FAN.values()).index(data['fan_mode'])]
+                    if 'mode' in data:
+                        self._hvac_mode = HVAC_MODES[data['mode']]
+                    if 'fan_mode' in data:
+                        self._fan_mode = FAN_MODES[data['fan_mode']]
                     if 'target_temperature' in data:  # 255 - off
                         self._target_temp = data['target_temperature']
 
@@ -187,14 +185,19 @@ class AqaraClimateYuba(AqaraGenericClimate, ClimateEntity):
     """Initialize the AqaraClimateYuba."""
 
     @property
+    def fan_modes(self):
+        """ return fan modes """
+        return list(YUBA_STATE_FAN.keys())
+
+    @property
     def hvac_modes(self):
         """ return hvac modes """
-        return [HVACMode.OFF, HVACMode.DRY, HVACMode.HEAT, HVACMode.AUTO]
+        return list(YUBA_STATE_HVAC.keys()) + [HVACMode.OFF]
 
     @property
     def supported_features(self):
         """ return supported features """
-        return ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.FAN_MODE | ClimateEntityFeature.SWING_MODE
+        return ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.FAN_MODE | ClimateEntityFeature.TURN_OFF | ClimateEntityFeature.TURN_ON | ClimateEntityFeature.SWING_MODE
 
     @property
     def swing_mode(self) -> str | None:
@@ -212,24 +215,39 @@ class AqaraClimateYuba(AqaraGenericClimate, ClimateEntity):
         """
         return [SWING_OFF, SWING_ON]
 
+    def turn_on(self) -> None:
+        """Turn the entity on."""
+        self.gateway.send(self.device, {'power': 1})
+
+    def turn_off(self) -> None:
+        """Turn the entity off."""
+        self.gateway.send(self.device, {'power': 0})
+
     def set_temperature(self, **kwargs) -> None:
         """ set temperature """
         if not self._state or kwargs[ATTR_TEMPERATURE] == 0:
             self.debug(f"Can't set climate temperature: {self._state}")
             return
-        self.gateway.send(self.device, {self._attr: int(kwargs[ATTR_TEMPERATURE])})
+        self.gateway.send(self.device, {'target_temperature': 100 * int(kwargs[ATTR_TEMPERATURE])})
+        self._target_temp = int(kwargs[ATTR_TEMPERATURE])
 
     def set_fan_mode(self, fan_mode: str) -> None:
         """ set fan mode """
         if not self._state:
             return
-        self.gateway.send(self.device, {self._attr: YUBA_STATE_FAN[fan_mode]})
+        self.gateway.send(self.device, {'fan_mode': YUBA_STATE_FAN[fan_mode]})
+        self._fan_mode = fan_mode
 
     def set_hvac_mode(self, hvac_mode: str) -> None:
         """ set hvac mode """
-        if not self._state:
+        self._hvac_mode = hvac_mode
+        if hvac_mode == HVACMode.OFF:
+            self.gateway.send(self.device, {'power': 0})
             return
-        self.gateway.send(self.device, {self._attr: YUBA_STATE_HVAC[hvac_mode]})
+        if self._is_on == 0:
+            self.gateway.send(self.device, {'power': 1})
+            self._is_on = 1
+        self.gateway.send(self.device, {'mode': YUBA_STATE_HVAC[hvac_mode]})
 
     def set_swing_mode(self, swing_mode: str) -> None:
         """Set new target swing operation."""
@@ -238,7 +256,7 @@ class AqaraClimateYuba(AqaraGenericClimate, ClimateEntity):
         value = 1
         if swing_mode == SWING_ON:
             value = 0
-        self.gateway.send(self.device, {self._attr: value})
+        self.gateway.send(self.device, {'swing_mode': value})
 
     def update(self, data: dict = None):
         # pylint: disable=broad-except
@@ -246,27 +264,23 @@ class AqaraClimateYuba(AqaraGenericClimate, ClimateEntity):
         try:
             if 'power' in data:  # 0 - off, 1 - on
                 self._is_on = data['power']
-
-                if self._is_on:
-                    if 'mode' in data:
-                        self._hvac_mode = HVAC_MODES[data['mode']]
-                    if 'fan_mode' in data:
-                        self._fan_mode = FAN_MODES[data['fan_mode']]
-                    if 'swing_mode' in data:
-                        self._swing_mode = SWING_OFF if data['swing_mode'] == 1 else SWING_ON
-                    if 'target_temperature' in data:
-                        self._target_temp = data['target_temperature']
-
-                else:
-                    self._fan_mode = None
-                    self._hvac_mode = None
-                    self._target_temp = 0
-
+                if self._is_on == 0:
+                    self._hvac_mode = HVACMode.OFF
+            if 'mode' in data:
+                self._hvac_mode = list(YUBA_STATE_HVAC.keys())[
+                    list(YUBA_STATE_HVAC.values()).index(data['mode'])]
+            if 'fan_mode' in data:
+                self._fan_mode = list(YUBA_STATE_FAN.keys())[
+                    list(YUBA_STATE_FAN.values()).index(data['fan_mode'])]
             if 'current_temperature' in data:
-                self._current_temp = data['current_temperature']
-
+                self._current_temp = data['current_temperature'] / 100
+            if 'target_temperature' in data:
+                self._target_temp = data['target_temperature'] / 100
+            if 'swing_mode' in data:
+                self._swing_mode = SWING_OFF if data['swing_mode'] == 1 else SWING_ON
+            self._state = self._is_on
 
         except Exception:
-            _LOGGER.exception("Can't read climate data: %s", data)
+            _LOGGER.exception(f"Can't read climate data: {data}")
 
         self.schedule_update_ha_state()
