@@ -253,7 +253,7 @@ class Gateway:
 
     def _get_devices(self, shell):
         """Load devices info for Coordinator, Zigbee and Mesh."""
-        devices = {}
+        devices = []
 
         try:
             # 1. Read coordinator info
