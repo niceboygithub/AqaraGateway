@@ -44,7 +44,7 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry: ConfigEntry):
         """ get option flow """
-        return OptionsFlowHandler(config_entry)
+        return OptionsFlowHandler()
 
     async def async_step_user(
         self,
@@ -250,10 +250,6 @@ class OptionsFlowHandler(OptionsFlow):
     _password = None
     _token = None
     _model = None
-
-    def __init__(self, config_entry):
-        """Initialize options flow."""
-        self.config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
         """Manage options."""
