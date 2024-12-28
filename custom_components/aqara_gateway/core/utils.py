@@ -339,7 +339,6 @@ DEVICES = [{
     'lumi.light.acn025': ["Aqara", "Spotlight T2 (36 degree)", "LTSZNSD03LM"],
     'lumi.light.acn024': ["Aqara", "Spotlight T2 (24 degree)", "LTSZNSD02LM"],
     'lumi.light.acn023': ["Aqara", "Spotlight T2 (15 degree)", "LTSZNSD01LM"],
-    'lumi.light.acn132': ["Aqara", "Colorful Light Strip T3", "LGYCDD01LM"],
     'lumi.light.acn131': ["Aqara", "Downlight T3", "LGYCDD02LM"],
     'lumi.light.acn130': ["Aqara", "Spotlight T3 (36 degree)", "LGYCDD03LM"],
     'lumi.light.acn129': ["Aqara", "Spotlight T3 (24 degree)", "LGYCDD04LM"],
@@ -368,6 +367,7 @@ DEVICES = [{
     'lumi.dimmer.acn003': ["Aqara", "RGBW LED Dimmer T1 (60W)", "AL010CNW01"],
     'lumi.dimmer.acn002': ["Aqara", "RGBW LED Dimmer T2 (24W)", ""],
     'lumi.dimmer.acn001': ["Aqara", "RGBW LED Dimmer T2", ""],
+    'lumi.light.acn132': ["Aqara", "LED Strip T1", "LGYCDD01LM"],
     'params': [
         ['1.10.85', None, 'present_mode', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
