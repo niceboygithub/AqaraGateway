@@ -145,6 +145,7 @@ DOMAINS = [
     'climate',
     'cover',
     'light',
+    'number',
     'remote',
     'select',
     'sensor',
