@@ -1,4 +1,9 @@
-from homeassistant.components.number import RestoreNumber, NumberEntityDescription
+from homeassistant.components.number import (
+    NumberDeviceClass,
+    RestoreNumber,
+    NumberEntityDescription,
+)
+from homeassistant.const import EntityCategory, UnitOfTime
 
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
@@ -20,7 +25,17 @@ async def async_unload_entry(hass, entry):
     return True
 
 
-ENTITY_DESCRIPTIONS: dict[str, NumberEntityDescription] = {}
+ENTITY_DESCRIPTIONS: dict[str, NumberEntityDescription] = {
+    "drying_time": NumberEntityDescription(
+        key="drying_time",
+        device_class=NumberDeviceClass.DURATION,
+        entity_category=EntityCategory.CONFIG,
+        native_max_value=480,
+        native_min_value=30,
+        native_step=1,
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+    )
+}
 
 
 class GatewayNumber(GatewayGenericDevice, RestoreNumber):
