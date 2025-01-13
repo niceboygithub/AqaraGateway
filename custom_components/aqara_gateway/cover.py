@@ -2,8 +2,9 @@
 from typing import Any
 
 from homeassistant.components.cover import (
-    ATTR_POSITION,
     ATTR_CURRENT_POSITION,
+    ATTR_CURRENT_TILT_POSITION,
+    ATTR_POSITION,
     ATTR_TILT_POSITION,
     CoverEntity,
     CoverEntityFeature,
@@ -14,6 +15,7 @@ from homeassistant.const import (
     STATE_OPENING,
     STATE_UNKNOWN
 )
+from homeassistant.helpers.restore_state import RestoreEntity
 
 from . import GatewayGenericDevice
 from .core.gateway import Gateway
@@ -70,7 +72,7 @@ async def async_unload_entry(hass, entry):
     return True
 
 
-class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
+class XiaomiGenericCover(GatewayGenericDevice, CoverEntity, RestoreEntity):
     """Representation of a XiaomiGenericCover."""
 
     def __init__(self, gateway, device, atrr):
@@ -87,6 +89,13 @@ class XiaomiGenericCover(GatewayGenericDevice, CoverEntity):
         if device['model'] in DEVICES_WITH_BATTERY:
             self._battery = None
         super().__init__(gateway, device, atrr)
+
+    async def async_added_to_hass(self):
+        """Run when entity about to be added to hass."""
+        if (last_state := await self.async_get_last_state()) is not None:
+            self._pos = last_state.attributes.get(ATTR_CURRENT_POSITION)
+            self._attrs[ATTR_CURRENT_POSITION] = self._pos
+        await super().async_added_to_hass()
 
     @property
     def current_cover_position(self):
@@ -240,6 +249,13 @@ class AqaraVerticalBlindsController(XiaomiGenericCover):
     )
 
     _tilt_angle: int | None = None  # -90~90
+
+    async def async_added_to_hass(self):
+        """Run when entity about to be added to hass."""
+        if (last_state := await self.async_get_last_state()) is not None:
+            if (tilt_position := last_state.attributes.get(ATTR_CURRENT_TILT_POSITION)) is not None:  # 0~100
+                self._tilt_angle = 90 - (tilt_position / 100 * 90)
+        await super().async_added_to_hass()
 
     def update(self, data: dict = None):
         """ update state """
