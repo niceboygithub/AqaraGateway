@@ -969,8 +969,11 @@ DEVICES = [{
 }, {
     'aqara.tow_w.acn001': ["Aqara", "Towel Warmer H1", "ZNMJJ02LM"],
     'params': [
-        ['0.1.85', 'temperature', 'temperature', 'sensor'],
-        ['4.21.85', 'switch', 'switch', 'switch'],
+        ['0.1.85', None, 'current_temperature', None],
+        ['4.21.85', None, 'power', None],
+        ['14.92.85', None, 'target_temperature', None],
+        ['14.93.85', None, 'drying_time', 'number'],  # 烘干时长 min
+        [None, None, 'towel_warmer', 'climate'],
     ]
 #}, {
 #    # cube with rotation

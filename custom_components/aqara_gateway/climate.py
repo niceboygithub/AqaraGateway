@@ -1,14 +1,17 @@
 """Support for Xiaomi Aqara Climate."""
 import logging
+from typing import Any
 
 from homeassistant.const import ATTR_TEMPERATURE, PRECISION_WHOLE, UnitOfTemperature
 from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate.const import (
+    HVACAction,
     HVACMode,
     ClimateEntityFeature,
     SWING_OFF,
     SWING_ON
 )
+from homeassistant.helpers.restore_state import RestoreEntity, RestoredExtraData
 
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
@@ -30,6 +33,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         if attr == 'yuba':
             async_add_entities([
                 AqaraClimateYuba(gateway, device, attr)])
+        elif attr == 'towel_warmer':
+            async_add_entities([AqaraTowelWarmer(gateway, device, attr)])
         else:
             async_add_entities([
                 AqaraGenericClimate(gateway, device, attr)
@@ -284,3 +289,67 @@ class AqaraClimateYuba(AqaraGenericClimate, ClimateEntity):
             _LOGGER.exception(f"Can't read climate data: {data}")
 
         self.schedule_update_ha_state()
+
+
+class AqaraTowelWarmer(GatewayGenericDevice, ClimateEntity, RestoreEntity):
+    _attr_hvac_modes: list[HVACMode] = [HVACMode.OFF, HVACMode.HEAT]
+    _attr_max_temp: float = 65
+    _attr_min_temp: float = 45
+    _attr_precision: float = PRECISION_WHOLE
+    _attr_supported_features: ClimateEntityFeature = ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.TURN_OFF | ClimateEntityFeature.TURN_ON
+    _attr_target_temperature_step: float = 1
+    _attr_temperature_unit: str = UnitOfTemperature.CELSIUS
+
+    _enable_turn_on_off_backwards_compatibility = False
+
+    def __init__(self, gateway: Gateway, device: dict, attr: str):
+        self._attr = attr
+        self._attr_hvac_mode: HVACMode | None = None
+        super().__init__(gateway, device, attr)
+
+    async def async_added_to_hass(self):
+        """Run when entity about to be added to hass."""
+        if last_state := await self.async_get_last_state():
+            if last_state.state in self.hvac_modes:
+                self._attr_hvac_mode = HVACMode(last_state.state)
+                self._attr_hvac_action = HVACAction.IDLE if self.hvac_mode == HVACMode.OFF else HVACAction.HEATING
+        if last_extra_data := await self.async_get_last_extra_data():
+            data = last_extra_data.as_dict()
+            if 'current_temperature' in data:
+                self._attr_current_temperature = data['current_temperature']
+            if 'target_temperature' in data:
+                self._attr_target_temperature = data['target_temperature']
+        await super().async_added_to_hass()
+
+    async def async_set_temperature(self, **kwargs: Any) -> None:
+        """Set new target temperature."""
+        if ATTR_TEMPERATURE not in kwargs:
+            return
+        target_temperature = kwargs[ATTR_TEMPERATURE]
+        self.gateway.send(self.device, {'target_temperature': target_temperature})
+
+    async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
+        """Set new target hvac mode."""
+        self.gateway.send(self.device, {'power': 1 if hvac_mode == HVACMode.HEAT else 0})
+
+    def update(self, data: dict):
+        if 'current_temperature' in data:
+            self._attr_current_temperature = data['current_temperature']
+        if 'target_temperature' in data:
+            self._attr_target_temperature = data['target_temperature']
+        if 'power' in data:
+            if data['power'] == 1:
+                self._attr_hvac_mode = HVACMode.HEAT
+                self._attr_hvac_action = HVACAction.HEATING
+            else:
+                self._attr_hvac_mode = HVACMode.OFF
+                self._attr_hvac_action = HVACAction.IDLE
+        self.schedule_update_ha_state()
+
+    @property
+    def extra_restore_state_data(self) -> RestoredExtraData | None:
+        """Return entity specific state data to be restored."""
+        return RestoredExtraData({
+            'current_temperature': self._attr_current_temperature,
+            'target_temperature': self._attr_target_temperature,
+        })
