@@ -151,6 +151,7 @@ class Gateway:
             self.hass.data[DOMAIN]["telnet"] = []
         if "mqtt" not in self.hass.data[DOMAIN]:
             self.hass.data[DOMAIN]["mqtt"] = []
+
         while not self.enabled and not self.available:
             if not self._check_port(23):
                 if self.host in self.hass.data[DOMAIN]["telnet"]:
@@ -162,7 +163,8 @@ class Gateway:
             telnetshell = True
             devices = self._prepare_gateway(get_devices=True)
             if isinstance(devices, list):
-                self._gw_topic = "gw/{}/".format(devices[0]['mac'][2:].upper())
+                if len(devices) >= 1:
+                    self._gw_topic = "gw/{}/".format(devices[0]['mac'][2:].upper())
                 await self.async_setup_devices(devices)
                 break
 
@@ -209,6 +211,11 @@ class Gateway:
         """
         try:
             device_name = Utils.get_device_name(self._model).lower()
+            if len(device_name) <= 1:
+                shell = TelnetShell(self.host,
+                                        self.options.get(CONF_PASSWORD, ''))
+                device_name = shell.get_model()
+                shell.close()
             if (("g2h pro" in device_name) or ("g3" in device_name)):
                 shell = TelnetShellG3(self.host,
                                             self.options.get(CONF_PASSWORD, ''))
@@ -225,9 +232,12 @@ class Gateway:
             else:
                 shell = TelnetShell(self.host,
                                         self.options.get(CONF_PASSWORD, ''))
+
             shell.login()
+
             processes = shell.get_running_ps("mosquitto")
             public_mosquitto = shell.check_public_mosquitto()
+
             if not public_mosquitto and "/data/bin/mosquitto" not in processes:
                 self.debug("mosquitto is not running as public!")
                 shell.run_public_mosquitto(self._model)

@@ -183,6 +183,29 @@ class TelnetShell(Telnet):
             return self.read_file(filename).rstrip().encode().hex()
         return None
 
+    def get_model(self):
+        try:
+            self.write(b"\n")
+            suffix = ":"
+            raw = self.read_until(suffix.encode(), timeout=15)
+            _LOGGER.error(f"return {raw.decode()}")
+        except Exception:
+            raw = b''
+        model = raw.decode()
+        models = {
+            "G2HPro": "g2h pro",
+            "G3": "g3",
+            "G2H": "g2h",
+            "M2": "m2 2022",
+            "M3": "m3",
+            "M1S": "m1s gen2",
+            "V1": "v1"
+        }
+        if len(model) >= 1:
+            for key, value in models.items():
+                if key in model:
+                    return value
+        return "m2 2022"
 
 class TelnetShellG2H(TelnetShell):
 
