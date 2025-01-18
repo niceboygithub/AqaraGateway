@@ -150,10 +150,22 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             return await self._async_add(user_input)
 
+        debug = []
+        ignore_offline = True
+
         return self.async_show_form(
             step_id="discovery_confirm",
-            description_placeholders={"name": self._name,
-                                        "device_info": self._device_info}
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_HOST, default=self._host): str,
+                    vol.Required(CONF_MODEL, default=self._model): str,
+                    vol.Optional(CONF_PASSWORD, default=self._password): str
+                }
+            ),
+            description_placeholders={
+                "name": self._name,
+                "device_info": self._device_info
+            }
         )
 
     async def async_step_zeroconf(self, discovery_info: DiscoveryInfoType):
