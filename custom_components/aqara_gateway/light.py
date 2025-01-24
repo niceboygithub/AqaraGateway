@@ -3,9 +3,14 @@ import binascii
 import struct
 
 import homeassistant.util.color as color_util
-from homeassistant.components.light import ColorMode, LightEntity, LightEntityFeature, \
-    ATTR_BRIGHTNESS, ATTR_COLOR_TEMP, ATTR_RGB_COLOR, \
-    SUPPORT_COLOR, ATTR_HS_COLOR
+try:
+    from homeassistant.components.light import ColorMode, LightEntity, \
+        LightEntityFeature, ATTR_BRIGHTNESS, \
+        ATTR_COLOR_TEMP_KELVIN, ATTR_RGB_COLOR, ATTR_HS_COLOR
+except:
+    from homeassistant.components.light import ColorMode, LightEntity, \
+        LightEntityFeature, ATTR_BRIGHTNESS, ATTR_COLOR_TEMP, \
+        ATTR_RGB_COLOR,  ATTR_HS_COLOR
 
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
