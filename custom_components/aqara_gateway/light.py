@@ -1,6 +1,7 @@
 """Support for Xiaomi/Aqara Light."""
 import binascii
 import struct
+import logging
 
 import homeassistant.util.color as color_util
 try:
@@ -26,6 +27,7 @@ from .core.const import (
     LQI
 )
 
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Perform the setup for Xiaomi/Aqara devices."""
@@ -123,7 +125,9 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             if ATTR_COLOR_TEMP in data:
                 self._attr_color_temp = data[ATTR_COLOR_TEMP]
             if ATTR_RGB_COLOR in data:
-                self._attr_rgb_color = data[ATTR_RGB_COLOR]
+                x_val = float(data[ATTR_RGB_COLOR] / (2**16))
+                y_val = float(data[ATTR_RGB_COLOR] - x_val)
+                self._attr_rgb_color = color_util.color_xy_to_RGB(x_val, y_val)
             if ATTR_HS_COLOR in data:
                 if self.device['type'] == 'zigbee':
                     if isinstance(data[ATTR_HS_COLOR], int):
@@ -160,13 +164,11 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
 
         if ATTR_RGB_COLOR in kwargs:
             self._attr_rgb_color = kwargs[ATTR_RGB_COLOR]
-            payload[ATTR_RGB_COLOR] = self._attr_rgb_color
 
         if ATTR_HS_COLOR in kwargs:
             self._attr_hs_color = kwargs[ATTR_HS_COLOR]
 
-        if (ATTR_HS_COLOR in kwargs or ATTR_BRIGHTNESS in kwargs or
-                self._attr == ATTR_RGB_COLOR):
+        if (ATTR_HS_COLOR in kwargs or ATTR_BRIGHTNESS in kwargs):
             if self._attr_hs_color:
                 payload[ATTR_HS_COLOR] = self._attr_color_temp
                 rgb = color_util.color_hs_to_RGB(*self._attr_hs_color)
@@ -179,13 +181,19 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                         payload[ATTR_HS_COLOR] = rgbhex
                     else:
                         payload[ATTR_HS_COLOR] = rgbhex
+        if ATTR_RGB_COLOR in kwargs and self._attr_rgb_color:
+            x_val, y_val = color_util.color_RGB_to_xy(*kwargs[ATTR_RGB_COLOR])
+            payload[ATTR_RGB_COLOR] = int(x_val * 65535) * (2 ** 16) + int(y_val * 65535)
 
-        if not payload:
+        if len(payload) >= 1:
             payload[self._attr] = 1
 
-        if self.gateway.send(self.device, payload):
-            self._state = True
-            self.schedule_update_ha_state()
+        try:
+            if self.gateway.send(self.device, payload):
+                self._state = True
+                self.schedule_update_ha_state()
+        except:
+            _LOGGER.warn(f"send payload {payload} to gateway failed")
 
     def turn_off(self, **kwargs):
         """Turn the light off."""

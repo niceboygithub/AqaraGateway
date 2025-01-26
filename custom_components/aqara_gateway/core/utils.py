@@ -314,7 +314,7 @@ DEVICES = [{
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
         ['14.2.85', 'colour_temperature', 'color_temp', None],
-        ['14.8.85', 'rgb_color', 'hs_color', None],
+        ['14.8.85', 'rgb_color', 'rgb_color', None],
         [None, 'hs_color', 'hs_color', None],
     ]
 }, {
