@@ -3,7 +3,7 @@ import logging
 from typing import Any
 
 from homeassistant.const import ATTR_TEMPERATURE, PRECISION_WHOLE, UnitOfTemperature
-from homeassistant.components.climate import ClimateEntity
+from homeassistant.components.climate import ATTR_CURRENT_TEMPERATURE, ATTR_HVAC_ACTION, ClimateEntity
 from homeassistant.components.climate.const import (
     HVACAction,
     HVACMode,
@@ -11,7 +11,7 @@ from homeassistant.components.climate.const import (
     SWING_OFF,
     SWING_ON
 )
-from homeassistant.helpers.restore_state import RestoreEntity, RestoredExtraData
+from homeassistant.helpers.restore_state import RestoreEntity
 
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
@@ -312,13 +312,11 @@ class AqaraTowelWarmer(GatewayGenericDevice, ClimateEntity, RestoreEntity):
         if last_state := await self.async_get_last_state():
             if last_state.state in self.hvac_modes:
                 self._attr_hvac_mode = HVACMode(last_state.state)
-                self._attr_hvac_action = HVACAction.IDLE if self.hvac_mode == HVACMode.OFF else HVACAction.HEATING
-        if last_extra_data := await self.async_get_last_extra_data():
-            data = last_extra_data.as_dict()
-            if 'current_temperature' in data:
-                self._attr_current_temperature = data['current_temperature']
-            if 'target_temperature' in data:
-                self._attr_target_temperature = data['target_temperature']
+            if ATTR_HVAC_ACTION in last_state.attributes:
+                self._attr_hvac_action = HVACAction(last_state.attributes[ATTR_HVAC_ACTION])
+            self._attr_current_temperature = last_state.attributes.get(ATTR_CURRENT_TEMPERATURE)
+            self._attr_target_temperature = last_state.attributes.get(ATTR_TEMPERATURE)
+
         await super().async_added_to_hass()
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
@@ -345,11 +343,3 @@ class AqaraTowelWarmer(GatewayGenericDevice, ClimateEntity, RestoreEntity):
                 self._attr_hvac_mode = HVACMode.OFF
                 self._attr_hvac_action = HVACAction.IDLE
         self.schedule_update_ha_state()
-
-    @property
-    def extra_restore_state_data(self) -> RestoredExtraData | None:
-        """Return entity specific state data to be restored."""
-        return RestoredExtraData({
-            'current_temperature': self._attr_current_temperature,
-            'target_temperature': self._attr_target_temperature,
-        })
