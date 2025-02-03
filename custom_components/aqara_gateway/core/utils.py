@@ -406,6 +406,7 @@ DEVICES = [{
     'lumi.sensor_86sw1': ["Aqara", "Single Wall Button", "WXKG03LM"],
     'lumi.remote.b186acn01': ["Aqara", "Single Wall Button", "WXKG03LM"],
     'lumi.remote.b186acn02': ["Aqara", "Single Wall Button D1", "WXKG06LM"],
+    'lumi.remote.b186acn03': ["Aqara", "Single Wall Button T1", "WXKG05LM"],
     'params': [
         ['13.1.85', None, 'button', None],
         [None, None, 'switch', 'binary_sensor'],
