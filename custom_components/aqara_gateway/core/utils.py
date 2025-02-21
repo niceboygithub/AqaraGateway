@@ -52,6 +52,10 @@ DEVICES = [{
     'lumi.gateway.agl004': ["Aqara", "Gateway M3", "HM-G01D"],
     'lumi.gateway.acn008': ["Aqara", "Gateway M1S Gen2", "ZHWG22LM"],
     'lumi.gateway.acn011': ["Aqara", "Outlet Hub V1", "AHWG11LM"],
+    'lumi.camera.acn008': ["Aqara", "Camera Hub G5 Pro (WiFi)", "ZNSXJ21LM"],
+    'lumi.camera.acn009': ["Aqara", "Camera Hub G5 Pro (PoE)", "ZNSXJ18LM"],
+    'lumi.camera.acn010': ["Aqara", "Camera Hub G5 Pro (PoE)", "CH-C03D/E"],
+    'lumi.camera.acn011': ["Aqara", "Camera Hub G5 Pro (WiFi)", "CH-C07D/E"],
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],
@@ -314,7 +318,7 @@ DEVICES = [{
         ['4.1.85', 'power_status', 'light', 'light'],
         ['14.1.85', 'light_level', 'brightness', None],
         ['14.2.85', 'colour_temperature', 'color_temp', None],
-        ['14.8.85', 'rgb_color', 'rgb_color', None],
+        ['14.8.85', 'rgb_color', 'hs_color', None],
         [None, 'hs_color', 'hs_color', None],
     ]
 }, {
