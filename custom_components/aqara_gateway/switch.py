@@ -1,28 +1,27 @@
 """Support for Aqara Switchs."""
 
 from homeassistant.components.switch import SwitchEntity
-from homeassistant.const import (
-    ATTR_VOLTAGE
-)
-from . import DOMAIN, GatewayGenericDevice, gateway_state_property
-from .core.gateway import Gateway
+from homeassistant.const import ATTR_VOLTAGE, STATE_OFF, STATE_ON
+from homeassistant.helpers.restore_state import RestoreEntity
+
+from . import DOMAIN, GatewayGenericDevice
 from .core.const import (
+    ATTR_CHIP_TEMPERATURE,
     ATTR_FW_VER,
     ATTR_IN_USE,
     ATTR_LOAD_POWER,
     ATTR_LQI,
     ATTR_POWER_CONSUMED,
-    ATTR_CHIP_TEMPERATURE,
     CHIP_TEMPERATURE,
     ENERGY_CONSUMED,
     FW_VER,
     IN_USE,
     LOAD_POWER,
-    LQI,
     LOAD_VOLTAGE,
+    LQI,
     SWITCH_ATTRIBUTES,
 )
-
+from .core.gateway import Gateway
 from .core.utils import Utils
 
 
@@ -43,18 +42,11 @@ async def async_unload_entry(hass, entry):
     return True
 
 
-class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
+class GatewaySwitch(GatewayGenericDevice, SwitchEntity, RestoreEntity):
     """Representation of a Xiaomi/Aqara Plug."""
-    # pylint: disable=unused-argument, too-many-instance-attributes
-    def __init__(
-        self,
-        gateway,
-        device,
-        attr,
-        feature
-    ):
+
+    def __init__(self, gateway: Gateway, device: dict, attr: str, feature):
         """Initialize the XiaomiPlug."""
-        self._state = False
         self._chip_temperature = None
         self._fw_ver = None
         self._in_use = None
@@ -66,12 +58,14 @@ class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
         self.feature = feature
         super().__init__(gateway, device, attr)
 
-    # https://github.com/PyCQA/pylint/issues/3150 for @gateway_state_property
-    # pylint: disable=invalid-overridden-method
-    @gateway_state_property
-    def is_on(self):
-        """ is switch on."""
-        return self._state
+    async def async_added_to_hass(self):
+        """Run when entity about to be added."""
+        if last_state := await self.async_get_last_state():
+            if last_state.state == STATE_ON:
+                self._attr_is_on = True
+            elif last_state.state == STATE_OFF:
+                self._attr_is_on = False
+        await super().async_added_to_hass()
 
     @property
     def icon(self):
@@ -94,7 +88,7 @@ class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
             self._attrs[ATTR_VOLTAGE] = self._voltage
         return self._attrs
 
-    def update(self, data: dict = None):
+    def update(self, data: dict):
         """update switch."""
         for key, value in data.items():
             if key == CHIP_TEMPERATURE:
@@ -117,9 +111,9 @@ class GatewaySwitch(GatewayGenericDevice, SwitchEntity):
                 self._attrs[key] = value
             if key == self._attr:
                 if self._model in ["aqara.feeder.acn001"] and self._attr == "feed_switch":
-                    self._state = False
+                    self._attr_is_on = False
                 else:
-                    self._state = bool(value)
+                    self._attr_is_on = bool(value)
         self.async_write_ha_state()
 
     def turn_on(self, **kwargs):
