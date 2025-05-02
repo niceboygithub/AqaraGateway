@@ -153,6 +153,7 @@ DOMAINS = [
     'binary_sensor',
     'climate',
     'cover',
+    'fan',
     'light',
     'number',
     'remote',
@@ -230,6 +231,13 @@ AC_STATE_FAN = {
     FAN_MEDIUM: 0x10,
     FAN_HIGH: 0x20,
     FAN_AUTO: 0x30
+}
+
+AC_STATE_FAN2 = {
+    FAN_LOW: 1,
+    FAN_MEDIUM: 2,
+    FAN_HIGH: 3,
+    FAN_AUTO: 0
 }
 
 YUBA_STATE_HVAC = {

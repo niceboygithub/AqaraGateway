@@ -18,6 +18,7 @@ from .core.gateway import Gateway
 from .core.const import (
     HVAC_MODES,
     AC_STATE_FAN,
+    AC_STATE_FAN2,
     AC_STATE_HVAC,
     FAN_MODES,
     YUBA_STATE_HVAC,
@@ -54,7 +55,7 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
     # pylint: disable=too-many-instance-attributes
     """Initialize the AqaraGenericClimate."""
 
-    def __init__(self, device, name, attr):
+    def __init__(self, gateway, device, attr):
         """Initialize the AqaraGenericClimate."""
         self._attr = attr
         self._current_hvac = None
@@ -65,7 +66,8 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
         self._is_on = None
         self._state = None
         self._target_temp = 0
-        super().__init__(device, name, attr)
+        self._model = device['model']
+        super().__init__(gateway, device, attr)
 
     @property
     def precision(self) -> float:
@@ -126,16 +128,22 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
                         self._hvac_mode = HVAC_MODES[data['mode']]
                     if 'fan_mode' in data:
                         self._fan_mode = FAN_MODES[data['fan_mode']]
-                    if 'target_temperature' in data:  # 255 - off
-                        self._target_temp = data['target_temperature']
+                    if 'current_temperature' in data:
+                        self._current_temp = data['current_temperature'] / 100
+                    if 'target_temperature' in data:
+                        self._target_temp = data['target_temperature'] / 100
 
                 else:
                     self._fan_mode = None
                     self._hvac_mode = None
                     self._target_temp = 0
+                    if 'fan_mode' in data:
+                        self._fan_mode = FAN_MODES[data['fan_mode']]
 
             if 'current_temperature' in data:
-                self._current_temp = data['current_temperature']
+                self._current_temp = data['current_temperature'] / 100
+            if 'target_temperature' in data:
+                self._target_temp = data['target_temperature'] / 100
 
             if self._attr in data:
                 self._state = bytearray(
@@ -148,10 +156,16 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
                         k for k, v in AC_STATE_HVAC.items()
                         if v == self._state[0]
                     )
-                    self._fan_mode = next(
-                        k for k, v in AC_STATE_FAN.items()
-                        if v == self._state[1]
-                    )
+                    if 'aqara.airrtc' in self._model:
+                        self._fan_mode = next(
+                            k for k, v in AC_STATE_FAN2.items()
+                            if v == self._state[1]
+                        )
+                    else:
+                        self._fan_mode = next(
+                            k for k, v in AC_STATE_FAN.items()
+                            if v == self._state[1]
+                        )
                     self._target_temp = self._state[2]
 
         except Exception:

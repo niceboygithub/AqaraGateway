@@ -580,6 +580,7 @@ DEVICES = [{
     'lumi.curtain.hagl07': ["Aqara", "Curtain C2", "ZNCLDJ14LM"],   # @darkbao
     'lumi.curtain.vagl02': ["Aqara", "Curtain T1", "ZNGZDJ15LM"],
     'lumi.curtain.acn04': ["Aqara", "Curtain C3", "ZNCLDJ01LM"],
+    'lumi.curtain.acn015': ["Aqara", "Curtain T2", "ZNGZDJ16LM"],
     'params': [
         ['1.1.85', 'curtain_level', 'position', None],
         ['14.2.85', None, 'motor', 'cover'],
@@ -1106,6 +1107,7 @@ DEVICES_AIOT = [{
 }, {
     # with neutral wire
     'lumi.switch.acn059': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Four-button Version)", "ZNQBKG45LM"],
+    'lumi.switch.agl006': ["Aqara", "Smart Wall Switch H2 (Four-button Version)", ""],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -1461,6 +1463,19 @@ DEVICES_AIOT = [{
         [None, 'yuba', 'yuba', 'climate'],
     ]
 }, {
+    'aqara.airrtc.acn02': ["Aqara", "Air Conditioning T1", ""],
+    'params': [
+        ['0.1.85', None, 'current_temperature', None],
+        ['1.1.85', None, 'target_temperature', None],
+        ['3.1.85', None, 'online', None],
+        ['4.1.85', 'power_status', 'power', None],
+        ['13.2.85', None, 'address', None],
+        ['14.1.85', None, 'fan_mode', None],
+#        ['14.39.85', None, 'fan_mode', None],
+        ['14.140.85', None, 'mode', None],
+        [None, 'ac_state', 'climate', 'climate'],
+    ]
+}, {
     'aqara.toilet.acn002': ["Aqara", "Smart Toilet T1", "ZNTL01LM"],
     'params': [
         ['4.1.85', 'ctrl_ch0_status', 'power', 'switch'],
@@ -1480,6 +1495,13 @@ DEVICES_AIOT = [{
         ['4.20.85', 'set_lock', 'child lock', 'switch'],
         ['4.23.85', 'set_mode', 'massage', 'switch'],
         ['4.31.85', 'bool_switch_first', 'back and leg', 'switch'],
+    ]
+}, {
+    'aqara.vent.eicn01': ["Aqara", "Ventilation Mechanical Controllor", ""],
+    'params': [
+        ['4.1.85', 'power_status', 'power', None],
+        ['14.39.85', None, 'fan_mode', None],
+        [None, 'fan', 'fan', 'fan'],
     ]
 }]
 
