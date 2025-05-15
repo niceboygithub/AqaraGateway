@@ -1338,7 +1338,7 @@ DEVICES_AIOT = [{
 }, {
     # motion sensor with illuminance
     'lumi.motion.agl02': ["Aqara", "Motion Sensor T1", "RTCGQ12LM"],  # @miniknife88
-    'lumi.motion.acn001': ["Aqara", "Motion Sensor E1", "RTCGO15LM"],
+    'lumi.motion.acn001': ["Aqara", "Motion Sensor E1", "RTCGQ15LM"],
     'params': [
         ['0.3.85', 'lux', 'illuminance_lux', None],
         ['0.4.85', 'illumination', 'illuminance', 'sensor'],
