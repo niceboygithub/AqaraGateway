@@ -45,8 +45,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Support Aqara Gateway."""
 
     # migrate data (also after first setup) to options
-    if entry.data:
-        hass.config_entries.async_update_entry(entry, data={},
+    if (len(entry.options) == 0):
+        if entry.data:
+            hass.config_entries.async_update_entry(entry, data={},
                                                 options=entry.data)
 
     if "model" not in entry.options or "password" not in entry.options:
