@@ -192,7 +192,7 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             x_val, y_val = color_util.color_RGB_to_xy(*kwargs[ATTR_RGB_COLOR])
             payload[ATTR_RGB_COLOR] = int(x_val * 65535) * (2 ** 16) + int(y_val * 65535)
 
-        if len(payload) >= 1:
+        if not payload:
             payload[self._attr] = 1
 
         try:
