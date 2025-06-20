@@ -1069,6 +1069,7 @@ DEVICES_AIOT = [{
     # with neutral wire
     'lumi.switch.acn048': ["Aqara", "Single Wall Switch Z1", "ZNQBKG38LM"], # @justbin95
     'lumi.switch.acn056': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Single-button Version)", "ZNQBKG42LM"],
+    'lumi.switch.agl004': ["Aqara", "Single Wall Switch H2 US", "WS-K02E"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
@@ -1080,6 +1081,7 @@ DEVICES_AIOT = [{
     # with neutral wire
     'lumi.switch.acn047': ["Aqara", "Double Wall Switch Z1", "ZNQBKG37LM"], # @justbin95
     'lumi.switch.acn057': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Double-button Version)", "ZNQBKG43LM"],
+    'lumi.switch.agl005': ["Aqara", "Double Wall Switch H2 US", "WS-K03E"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
         ['0.13.85', None, 'consumption', 'sensor'],
