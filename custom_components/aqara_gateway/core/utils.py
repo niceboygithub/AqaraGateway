@@ -344,6 +344,7 @@ DEVICES = [{
     'lumi.light.acn024': ["Aqara", "Spotlight T2 (24 degree)", "LTSZNSD02LM"],
     'lumi.light.acn023': ["Aqara", "Spotlight T2 (15 degree)", "LTSZNSD01LM"],
     'lumi.light.acn131': ["Aqara", "Downlight T3", "LGYCDD02LM"],
+    'lumi.light.acn132': ["Aqara", "Colorful Light Strip T3", "LGYCDD01LM"],
     'lumi.light.acn130': ["Aqara", "Spotlight T3 (36 degree)", "LGYCDD03LM"],
     'lumi.light.acn129': ["Aqara", "Spotlight T3 (24 degree)", "LGYCDD04LM"],
     'lumi.light.acn128': ["Aqara", "Spotlight T3", "LGYCDD05LM"],
@@ -1077,6 +1078,16 @@ DEVICES_AIOT = [{
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
+    'lumi.switch.agl004': ["Aqara", "Single Wall Switch H2 US", "WS-K02E"],
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.4.85', 'channel_0_lock', 'channel 1 Lock', 'switch'],
+        ['13.21.85', None, 'button_1', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
     # with neutral wire
     'lumi.switch.acn047': ["Aqara", "Double Wall Switch Z1", "ZNQBKG37LM"], # @justbin95
     'lumi.switch.acn057': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Double-button Version)", "ZNQBKG43LM"],
@@ -1085,6 +1096,19 @@ DEVICES_AIOT = [{
         ['0.13.85', None, 'consumption', 'sensor'],
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['13.21.85', None, 'button_1', None],
+        ['13.22.85', None, 'button_2', None],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
+    'lumi.switch.agl005': ["Aqara", "Double Wall Switch H2 US", "WS-K03E"],
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.4.85', 'channel_0_lock', 'channel 1 Lock', 'switch'],
+        ['4.5.85', 'channel_1_lock', 'channel 2 Lock', 'switch'],
         ['13.21.85', None, 'button_1', None],
         ['13.22.85', None, 'button_2', None],
         [None, None, 'switch', 'binary_sensor'],
