@@ -199,7 +199,8 @@ class TelnetShell(Telnet):
             "M2": "m2 2022",
             "M3": "m3",
             "M1S": "m1s gen2",
-            "V1": "v1"
+            "V1": "v1",
+            "M100": "m100"
         }
         if len(model) >= 1:
             for key, value in models.items():

@@ -56,6 +56,7 @@ DEVICES = [{
     'lumi.camera.acn009': ["Aqara", "Camera Hub G5 Pro (PoE)", "ZNSXJ18LM"],
     'lumi.camera.acn010': ["Aqara", "Camera Hub G5 Pro (PoE)", "CH-C03D/E"],
     'lumi.camera.acn011': ["Aqara", "Camera Hub G5 Pro (WiFi)", "CH-C07D/E"],
+    'lumi.gateway.agl010': ["Aqara", "Hub M100", "ZHWG25LM"],
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],

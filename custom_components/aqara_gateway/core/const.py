@@ -58,7 +58,8 @@ OPT_DEVICE_NAME = {
     'm3': "Aqara Gateway M3",
     'm1s gen2': "Aqara Gateway M1S Gen2",
     'v1': "Aqara Outlet Hub V1",
-    'g5 pro': "Aqara Camera Hub G5 Pro"
+    'g5 pro': "Aqara Camera Hub G5 Pro",
+    'm100': "Aqara Hub M100"
 }
 
 SIGMASTAR_MODELS = [
@@ -78,7 +79,8 @@ SIGMASTAR_MODELS = [
     'lumi.camera.acn008',
     'lumi.camera.acn009',
     'lumi.camera.acn010',
-    'lumi.camera.acn011'
+    'lumi.camera.acn011',
+    'lumi.gateway.agl010'
 ]
 
 REALTEK_MODELS = [
@@ -115,7 +117,8 @@ AIOT_MODELS = [
     'lumi.camera.acn008',
     'lumi.camera.acn009',
     'lumi.camera.acn010',
-    'lumi.camera.acn011'
+    'lumi.camera.acn011',
+    'lumi.gateway.agl010'
 ]
 
 DATA_KEY = "aqara_gateway"
