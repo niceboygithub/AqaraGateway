@@ -1018,7 +1018,6 @@ DEVICES_AIOT = [{
     'lumi.switch.b2nacn01': ["Aqara", "Double Wall Switch T1", "QBKG20LM"],
     'lumi.switch.acn045': ["Aqara", "Double Wall Switch J1", ""],
     'lumi.switch.acn049': ["Aqara", "Two-way Control module T2", "ZNQBKG39LM"],
- #   'lumi.switch.acn047': ["Aqara", "Two-way Control module T2", "LLKZMK12LM"],
     'params': [
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
@@ -1090,7 +1089,8 @@ DEVICES_AIOT = [{
     ]
 }, {
     # with neutral wire
-    'lumi.switch.acn047': ["Aqara", "Double Wall Switch Z1", "ZNQBKG37LM"], # @justbin95
+#    'lumi.switch.acn047': ["Aqara", "Double Wall Switch Z1", "ZNQBKG37LM"], # @justbin95
+    'lumi.switch.acn047': ["Aqara", "Two-way Control module T2", "LLKZMK12LM"],
     'lumi.switch.acn057': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Double-button Version)", "ZNQBKG43LM"],
     'params': [
         ['0.12.85', 'load_power', 'power', 'sensor'],
