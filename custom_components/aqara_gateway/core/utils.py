@@ -51,6 +51,7 @@ DEVICES = [{
     'lumi.gateway.acn012': ["Aqara", "Gateway M3", "ZHWG24LM"],
     'lumi.gateway.agl004': ["Aqara", "Gateway M3", "HM-G01D"],
     'lumi.gateway.acn008': ["Aqara", "Gateway M1S Gen2", "ZHWG22LM"],
+    'lumi.gateway.agl002': ["Aqara", "Gateway M1S Gen2", "HM1S-G02"],
     'lumi.gateway.acn011': ["Aqara", "Outlet Hub V1", "AHWG11LM"],
     'lumi.camera.acn008': ["Aqara", "Camera Hub G5 Pro (WiFi)", "ZNSXJ21LM"],
     'lumi.camera.acn009': ["Aqara", "Camera Hub G5 Pro (PoE)", "ZNSXJ18LM"],

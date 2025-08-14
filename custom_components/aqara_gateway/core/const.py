@@ -72,6 +72,7 @@ SIGMASTAR_MODELS = [
     'lumi.gateway.acn004',
     'lumi.gateway.aqcn03',
     'lumi.gateway.acn008',
+    'lumi.gateway.agl002',
     'lumi.gateway.iragl8',
     'lumi.gateway.acn012',
     'lumi.gateway.agl004',
