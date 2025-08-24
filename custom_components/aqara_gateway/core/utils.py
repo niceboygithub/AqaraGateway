@@ -403,7 +403,6 @@ DEVICES = [{
     'params': [
         ['1.10.85', None, 'present_mode', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
-        ['14.1.85', 'light_level', 'brightness', None],
         ['4.1.85', 'power_status', 'light', 'light'],
         ['1.7.85', 'light_level', 'brightness', None],
         ['1.9.85', 'colour_temperature', 'color_temp', None],
