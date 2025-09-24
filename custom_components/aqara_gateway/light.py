@@ -2,7 +2,7 @@
 import binascii
 import struct
 import logging
-
+import json
 import homeassistant.util.color as color_util
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
@@ -175,9 +175,10 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             self._attr_hs_color = kwargs[ATTR_HS_COLOR]
 
         if (ATTR_HS_COLOR in kwargs or ATTR_BRIGHTNESS in kwargs):
-            _LOGGER.warning('payload = ', payload)
+            _LOGGER.warning('payload = ', json.dumps(payload))
+
             if self._attr_hs_color:
-                _LOGGER.warning('self._attr_color_temp_kelvin = ', self._attr_color_temp_kelvin)
+                _LOGGER.warning('self._attr_color_temp_kelvin = ', json.dumps(self._attr_color_temp_kelvin))
                 # payload[ATTR_HS_COLOR] = color_util.color_temperature_kelvin_to_mired(self._attr_color_temp_kelvin)
                 rgb = color_util.color_hs_to_RGB(*self._attr_hs_color)
                 rgba = (self._attr_brightness,) + rgb
