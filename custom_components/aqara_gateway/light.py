@@ -159,7 +159,7 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
     def turn_on(self, **kwargs):
         """Turn the light on."""
         payload = {}
-        _LOGGER.warning('kwargs', json.dumps(kwargs))
+
         if ATTR_BRIGHTNESS in kwargs:
             self._attr_brightness = int(kwargs[ATTR_BRIGHTNESS] / 255.0 * 100.0)
             payload[ATTR_BRIGHTNESS] = self._attr_brightness
@@ -175,11 +175,8 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             self._attr_hs_color = kwargs[ATTR_HS_COLOR]
 
         if (ATTR_HS_COLOR in kwargs or ATTR_BRIGHTNESS in kwargs):
-            _LOGGER.warning('payload = ', json.dumps(payload))
-
             if self._attr_hs_color:
-                _LOGGER.warning('self._attr_color_temp_kelvin = ', json.dumps(self._attr_color_temp_kelvin))
-                # payload[ATTR_HS_COLOR] = color_util.color_temperature_kelvin_to_mired(self._attr_color_temp_kelvin)
+                payload[ATTR_HS_COLOR] = color_util.color_temperature_kelvin_to_mired(self._attr_color_temp_kelvin)
                 rgb = color_util.color_hs_to_RGB(*self._attr_hs_color)
                 rgba = (self._attr_brightness,) + rgb
                 if isinstance(self._attr_brightness, int):
@@ -196,13 +193,13 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
 
         if not payload:
             payload[self._attr] = 1
-
+        _LOGGER.warning('payload = ', json.dumps(payload))
         try:
             if self.gateway.send(self.device, payload):
                 self._state = True
                 self.schedule_update_ha_state()
         except:
-            _LOGGER.warn(f"send payload {payload} to gateway failed")
+            _LOGGER.warning(f"send payload {payload} to gateway failed")
 
     def turn_off(self, **kwargs):
         """Turn the light off."""
