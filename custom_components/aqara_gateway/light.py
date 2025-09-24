@@ -159,7 +159,7 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
     def turn_on(self, **kwargs):
         """Turn the light on."""
         payload = {}
-
+        _LOGGER.warning('kwargs', json.dumps(kwargs))
         if ATTR_BRIGHTNESS in kwargs:
             self._attr_brightness = int(kwargs[ATTR_BRIGHTNESS] / 255.0 * 100.0)
             payload[ATTR_BRIGHTNESS] = self._attr_brightness
