@@ -132,7 +132,7 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             if ATTR_COLOR_TEMP in data:
                 self._attr_color_temp_kelvin = color_util.color_temperature_mired_to_kelvin(data[ATTR_COLOR_TEMP])
             if ATTR_RGB_COLOR in data:
-                x_val, y_val = color_util.color_RGB_to_xy(data[ATTR_RGB_COLOR])
+                x_val, y_val = color_util.color_RGB_to_xy(*data[ATTR_RGB_COLOR])
                 self._attr_rgb_color = color_util.color_xy_to_RGB(x_val, y_val)
             if ATTR_HS_COLOR in data:
                 if self.device['type'] == 'zigbee':
