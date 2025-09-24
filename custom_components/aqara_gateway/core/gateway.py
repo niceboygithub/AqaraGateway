@@ -857,7 +857,10 @@ class Gateway:
                 payload = json.dumps(payload, separators=(',', ':')).encode()
                 _LOGGER.warning('payload gateway = ', payload)
                 msg = self._mqttc.publish('ioctl/recv', payload)
-                _LOGGER.warning('payload gateway msg = ', json.dumps(msg))
+                try:
+                    _LOGGER.warning('payload gateway msg = ', msg)
+                except Exception as e:
+                    _LOGGER.error('ERROR = ', e)
             return True
         except ConnectionError:
             return False
