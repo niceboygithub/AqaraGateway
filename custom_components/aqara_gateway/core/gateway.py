@@ -858,7 +858,7 @@ class Gateway:
                 _LOGGER.warning('payload gateway = ', payload)
                 msg = self._mqttc.publish('ioctl/recv', payload)
                 try:
-                    _LOGGER.warning('payload gateway msg = ', msg)
+                    _LOGGER.warning('payload gateway msg = ', msg.__str__())
                 except Exception as e:
                     _LOGGER.error('ERROR = ', e)
             return True
