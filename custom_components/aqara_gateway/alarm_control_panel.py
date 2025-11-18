@@ -9,7 +9,7 @@ from homeassistant.components.alarm_control_panel import (
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
 from .core.utils import Utils
-from .core.shell import TelnetShell, TelnetShellE1, TelnetShellM2POE
+from .core.shell import TelnetShell, TelnetShellE1, TelnetShellM2POE, TelnetShellG3
 
 ALARM_STATES = [AlarmControlPanelState.ARMED_HOME, AlarmControlPanelState.ARMED_AWAY,
                 AlarmControlPanelState.ARMED_NIGHT, AlarmControlPanelState.DISARMED]
@@ -49,8 +49,11 @@ class AqaraGatewayAlarm(GatewayGenericDevice, AlarmControlPanelEntity):
         if "e1" in device_name:
             self._shell = TelnetShellE1(gateway.host)
         elif (("m2 2022" in device_name) or ("m1s 2022" in device_name) or
-                    ("m3" in device_name) or ("m1s gen2" in device_name) or ("v1" in device_name)):
+                    ("m3" in device_name) or ("m1s gen2" in device_name) or
+                    ("v1" in device_name)):
             self._shell = TelnetShellM2POE(gateway.host)
+        elif (("m100" in device_name) or ("m200" in device_name)):
+            self._shell = TelnetShellG3(gateway.host)
         else:
             self._shell = TelnetShell(gateway.host)
         self._shell.login()

@@ -200,6 +200,7 @@ class TelnetShell(Telnet):
             "M3": "m3",
             "M1S": "m1s gen2",
             "V1": "v1",
+            "M200": "m200"
             "M100": "m100"
         }
         if len(model) >= 1:

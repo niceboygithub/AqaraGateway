@@ -14,7 +14,7 @@ from homeassistant.exceptions import PlatformNotReady
 from homeassistant.helpers.device_registry import DeviceRegistry
 from miio import Device, DeviceException
 
-from .const import AIOT_MODELS, SIGMASTAR_MODELS
+from .const import AIOT_MODELS, SIGMASTAR_MODELS, NO_ALARM_MODE_MODELS, INFRARED_SUPPORTED_MODELS
 
 SOFT_HACK_REALTEK = {"ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
 SOFT_HACK_SIGMASTAR = {"ssid": "\"\"", "pswd": "123123 ; passwd -d root ; /bin/riu_w 101e 53 3012 ; telnetd"}
@@ -57,7 +57,10 @@ DEVICES = [{
     'lumi.camera.acn009': ["Aqara", "Camera Hub G5 Pro (PoE)", "ZNSXJ18LM"],
     'lumi.camera.acn010': ["Aqara", "Camera Hub G5 Pro (PoE)", "CH-C03D/E"],
     'lumi.camera.acn011': ["Aqara", "Camera Hub G5 Pro (WiFi)", "CH-C07D/E"],
+    'lumi.gateway.agl002': ["Aqara", "Gateway M1S Gen2", "ZHWG23LM"],  # EU version
+    'lumi.gateway.agl008': ["Aqara", "Hub M100", "ZHWG24LM"],
     'lumi.gateway.agl010': ["Aqara", "Hub M100", "ZHWG25LM"],
+    'lumi.gateway.agl011': ["Aqara", "Gateway M200", "AG047GLB02"],   # Global version
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],
@@ -2072,22 +2075,14 @@ class Utils:
     def gateway_alarm_mode_supported(model: str) -> Optional[bool]:
         """ return the gateway alarm mode supported """
         #  basic_cli not support
-        if model not in (
-            'lumi.camera.gwagl02', 'lumi.camera.gwag03',
-            'lumi.camera.gwpagl01', 'lumi.camera.gwpgl1',
-            'lumi.camera.agl001'
-        ):
+        if model not in NO_ALARM_MODE_MODELS:
             return True
         return False
 
     @staticmethod
     def gateway_infrared_supported(model: str) -> Optional[bool]:
         """ return the gateway infrared supported """
-        if model in ('lumi.aircondition.acn05', 'lumi.gateway.iragl5',
-                        'lumi.gateway.iragl7', 'lumi.gateway.iragl01',
-                        'lumi.gateway.iragl8', 'lumi.gateway.agl001',
-                        'lumi.camera.gwpagl01', 'lumi.camera.gwpgl1',
-                        'lumi.gateway.acn012', 'lumi.gateway.agl004'):
+        if model in INFRARED_SUPPORTED_MODELS:
             return True
         return False
 

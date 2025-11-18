@@ -59,7 +59,8 @@ OPT_DEVICE_NAME = {
     'm1s gen2': "Aqara Gateway M1S Gen2",
     'v1': "Aqara Outlet Hub V1",
     'g5 pro': "Aqara Camera Hub G5 Pro",
-    'm100': "Aqara Hub M100"
+    'm100': "Aqara Hub M100",
+    'm200': "Aqara Gateway M200"
 }
 
 SIGMASTAR_MODELS = [
@@ -81,7 +82,8 @@ SIGMASTAR_MODELS = [
     'lumi.camera.acn009',
     'lumi.camera.acn010',
     'lumi.camera.acn011',
-    'lumi.gateway.agl010'
+    'lumi.gateway.agl010',
+    'lumi.gateway.agl011'
 ]
 
 REALTEK_MODELS = [
@@ -119,7 +121,33 @@ AIOT_MODELS = [
     'lumi.camera.acn009',
     'lumi.camera.acn010',
     'lumi.camera.acn011',
-    'lumi.gateway.agl010'
+    'lumi.gateway.agl010',
+    'lumi.gateway.agl002',
+    'lumi.gateway.agl008',
+    'lumi.gateway.agl011'
+]
+
+NO_ALARM_MODE_MODELS = [
+    'lumi.camera.gwagl02',
+    'lumi.camera.gwag03',
+    'lumi.camera.gwpagl01',
+    'lumi.camera.gwpgl1',
+    'lumi.camera.agl001',
+    'lumi.camera.acn010'
+]
+
+INFRARED_SUPPORTED_MODELS = [
+    'lumi.aircondition.acn05',
+    'lumi.gateway.iragl5',
+    'lumi.gateway.iragl7',
+    'lumi.gateway.iragl01',
+    'lumi.gateway.iragl8',
+    'lumi.gateway.agl001',
+    'lumi.camera.gwpagl01',
+    'lumi.camera.gwpgl1',
+    'lumi.gateway.acn012',
+    'lumi.gateway.agl004',
+    'lumi.gateway.agl011'
 ]
 
 DATA_KEY = "aqara_gateway"
