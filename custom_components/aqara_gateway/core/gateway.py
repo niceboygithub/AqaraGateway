@@ -271,11 +271,17 @@ class Gateway:
         try:
             # 1. Read coordinator info
             value = {}
+            version_g2h = ""
+            build_num_g2h = ""
             prop_raw = shell.get_prop("")
+
             data = re.search(r"\[sys\.zb_coordinator\\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
             zb_coordinator = data.group(1) if data else shell.get_prop("sys.zb_coordinator")
             data = re.search(r"\[persist\.sys\.model\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
             model = data.group(1) if data else shell.get_prop("persist.sys.model")
+            if len(model) < 1:
+                data = re.search(r"\[ro\.sys\.model\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
+                model = data.group(1) if data else shell.get_prop("ro.sys.model")
             if len(zb_coordinator) >= 1:
                 raw = shell.read_file(zb_coordinator, with_newline=False)
                 data = re.search(r"\[persist\.sys\.did\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
@@ -301,6 +307,12 @@ class Gateway:
                 did = data.group(1) if data else ''
                 data = re.search(r"model=([a-zA-Z0-9.-]+).+", raw)
                 model = data.group(1) if data else ''
+                raw = str(shell.read_file('/etc/build.prop'))
+                if len(raw) >= 1:
+                    data = re.search(r"ro.sys.fw_ver=([0-9]+).+", raw)
+                    version_g2h = data.group(1) if data else ''
+                    data = re.search(r"ro.sys.build_num=([0-9]+).+", raw)
+                    build_num_g2h = data.group(1) if data else ''
                 raw = shell.read_file(
                     '/mnt/config/zigbee/coordinator.info', with_newline=False)
             else:
@@ -322,6 +334,38 @@ class Gateway:
                 'debugStatus': value['debugStatus'],
                 'type': 'gateway',
             }]
+
+            if len(prop_raw) >= 1:
+                data = re.search(r"\[ro\.sys\.model\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
+                hw_model = data.group(1) if data else shell.get_prop("ro.sys.model")
+                data = re.search(r"\[ro\.sys\.fw_ver\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
+                version = data.group(1) if data else shell.get_prop("ro.sys.fw_ver")
+                data = re.search(r"\[ro\.sys\.build_num\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
+                build_num = data.group(1) if data else shell.get_prop("ro.sys.build_num")
+                data = re.search(r"\[ro\.sys\.vendor\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
+                device_manufacturer = data.group(1) if data else shell.get_prop("ro.sys.vendor")
+                data = re.search(r"\[persist\.sys\.zb_ver\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
+                zb_ver = data.group(1) if data else shell.get_prop("persist.sys.zb_ver")
+                data = re.search(r"\[persist\.sys\.sn\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
+                serial_number = data.group(1) if data else shell.get_prop("persist.sys.sn")
+                data = re.search(r"\[persist\.sys\.miio_mac\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
+                mac = data.group(1) if data else shell.get_prop("persist.sys.miio_mac")
+
+                if len(device_manufacturer) >= 1:
+                    devices[0]['device_manufacturer'] = f"{device_manufacturer}"
+                if len(hw_model) >= 1:
+                    devices[0]['hw_version'] = f"{hw_model}"
+                if len(version) >= 1 and len(build_num) >= 1:
+                    devices[0]['sw_version'] = f"{version}_{build_num}"
+                elif len(version_g2h) >=1 and len(build_num_g2h) >= 1:
+                    devices[0]['sw_version'] = f"{version_g2h}_{build_num_g2h}"
+                if len(zb_ver) >= 1:
+                    devices[0]['sw_version'] = f"{devices[0]['sw_version']}.{zb_ver}"
+                if len(serial_number) >= 1:
+                    devices[0]['serial_number'] = f"{serial_number}"
+                if len(mac) >= 1:
+                    devices[0]['mac'] = f"{mac}"
+
             self._model = model
 
             # zigbee devices

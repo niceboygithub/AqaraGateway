@@ -11,6 +11,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_registry import EntityRegistry
 from homeassistant.helpers.system_info import async_get_system_info
+from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC
 
 from .core.gateway import Gateway
 from .core.utils import AqaraGatewayDebug
@@ -240,34 +241,39 @@ class GatewayGenericDevice(Entity):
 
     @property
     def device_info(self):
+        device = self.device
         """
         https://developers.home-assistant.io/docs/device_registry_index/
         """
-        type_ = self.device['type']
+        type_ = device['type']
         if type_ == 'gateway':
             return {
-                'identifiers': {(DOMAIN, self.device.get('mac', ""))},
-                'manufacturer': self.device.get('device_manufacturer', ""),
-                'model': self.device.get('device_model', ""),
-                'name': self.device.get('device_name', "")
+                'connections': {(CONNECTION_NETWORK_MAC, device.get('mac', ""))},
+                'identifiers': {(DOMAIN, device.get('mac', ""))},
+                'manufacturer': device.get('device_manufacturer', ""),
+                'model': device.get('model', ""),
+                'name': device.get('device_name', ""),
+                'sw_version': device.get('sw_version', ""),
+                'hw_version': device.get('hw_version', ""),
+                'serial_number': device.get('serial_number', "")
             }
         if type_ == 'zigbee':
             return {
-                'connections': {(type_, self.device.get('mac', ""))},
-                'identifiers': {(DOMAIN, self.device.get('mac', ""))},
-                'manufacturer': self.device.get('device_manufacturer', ""),
-                'model': self.device.get('device_model', ""),
-                'name': self.device.get('device_name', ""),
-                'sw_version': self.device.get('model_ver', ""),
+                'connections': {(type_, device.get('mac', ""))},
+                'identifiers': {(DOMAIN, device.get('mac', ""))},
+                'manufacturer': device.get('device_manufacturer', ""),
+                'model': device.get('device_model', ""),
+                'name': device.get('device_name', ""),
+                'sw_version': device.get('model_ver', ""),
                 'via_device': (DOMAIN, self.gateway.device['mac'])
             }
         # ble and mesh
         return {
-            'connections': {('bluetooth', self.device['mac'])},
-            'identifiers': {(DOMAIN, self.device['mac'])},
-            'manufacturer': self.device.get('device_manufacturer'),
-            'model': self.device['device_model'],
-            'name': self.device['device_name'],
+            'connections': {('bluetooth', device['mac'])},
+            'identifiers': {(DOMAIN, device['mac'])},
+            'manufacturer': device.get('device_manufacturer'),
+            'model': device['device_model'],
+            'name': device['device_name'],
             'via_device': (DOMAIN, self.gateway.device['mac'])
         }
 
