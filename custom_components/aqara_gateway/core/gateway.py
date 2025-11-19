@@ -205,6 +205,30 @@ class Gateway:
         finally:
             skt.close()
 
+    def _get_shell(self, device_name: str) -> TelnetShell:
+        """ get shell according to the model
+        """
+        if (("g2h pro" in device_name) or ("g3" in device_name) or
+                ("g5 pro" in device_name) or ("m100" in device_name) or
+                ("m200" in device_name) or ("g410" in device_name)):
+            shell = TelnetShellG3(self.host,
+                                        self.options.get(CONF_PASSWORD, ''))
+        elif "g2h" in device_name:
+            shell = TelnetShellG2H(self.host,
+                                    self.options.get(CONF_PASSWORD, ''))
+        elif "e1" in device_name:
+            shell = TelnetShellE1(self.host,
+                                    self.options.get(CONF_PASSWORD, ''))
+        elif (("m2 2022" in device_name) or ("m1s 2022" in device_name) or
+                ("m3" in device_name) or ("m1s gen2" in device_name) or
+                ("v1" in device_name)):
+            shell = TelnetShellM2POE(self.host,
+                                    self.options.get(CONF_PASSWORD, ''))
+        else:
+            shell = TelnetShell(self.host,
+                                    self.options.get(CONF_PASSWORD, ''))
+        return shell
+
     def _prepare_gateway(self, get_devices: bool = False):
         """Launching the required utilities on the hub, if they are not already
         running.
@@ -216,25 +240,7 @@ class Gateway:
                                         self.options.get(CONF_PASSWORD, ''))
                 device_name = shell.get_model()
                 shell.close()
-            if (("g2h pro" in device_name) or ("g3" in device_name) or
-                    ("g5 pro" in device_name) or ("m100" in device_name) or
-                    ("m200" in device_name)):
-                shell = TelnetShellG3(self.host,
-                                            self.options.get(CONF_PASSWORD, ''))
-            elif "g2h" in device_name:
-                shell = TelnetShellG2H(self.host,
-                                        self.options.get(CONF_PASSWORD, ''))
-            elif "e1" in device_name:
-                shell = TelnetShellE1(self.host,
-                                        self.options.get(CONF_PASSWORD, ''))
-            elif (("m2 2022" in device_name) or ("m1s 2022" in device_name) or
-                    ("m3" in device_name) or ("m1s gen2" in device_name) or
-                    ("v1" in device_name)):
-                shell = TelnetShellM2POE(self.host,
-                                        self.options.get(CONF_PASSWORD, ''))
-            else:
-                shell = TelnetShell(self.host,
-                                        self.options.get(CONF_PASSWORD, ''))
+            shell = self._get_shell(device_name)
 
             shell.login()
 
@@ -297,8 +303,8 @@ class Gateway:
                     '/data/zigbee/coordinator.info', with_newline=False)
                 data = re.search(r"\[persist\.sys\.did\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
                 did = data.group(1) if data else shell.get_prop("persist.sys.did")
-                data = re.search(r"\[ro\.sys\.model\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
-                model = data.group(1) if data else shell.get_prop("ro.sys.model")
+                data = re.search(r"\[persist\.sys\.model\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
+                model = data.group(1) if data else shell.get_prop("persist.sys.model")
             elif any(name in model for name in ['lumi.camera.gwagl02']):
                 raw = str(shell.read_file('/mnt/config/miio/device.conf'))
                 if len(raw) <= 1:
@@ -506,25 +512,7 @@ class Gateway:
                                 ).strip().split(' '))
                         data.update(dict(zip(stat, stat)))
             device_name = Utils.get_device_name(self._model).lower()
-            if (("g2h pro" in device_name) or ("g3" in device_name) or
-                    ("g5 pro" in device_name) or ("m100" in device_name) or
-                    ("m200" in device_name)):
-                shell = TelnetShellG3(self.host,
-                                            self.options.get(CONF_PASSWORD, ''))
-            elif "g2h" in device_name:
-                shell = TelnetShellG2H(self.host,
-                                        self.options.get(CONF_PASSWORD, ''))
-            elif "e1" in device_name:
-                shell = TelnetShellE1(self.host,
-                                        self.options.get(CONF_PASSWORD, ''))
-            elif (("m2 2022" in device_name) or ("m1s 2022" in device_name) or
-                    ("m3" in device_name) or ("m1s gen2" in device_name) or
-                    ("v1" in device_name)):
-                shell = TelnetShellM2POE(self.host,
-                                        self.options.get(CONF_PASSWORD, ''))
-            else:
-                shell = TelnetShell(self.host,
-                                    self.options.get(CONF_PASSWORD, ''))
+            shell = self._get_shell(device_name)
             shell.login()
             raw = shell.read_file('{}/zigbee/networkBak.info'.format(
                 Utils.get_info_store_path(self._model)), with_newline=False)
@@ -605,25 +593,7 @@ class Gateway:
 
         if prop == 'paring' and value == 0:
             device_name = Utils.get_device_name(self._model).lower()
-            if (("g2h pro" in device_name) or ("g3" in device_name) or
-                    ("g5 pro" in device_name) or ("m100" in device_name) or
-                    ("m200" in device_name)):
-                shell = TelnetShellG3(self.host,
-                                            self.options.get(CONF_PASSWORD, ''))
-            elif "g2h" in device_name:
-                shell = TelnetShellG2H(self.host,
-                                        self.options.get(CONF_PASSWORD, ''))
-            elif "e1" in device_name:
-                shell = TelnetShellE1(self.host,
-                                        self.options.get(CONF_PASSWORD, ''))
-            elif (("m2 2022" in device_name) or ("m1s 2022" in device_name) or
-                    ("m3" in device_name) or ("m1s gen2" in device_name) or
-                    ("v1" in device_name)):
-                shell = TelnetShellM2POE(self.host,
-                                        self.options.get(CONF_PASSWORD, ''))
-            else:
-                shell = TelnetShell(self.host,
-                                    self.options.get(CONF_PASSWORD, ''))
+            shell = self._get_shell(device_name)
             shell.login()
             zb_device = shell.get_prop("sys.zb_device")
             if len(zb_device) >= 1:
@@ -980,7 +950,7 @@ def is_aqaragateway(host: str,
                     shell = TelnetShellE1(host, password)
                 elif (('g2h pro' in device_name) or ("g3" in device_name) or
                       ("g5 pro" in device_name) or ("m100" in device_name) or
-                        ("m200" in device_name)):
+                      ("m200" in device_name) or ("g410" in device_name)):
                     shell = TelnetShellG3(host, password)
                 elif (("m2 2022" in device_name) or ("m1s 2022" in device_name) or
                         ("m3" in device_name) or ("m1s gen2" in device_name) or

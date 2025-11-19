@@ -188,7 +188,6 @@ class TelnetShell(Telnet):
             self.write(b"\n")
             suffix = ":"
             raw = self.read_until(suffix.encode(), timeout=15)
-            _LOGGER.error(f"return {raw.decode()}")
         except Exception:
             raw = b''
         model = raw.decode()
@@ -200,7 +199,7 @@ class TelnetShell(Telnet):
             "M3": "m3",
             "M1S": "m1s gen2",
             "V1": "v1",
-            "M200": "m200"
+            "M200": "m200",
             "M100": "m100"
         }
         if len(model) >= 1:

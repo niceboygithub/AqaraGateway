@@ -46,6 +46,7 @@ DEVICES = [{
     'lumi.camera.gwpagl01': ["Aqara", "Camera Hub G3", "ZNSXJ13LM"],  # tested
     'lumi.camera.gwpgl1': ["Aqara", "Camera Hub G3", "CH-H03"],
     'lumi.camera.agl001': ["Aqara", "Camera Hub G2H Pro", "ZNSXJ15LM"],
+    'lumi.camera.acn003': ["Aqara", "Camera Hub G2H Pro", "ZNSXJ15LM"],
     'lumi.gateway.iragl8': ["Aqara", "Gateway M2 2022", "ZHWG19LM"],  # tested
     'lumi.gateway.acn004': ["Aqara", "Gateway M1S 2022", "ZHWG20LM"],  # tested
     'lumi.gateway.acn012': ["Aqara", "Gateway M3", "ZHWG24LM"],
@@ -57,9 +58,10 @@ DEVICES = [{
     'lumi.camera.acn009': ["Aqara", "Camera Hub G5 Pro (PoE)", "ZNSXJ18LM"],
     'lumi.camera.acn010': ["Aqara", "Camera Hub G5 Pro (PoE)", "CH-C03D/E"],
     'lumi.camera.acn011': ["Aqara", "Camera Hub G5 Pro (WiFi)", "CH-C07D/E"],
-    'lumi.gateway.agl002': ["Aqara", "Gateway M1S Gen2", "ZHWG23LM"],  # EU version
     'lumi.gateway.agl008': ["Aqara", "Hub M100", "ZHWG24LM"],
     'lumi.gateway.agl010': ["Aqara", "Hub M100", "ZHWG25LM"],
+    'lumi.camera.acn017': ["Aqara", "Doorbell G410", "ZNKSML05"],
+    'lumi.camera.agl006': ["Aqara", "Doorbell G410", "CH-C09D"],   # Global version
     'lumi.gateway.agl011': ["Aqara", "Gateway M200", "AG047GLB02"],   # Global version
     'params': [
         ['8.0.2012', None, 'power_tx', None],

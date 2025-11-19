@@ -60,7 +60,8 @@ OPT_DEVICE_NAME = {
     'v1': "Aqara Outlet Hub V1",
     'g5 pro': "Aqara Camera Hub G5 Pro",
     'm100': "Aqara Hub M100",
-    'm200': "Aqara Gateway M200"
+    'm200': "Aqara Gateway M200",
+    'g410': "Aqara Doorbell G410"
 }
 
 SIGMASTAR_MODELS = [
@@ -124,6 +125,8 @@ AIOT_MODELS = [
     'lumi.gateway.agl010',
     'lumi.gateway.agl002',
     'lumi.gateway.agl008',
+    'lumi.camera.acn017',
+    'lumi.camera.agl006',
     'lumi.gateway.agl011'
 ]
 
@@ -133,6 +136,9 @@ NO_ALARM_MODE_MODELS = [
     'lumi.camera.gwpagl01',
     'lumi.camera.gwpgl1',
     'lumi.camera.agl001',
+    'lumi.camera.acn017',
+    'lumi.camera.agl006',
+    'lumi.camera.acn003',
     'lumi.camera.acn010'
 ]
 
