@@ -63,6 +63,7 @@ DEVICES = [{
     'lumi.camera.acn017': ["Aqara", "Doorbell G410", "ZNKSML05"],
     'lumi.camera.agl006': ["Aqara", "Doorbell G410", "CH-C09D"],   # Global version
     'lumi.gateway.agl011': ["Aqara", "Gateway M200", "AG047GLB02"],   # Global version
+    'lumi.gateway.agl013': ["Aqara", "Gateway M300", "HM-G04E"],
     'params': [
         ['8.0.2012', None, 'power_tx', None],
         ['8.0.2024', None, 'channel', None],
@@ -1109,6 +1110,7 @@ DEVICES_AIOT = [{
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.4.85', 'channel_0_lock', 'channel 1 Lock', 'switch'],
         ['13.21.85', None, 'button_1', None],
+        ['13.22.85', None, 'button_2', None],
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
@@ -1136,6 +1138,8 @@ DEVICES_AIOT = [{
         ['4.5.85', 'channel_1_lock', 'channel 2 Lock', 'switch'],
         ['13.21.85', None, 'button_1', None],
         ['13.22.85', None, 'button_2', None],
+        ['13.23.85', None, 'button_3', None],
+        ['13.24.85', None, 'button_4', None],
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
