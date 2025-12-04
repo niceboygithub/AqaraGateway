@@ -1,9 +1,51 @@
 {
     "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yapılandırılmış"
+        },
+        "error": {
+            "connection_error": "Aqara Gateway'e bağlanılamıyor."
+        },
+        "flow_title": "Aqara Gateway: {name}",
         "step": {
             "discovery_confirm": {
-                "title": "Ke\u015ffedilen Aqara Gateway d\u00fc\u011f\u00fcm\u00fc"
+                "description": "`{name}` Aqara Gateway'i Home Assistant'a eklemek istiyor musunuz? \n\n{device_info}",
+                "title": "Aqara Gateway Keşfedildi"
+            },
+            "user": {
+                "data": {
+                    "host": "Ana Makine",
+                    "password": "Parola",
+                    "token": "Erişim Jetonu",
+                    "model": "Model",
+                    "debug": "Hata Ayıklama",
+                    "noffline": "Çevrimdışı mesajını yoksay",
+                    "patched_firmware": "Yamalı Donanım Yazılımı"
+                },
+                "description": "Lütfen Aqara Gateway'inizin bağlantı ayarlarını girin. Gateway'i ilk kez kullanıyorsanız veya telnet etkin değilse, gateway'in telnet özelliğinin etkinleştirilmesi gerekir. Telnet'i etkinleştirmek için lütfen gateway'i (M1S, P3, E1 için) Mijia ev moduna yapılandırın ve jetonu edinin. Jeton edinme yöntemi için lütfen [bu web sitesine](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor) bakın. Telnet zaten etkinse, jeton girmenize gerek yoktur."
             }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Gateway Yapılandırması",
+                "data": {
+                    "host": "Ana Makine",
+                    "password": "Parola",
+                    "token": "Erişim Jetonu",
+                    "model": "Model",
+                    "stats": "İstatistikler",
+                    "debug": "Hata Ayıklama",
+                    "noffline": "Çevrimdışı mesajını yoksay"
+                }
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "telnet_logged": "Telnet Bağlandı",
+            "mqtt_connected": "MQTT Bağlandı"
         }
     }
 }
