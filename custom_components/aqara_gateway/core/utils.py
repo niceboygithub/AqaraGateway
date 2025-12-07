@@ -81,7 +81,7 @@ DEVICES = [{
         [None, 'light_level', 'brightness', None],
         [None, 'hs_color', 'hs_color', None],
         [None, 'rgb_color', 'rgb_color', 'light'],
-        [None, None, 'alarm', 'alarm_control_panel'],
+#        [None, None, 'alarm', 'alarm_control_panel'],
         [None, None, 'pair', 'remote'],
     ]
 }, {
