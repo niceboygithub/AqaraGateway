@@ -1566,6 +1566,12 @@ DEVICES_AIOT = [{
         ['14.39.85', None, 'fan_mode', None],
         [None, 'fan', 'fan', 'fan'],
     ]
+}, {
+    'lumi.valve.agl001': ["Aqara", "Valve Controller T1", "VC-X01D"],
+    'params': [
+        ['4.1.85', 'power_status', 'switch', 'switch'],
+        ['8.0.2001', 'battery', 'battery', 'sensor'],
+    ]
 }]
 
 # params: [lumi res name, xiaomi prop name, hass attr name, hass domain]
