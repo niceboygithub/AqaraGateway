@@ -204,7 +204,6 @@ class GatewayGenericDevice(Entity):
                         self._attr.replace('_', ' ').title())
 
         self.entity_id = f"{DOMAIN}.{self._unique_id}"
-        self.entity_id = self.entity_id.replace(' ', '_').replace(':', '').lower()
 
     def debug(self, message: str):
         """ debug function """
