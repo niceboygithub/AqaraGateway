@@ -54,10 +54,9 @@ async def async_unload_entry(hass, entry):
 class GatewayLight(GatewayGenericDevice, LightEntity):
     """Representation of a Xiaomi/Aqara Light."""
 
-    _attr_min_color_temp_kelvin: int = 2702  # 370
-    _attr_max_color_temp_kelvin: int = 6535  # 153
+    _attr_min_color_temp_kelvin: int = 2702
+    _attr_max_color_temp_kelvin: int = 6535
 
-    _white = None
     _state = None
 
     def __init__(
@@ -72,31 +71,45 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
         self._fw_ver = None
         self._hw_ver = None
         self._lqi = None
-        color_modes = {ColorMode.ONOFF}
-        for parm in device['params']:
-            if parm[2] == "brightness":
-                color_modes = {ColorMode.BRIGHTNESS}
-            if parm[2] == "color_temp":
-                color_modes = {ColorMode.COLOR_TEMP}
-            if parm[2] == "rgb_color":
-                color_modes = {ColorMode.RGB}
+        
+        color_modes = set()
         if self.device['type'] == 'gateway':
-            color_modes = {ColorMode.RGB}
+            color_modes.add(ColorMode.RGB)
+        else:
+            has_brightness = False
+            has_color_temp = False
+            for parm in device.get('params', []):
+                if parm[2] == "brightness":
+                    has_brightness = True
+                if parm[2] == "color_temp":
+                    has_color_temp = True
+                if parm[2] == "rgb_color":
+                    color_modes.add(ColorMode.RGB)
+            
+            if has_color_temp:
+                color_modes.add(ColorMode.COLOR_TEMP)
+            if has_brightness and not color_modes:
+                color_modes.add(ColorMode.BRIGHTNESS)
+        
+        if not color_modes:
+            color_modes.add(ColorMode.ONOFF)
+            
         self._attr_supported_color_modes = color_modes
-        self._attr_supported_features = LightEntityFeature.EFFECT
+        self._attr_supported_features = LightEntityFeature.EFFECT if self.device['type'] == 'gateway' else 0
 
-        if ColorMode.COLOR_TEMP in color_modes:
+        if ColorMode.RGB in color_modes:
+            self._attr_color_mode = ColorMode.RGB
+        elif ColorMode.COLOR_TEMP in color_modes:
             self._attr_color_mode = ColorMode.COLOR_TEMP
         elif ColorMode.BRIGHTNESS in color_modes:
             self._attr_color_mode = ColorMode.BRIGHTNESS
-        elif ColorMode.ONOFF in color_modes:
-            self._attr_color_mode = ColorMode.ONOFF
         else:
-            self._attr_color_mode = ColorMode.UNKNOWN
+            self._attr_color_mode = ColorMode.ONOFF
+
 
     @property
     def is_on(self) -> bool:
-        """return state """
+        """Return true if light is on."""
         return self._state
 
     @property
@@ -107,107 +120,110 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
             self._attrs[ATTR_HW_VER] = self._hw_ver
             self._attrs[ATTR_FW_VER] = self._fw_ver
             self._attrs[ATTR_LQI] = self._lqi
-
         return self._attrs
 
     def update(self, data: dict = None):
-        """ update attribue in data """
-        for key, value in data.items():
-            if key == CHIP_TEMPERATURE:
-                self._chip_temperature = value
-            if key == HW_VER:
-                self._hw_ver = value
-            if key == FW_VER or key == 'back_version':
-                self._fw_ver = value
-            if key == LQI:
-                self._lqi = value
+        """Update light attributes."""
+        if ATTR_RGB_COLOR in data and isinstance(data[ATTR_RGB_COLOR], tuple) and sum(data[ATTR_RGB_COLOR]) == 0:
+            self._state = False
+        else:
+            for key, value in data.items():
+                if key == CHIP_TEMPERATURE: self._chip_temperature = value
+                if key == HW_VER: self._hw_ver = value
+                if key == FW_VER or key == 'back_version': self._fw_ver = value
+                if key == LQI: self._lqi = value
 
             if self._attr in data:
-                if isinstance(data[self._attr], tuple):
-                    self._state = any(data[self._attr])
-                else:
-                    self._state = data[self._attr] >= 1
-            if ATTR_BRIGHTNESS in data:
-                self._attr_brightness = int(data[ATTR_BRIGHTNESS] / 100.0 * 255.0)
+                self._state = bool(data[self._attr])
+
             if ATTR_COLOR_TEMP in data:
                 self._attr_color_temp_kelvin = color_util.color_temperature_mired_to_kelvin(data[ATTR_COLOR_TEMP])
-            if ATTR_RGB_COLOR in data:
-                x_val = float(data[ATTR_RGB_COLOR] / (2**16))
-                y_val = float(data[ATTR_RGB_COLOR] - x_val)
-                self._attr_rgb_color = color_util.color_xy_to_RGB(x_val, y_val)
-            if ATTR_HS_COLOR in data:
-                if self.device['type'] == 'zigbee':
-                    if isinstance(data[ATTR_HS_COLOR], int):
-                        value = hex(data[ATTR_HS_COLOR] & 0xFFFFFF).replace('0x', '')
-                    else:
-                        value = data[ATTR_HS_COLOR].replace('0x', '')
+            
+            if ATTR_RGB_COLOR in data and isinstance(data[ATTR_RGB_COLOR], tuple):
+                self._state = True
+                r, g, b = data[ATTR_RGB_COLOR]
+                max_val = max(r, g, b)
+                self._attr_brightness = max_val
+
+                if max_val > 0:
+                    factor = 255 / max_val
+                    norm_r = min(255, int(r * factor))
+                    norm_g = min(255, int(g * factor))
+                    norm_b = min(255, int(b * factor))
+                    self._attr_rgb_color = (norm_r, norm_g, norm_b)
+                    self._attr_hs_color = color_util.color_RGB_to_hs(norm_r, norm_g, norm_b)
                 else:
-                    if isinstance(data[ATTR_HS_COLOR], int):
-                        value = data[ATTR_HS_COLOR] * 3
-                    else:
-                        value = data[ATTR_HS_COLOR].replace('0x', '')
-                if value == '0':
-                    self._attr_hs_color = (0.0, 0.0)
-                else:
-                    rgb = color_util.rgb_hex_to_rgb_list(value)
-                    if len(rgb) > 3:
-                        self._white = rgb.pop()
-                    if len(rgb) > 3:
-                        self._attr_brightness = rgb.pop()
-                    self._attr_hs_color = color_util.color_RGB_to_hs(*rgb)
+                    self._attr_rgb_color = (0, 0, 0)
+                    self._attr_hs_color = (0, 0)
+            
+            if ATTR_BRIGHTNESS in data:
+                self._attr_brightness = int(data[ATTR_BRIGHTNESS] / 100.0 * 255.0)
+
         self.schedule_update_ha_state()
 
     def turn_on(self, **kwargs):
         """Turn the light on."""
         payload = {}
 
-        if ATTR_BRIGHTNESS in kwargs:
-            self._attr_brightness = int(kwargs[ATTR_BRIGHTNESS] / 255.0 * 100.0)
-            payload[ATTR_BRIGHTNESS] = self._attr_brightness
+        if any(key in kwargs for key in [ATTR_HS_COLOR, ATTR_RGB_COLOR, ATTR_BRIGHTNESS, ATTR_COLOR_TEMP_KELVIN]):
+            if ATTR_BRIGHTNESS in kwargs:
+                self._attr_brightness = kwargs[ATTR_BRIGHTNESS]
+            
+            if ATTR_HS_COLOR in kwargs:
+                self._attr_hs_color = kwargs[ATTR_HS_COLOR]
+                self._attr_rgb_color = color_util.color_hs_to_RGB(*self._attr_hs_color)
+            elif ATTR_RGB_COLOR in kwargs:
+                self._attr_rgb_color = kwargs[ATTR_RGB_COLOR]
+                self._attr_hs_color = color_util.color_RGB_to_hs(*self._attr_rgb_color)
 
-        if ATTR_COLOR_TEMP_KELVIN in kwargs:
-            self._attr_color_temp_kelvin = kwargs[ATTR_COLOR_TEMP_KELVIN]
-            payload[ATTR_COLOR_TEMP] = color_util.color_temperature_kelvin_to_mired(self._attr_color_temp_kelvin)
+            if ATTR_COLOR_TEMP_KELVIN in kwargs:
+                mired = color_util.color_temperature_kelvin_to_mired(kwargs[ATTR_COLOR_TEMP_KELVIN])
+                payload[ATTR_COLOR_TEMP] = mired
+            else:
+                brightness_100 = int((self._attr_brightness or 255) / 255.0 * 100.0)
+                if brightness_100 == 0: brightness_100 = 1
 
-        if ATTR_RGB_COLOR in kwargs:
-            self._attr_rgb_color = kwargs[ATTR_RGB_COLOR]
+                r, g, b = self._attr_rgb_color or (255, 255, 255)
+                combined_value = (brightness_100 << 24) | (r << 16) | (g << 8) | b
+                payload[ATTR_HS_COLOR] = combined_value
+        else:
+            if self.device['type'] == 'gateway':
+                last_ha_brightness = self._attr_brightness
+                last_rgb_color = self._attr_rgb_color
 
-        if ATTR_HS_COLOR in kwargs:
-            self._attr_hs_color = kwargs[ATTR_HS_COLOR]
+                if not last_ha_brightness or last_ha_brightness == 0:
+                    last_ha_brightness = 255
 
-        if (ATTR_HS_COLOR in kwargs or ATTR_BRIGHTNESS in kwargs):
-            if self._attr_hs_color:
-                payload[ATTR_HS_COLOR] = color_util.color_temperature_kelvin_to_mired(self._attr_color_temp_kelvin)
-                rgb = color_util.color_hs_to_RGB(*self._attr_hs_color)
-                rgba = (self._attr_brightness,) + rgb
-                if isinstance(self._attr_brightness, int):
-                    rgbhex = binascii.hexlify(
-                        struct.pack("BBBB", *rgba)).decode("ASCII")
-                    rgbhex = int(rgbhex, 16)
-                    if self.device['type'] == 'zigbee':
-                        payload[ATTR_HS_COLOR] = rgbhex
-                    else:
-                        payload[ATTR_HS_COLOR] = rgbhex
-        if ATTR_RGB_COLOR in kwargs and self._attr_rgb_color:
-            x_val, y_val = color_util.color_RGB_to_xy(*kwargs[ATTR_RGB_COLOR])
-            payload[ATTR_RGB_COLOR] = int(x_val * 65535) * (2 ** 16) + int(y_val * 65535)
+                if not last_rgb_color or last_rgb_color == (0, 0, 0) or sum(last_rgb_color) == 0:
+                    last_rgb_color = (255, 180, 80)
 
-        if not payload:
-            payload[self._attr] = 1
+                brightness_100 = int(last_ha_brightness / 255.0 * 100.0)
+                if brightness_100 == 0: brightness_100 = 100
+
+                r, g, b = last_rgb_color
+                
+                combined_value = (brightness_100 << 24) | (r << 16) | (g << 8) | b
+                payload[ATTR_HS_COLOR] = combined_value
+            else:
+                payload[self._attr] = 1
 
         try:
             if self.gateway.send(self.device, payload):
                 self._state = True
                 self.schedule_update_ha_state()
-        except:
-            _LOGGER.warn(f"send payload {payload} to gateway failed")
+            else:
+                _LOGGER.warning(f"Gateway may have rejected payload: {payload}")
+        except Exception as e:
+            _LOGGER.error(f"Failed to send payload {payload} to gateway. Exception: {e}", exc_info=True)
 
     def turn_off(self, **kwargs):
         """Turn the light off."""
         payload = {}
         if self.device['type'] == 'gateway':
             payload[ATTR_HS_COLOR] = 0
-        payload[self._attr] = 0
+        else:
+            payload[self._attr] = 0
+            
         if self.gateway.send(self.device, payload):
             self._state = False
             self.schedule_update_ha_state()
