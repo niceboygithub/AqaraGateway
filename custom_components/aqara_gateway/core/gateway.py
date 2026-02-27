@@ -821,7 +821,55 @@ class Gateway:
         """ send command """
         try:
             payload = {}
-            if device['type'] == 'zigbee' or 'paring' in data:
+            # Check if this is the specific M1S gateway model that needs special handling
+            is_m1s_gateway = (device['type'] == 'gateway' and
+                             device['model'] == 'lumi.gateway.acn01')
+            
+            if is_m1s_gateway:
+                # For M1S gateway, try sending through ioctl/recv with rgb type
+                # This matches the format used by other gateways
+                if ATTR_HS_COLOR in data:
+                    hs_color = data.get(ATTR_HS_COLOR, 0)
+                    brightness = (hs_color >> 24) & 0xFF
+                    payload = {
+                        'cmd': 'control',
+                        'data': {
+                            'blue': int((hs_color & 0xFF) * brightness / 100),
+                            'breath': 500,
+                            'green': int(
+                                ((hs_color >> 8) & 0xFF) * brightness / 100),
+                            'red': int(
+                                ((hs_color >> 16) & 0xFF) * brightness / 100)},
+                        'type': 'rgb',
+                        'rev': 1,
+                        'from': 'ha',
+                        'id': randint(0, 65535)
+                    }
+                else:
+                    # For simple on/off or brightness, send through ioctl/recv
+                    brightness = 100  # Default brightness
+                    if 'light' in data:
+                        brightness = data['light']
+                    elif ATTR_BRIGHTNESS in data:
+                        brightness = data[ATTR_BRIGHTNESS]
+                    
+                    payload = {
+                        'cmd': 'control',
+                        'data': {
+                            'blue': int(255 * brightness / 100),
+                            'breath': 500,
+                            'green': int(255 * brightness / 100),
+                            'red': int(255 * brightness / 100)},
+                        'type': 'rgb',
+                        'rev': 1,
+                        'from': 'ha',
+                        'id': randint(0, 65535)
+                    }
+                
+                payload = json.dumps(payload, separators=(',', ':')).encode()
+                self._mqttc.publish('ioctl/recv', payload)
+                _LOGGER.debug(f"M1S Gateway: Sent payload to ioctl/recv: {payload}")
+            elif device['type'] == 'zigbee' or 'paring' in data:
                 did = data.get('did', device['did'])
                 data.pop('did', '')
                 params = []
