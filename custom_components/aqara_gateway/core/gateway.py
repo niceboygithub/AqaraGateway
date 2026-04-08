@@ -655,6 +655,9 @@ class Gateway:
             _LOGGER.warning("Unsupported cmd: {}".format(data))
             return
 
+        if pkey == 'mi_spec' and pkey not in data:
+            return
+
         did = data['did']
 
         if did == 'lumi.0':
