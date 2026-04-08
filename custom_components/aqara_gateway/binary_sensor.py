@@ -14,8 +14,12 @@ from homeassistant.helpers.event import async_call_later
 from homeassistant.util.dt import now
 from homeassistant.const import (
     ATTR_BATTERY_LEVEL,
-    ATTR_VOLTAGE
+    ATTR_VOLTAGE,
+    STATE_ON,
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
 )
+from homeassistant.helpers.restore_state import RestoreEntity
 
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
@@ -49,6 +53,8 @@ DEVICE_CLASS = {
     'contact': BinarySensorDeviceClass.DOOR,
     'water_leak': BinarySensorDeviceClass.MOISTURE,
 }
+N100_MODELS = {"aqara.lock.bzacn3", "aqara.lock.bzacn4"}
+N100_RESTORE_BINARY_ATTRS = {"away mode", "door_state", "lock by handle", "latch_state"}
 
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
@@ -81,7 +87,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     aqara_gateway.add_setup('binary_sensor', setup)
 
 
-class GatewayBinarySensor(GatewayGenericDevice, BinarySensorEntity):
+class GatewayBinarySensor(GatewayGenericDevice, BinarySensorEntity, RestoreEntity):
     """Representation of a Xiaomi/Aqara Binary Sensor."""
     _state = False
     _battery = None
@@ -106,6 +112,17 @@ class GatewayBinarySensor(GatewayGenericDevice, BinarySensorEntity):
     def device_class(self):
         """Return the class of binary sensor."""
         return DEVICE_CLASS.get(self._attr, self._attr)
+
+    async def async_added_to_hass(self):
+        """Restore state for selected N100 lock binary sensors."""
+        if (
+            self.device.get("model") in N100_MODELS
+            and self._attr in N100_RESTORE_BINARY_ATTRS
+            and (last_state := await self.async_get_last_state()) is not None
+            and last_state.state not in (STATE_UNKNOWN, STATE_UNAVAILABLE, "")
+        ):
+            self._state = last_state.state == STATE_ON
+        await super().async_added_to_hass()
 
     def update(self, data: dict = None):
         """Update the sensor state."""

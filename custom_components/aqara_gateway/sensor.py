@@ -6,8 +6,11 @@ from homeassistant.const import (
     ATTR_BATTERY_LEVEL,
     ATTR_VOLTAGE,
     STATE_PROBLEM,
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
 )
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.helpers.restore_state import RestoreEntity
 
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
@@ -101,7 +104,23 @@ async def async_unload_entry(hass, entry):
     return True
 
 
-class GatewaySensor(GatewayGenericDevice, SensorEntity):
+N100_MODELS = {"aqara.lock.bzacn3", "aqara.lock.bzacn4"}
+N100_RESTORE_SENSOR_ATTRS = {"battery", "lock"}
+N100_RESTORE_LOCK_EVENT_ATTRS = {"key_id", "lock_event"}
+
+
+def _restore_sensor_state(value):
+    """Restore sensor state from Home Assistant state storage."""
+    if value in (None, "", STATE_UNKNOWN, STATE_UNAVAILABLE):
+        return None
+    try:
+        # Keep integers as int and decimals as float.
+        return int(value) if "." not in value else float(value)
+    except (TypeError, ValueError):
+        return value
+
+
+class GatewaySensor(GatewayGenericDevice, SensorEntity, RestoreEntity):
     """ Xiaomi/Aqara Sensors """
 
     def __init__(
@@ -129,6 +148,16 @@ class GatewaySensor(GatewayGenericDevice, SensorEntity):
             self._attr_state_class = 'measurement'
 
         super().__init__(gateway, device, attr)
+
+    async def async_added_to_hass(self):
+        """Restore state for selected N100 sensors."""
+        await super().async_added_to_hass()
+        if (
+            self.device.get("model") in N100_MODELS
+            and self._attr in N100_RESTORE_SENSOR_ATTRS
+            and (last_state := await self.async_get_last_state()) is not None
+        ):
+            self._state = _restore_sensor_state(last_state.state)
 
     @property
     def state(self):
@@ -419,6 +448,16 @@ class GatewayKeyIDSensor(GatewaySensor):
         """Return the class of this device."""
         return None
 
+    async def async_added_to_hass(self):
+        """Restore last key id for N100 locks."""
+        await super().async_added_to_hass()
+        if (
+            self.device.get("model") in N100_MODELS
+            and self._attr in N100_RESTORE_LOCK_EVENT_ATTRS
+            and (last_state := await self.async_get_last_state()) is not None
+        ):
+            self._state = _restore_sensor_state(last_state.state)
+
     def update(self, data: dict = None):
         """ update lock state """
         # handle available change
@@ -440,6 +479,16 @@ class GatewayLockEventSensor(GatewaySensor):
     def device_class(self):
         """Return the class of this device."""
         return None
+
+    async def async_added_to_hass(self):
+        """Restore last lock event for N100 locks."""
+        await super().async_added_to_hass()
+        if (
+            self.device.get("model") in N100_MODELS
+            and self._attr in N100_RESTORE_LOCK_EVENT_ATTRS
+            and (last_state := await self.async_get_last_state()) is not None
+        ):
+            self._state = _restore_sensor_state(last_state.state)
 
     def update(self, data: dict = None):
         """ update lock state """
