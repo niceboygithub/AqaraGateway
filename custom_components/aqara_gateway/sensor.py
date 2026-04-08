@@ -151,13 +151,13 @@ class GatewaySensor(GatewayGenericDevice, SensorEntity, RestoreEntity):
 
     async def async_added_to_hass(self):
         """Restore state for selected N100 sensors."""
+        await super().async_added_to_hass()
         if (
             self.device.get("model") in N100_MODELS
             and self._attr in N100_RESTORE_SENSOR_ATTRS
             and (last_state := await self.async_get_last_state()) is not None
         ):
             self._state = _restore_sensor_state(last_state.state)
-        await super().async_added_to_hass()
 
     @property
     def state(self):
@@ -450,13 +450,13 @@ class GatewayKeyIDSensor(GatewaySensor):
 
     async def async_added_to_hass(self):
         """Restore last key id for N100 locks."""
+        await super().async_added_to_hass()
         if (
             self.device.get("model") in N100_MODELS
             and self._attr in N100_RESTORE_LOCK_EVENT_ATTRS
             and (last_state := await self.async_get_last_state()) is not None
         ):
             self._state = _restore_sensor_state(last_state.state)
-        await super().async_added_to_hass()
 
     def update(self, data: dict = None):
         """ update lock state """
@@ -482,13 +482,13 @@ class GatewayLockEventSensor(GatewaySensor):
 
     async def async_added_to_hass(self):
         """Restore last lock event for N100 locks."""
+        await super().async_added_to_hass()
         if (
             self.device.get("model") in N100_MODELS
             and self._attr in N100_RESTORE_LOCK_EVENT_ATTRS
             and (last_state := await self.async_get_last_state()) is not None
         ):
             self._state = _restore_sensor_state(last_state.state)
-        await super().async_added_to_hass()
 
     def update(self, data: dict = None):
         """ update lock state """
