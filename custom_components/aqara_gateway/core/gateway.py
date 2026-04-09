@@ -26,6 +26,7 @@ from .shell import (
 from .utils import DEVICES, Utils, GLOBAL_PROP
 from .const import (
     CONF_MODEL,
+    CONF_VRF_UNITS,
     DOMAIN,
     SIGMASTAR_MODELS,
     REALTEK_MODELS,
@@ -33,7 +34,10 @@ from .const import (
     MD5_MOSQUITTO_ARMV7L,
     MD5_MOSQUITTO_NEW_ARMV7L,
     MD5_MOSQUITTO_G2HPRO_ARMV7L,
-    MD5_MOSQUITTO_MIPSEL
+    MD5_MOSQUITTO_MIPSEL,
+    VRF_MODELS,
+    VRF_DIP_MIN,
+    VRF_DIP_MAX
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -436,6 +440,34 @@ class Gateway:
                 if default_config:
                     device.update(default_config)
 
+                # Dynamically inject VRF climate params based on config
+                if device['model'] in VRF_MODELS:
+                    vrf_units = self.options.get(CONF_VRF_UNITS, [])
+                    for idx_0, unit_id in enumerate(vrf_units):
+                        if unit_id < VRF_DIP_MIN or unit_id > VRF_DIP_MAX:
+                            continue
+                        zone = idx_0 + 1  # 1-based zone index
+                        device['params'].extend([
+                            [f'0.{unit_id}.85',
+                             f'current_temperature_{zone}',
+                             f'current_temperature_{zone}', None],
+                            [f'1.{unit_id}.85',
+                             f'target_temperature_{zone}',
+                             f'target_temperature_{zone}', None],
+                            [f'4.{unit_id}.85',
+                             f'power_{zone}',
+                             f'power_{zone}', None],
+                            [f'14.{unit_id}.85',
+                             f'fan_mode_{zone}',
+                             f'fan_mode_{zone}', None],
+                            [f'14.{unit_id + 139}.85',
+                             f'mode_{zone}',
+                             f'mode_{zone}', None],
+                            [f'4.{unit_id}.85',
+                             'ac_state',
+                             f'climate {zone}', 'climate'],
+                        ])
+
                 self.devices[device['did']] = device
 
                 for param in (device['params'] or device['mi_spec']):
@@ -731,7 +763,20 @@ class Gateway:
                 _LOGGER.warning("Unsupported param: %s", data)
                 return
 
-            if prop in GLOBAL_PROP:
+            # For VRF devices, prefer device-specific params over
+            # GLOBAL_PROP to avoid resource ID collisions (e.g.
+            # 4.10.85 mapped to 'channel_1_decoupled' globally but
+            # means 'power_3' for VRF).
+            if device.get('model') in VRF_MODELS:
+                device_prop = next((
+                    p[2] for p in (device['params'] or device['mi_spec'])
+                    if p[0] == prop
+                ), None)
+                if device_prop is not None:
+                    prop = device_prop
+                elif prop in GLOBAL_PROP:
+                    prop = GLOBAL_PROP[prop]
+            elif prop in GLOBAL_PROP:
                 prop = GLOBAL_PROP[prop]
             else:
                 prop = next((
@@ -773,7 +818,11 @@ class Gateway:
             elif prop in ('consumption'):
                 payload[prop] = round(param['value'], 2) / 1000.0
             elif 'value' in param:
-                payload[prop] = param['value']
+                value = param['value']
+                # Strip control characters from VRF string values
+                if isinstance(value, str):
+                    value = value.rstrip('\x00\x08\b')
+                payload[prop] = value
             elif 'arguments' in param:
                 if prop == 'motion':
                     payload[prop] = 1
