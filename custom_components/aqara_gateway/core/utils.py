@@ -14,7 +14,13 @@ from homeassistant.exceptions import PlatformNotReady
 from homeassistant.helpers.device_registry import DeviceRegistry
 from miio import Device, DeviceException
 
-from .const import AIOT_MODELS, SIGMASTAR_MODELS, NO_ALARM_MODE_MODELS, INFRARED_SUPPORTED_MODELS
+from .const import (
+    AIOT_MODELS,
+    INFRARED_SUPPORTED_MODELS,
+    NO_ALARM_MODE_MODELS,
+    REALTEK_MODELS,
+    SIGMASTAR_MODELS,
+)
 
 SOFT_HACK_REALTEK = {"ssid": "\"\"", "pswd": "123123 ; passwd -d admin ; echo enable > /sys/class/tty/tty/enable; telnetd"}
 SOFT_HACK_SIGMASTAR = {"ssid": "\"\"", "pswd": "123123 ; passwd -d root ; /bin/riu_w 101e 53 3012 ; telnetd"}
@@ -2118,6 +2124,11 @@ class Utils:
         if model not in NO_ALARM_MODE_MODELS:
             return True
         return False
+
+    @staticmethod
+    def gateway_speaker_supported(model: str) -> bool:
+        """Local /data/musics WAV playback via telnet (Realtek-based hubs)."""
+        return model in REALTEK_MODELS
 
     @staticmethod
     def gateway_infrared_supported(model: str) -> Optional[bool]:

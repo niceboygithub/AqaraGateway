@@ -49,16 +49,21 @@ class TelnetShell(Telnet):
 
 #        self.run_command("export PS1='# '")
 
-    def run_command(self, command: str, as_bytes=False) -> Union[str, bytes]:
+    def run_command(
+        self,
+        command: str,
+        as_bytes=False,
+        read_timeout: float = 15,
+    ) -> Union[str, bytes]:
         """Run command and return it result."""
         # pylint: disable=broad-except
         try:
             self.write(command.encode() + b"\n")
             suffix = "\r\n{}".format(self._suffix)
-            raw = self.read_until(suffix.encode(), timeout=15)
+            raw = self.read_until(suffix.encode(), timeout=read_timeout)
         except Exception:
             raw = b''
-        return raw if as_bytes else raw.decode()
+        return raw if as_bytes else raw.decode(errors="replace")
 
     def check_bin(self, filename: str, md5: str, url=None) -> bool:
         """Check binary md5 and download it if needed."""
@@ -71,12 +76,23 @@ class TelnetShell(Telnet):
         else:
             return False
 
-    def run_basis_cli(self, command: str, as_bytes=False) -> Union[str, bytes]:
-        """Run command and return it result."""
+    def run_basis_cli(
+        self,
+        command: str,
+        as_bytes=False,
+        read_timeout: float = 25,
+        prompt_reads: int = 2,
+    ) -> Union[str, bytes]:
+        """Run basis_cli; bounded read_until. prompt_reads=1 for fast -sys -v."""
         command = "basis_cli " + command
         self.write(command.encode() + b"\n")
-        self.read_until(self._suffix.encode())
-        self.read_until(self._suffix.encode())
+        raw = b""
+        try:
+            for _ in range(max(1, prompt_reads)):
+                raw += self.read_until(self._suffix.encode(), timeout=read_timeout)
+        except EOFError:
+            pass
+        return raw if as_bytes else raw.decode(errors="replace")
 
     def file_exist(self, filename: str) -> bool:
         """ check file exit """
@@ -173,8 +189,13 @@ class TelnetShell(Telnet):
         if value > 100:
             value = 100
         command = "-sys -v {}".format(value)
-        raw = self.run_basis_cli(command)
-        return raw[raw.find(">>>") + 4:]
+        raw = self.run_basis_cli(command, read_timeout=12, prompt_reads=1)
+        if '"result"' in raw and "ok" in raw:
+            return raw
+        idx = raw.find(">>>")
+        if idx >= 0:
+            return raw[idx + 4 :]
+        return raw
 
     def get_token(self):
         """ get gateway token """

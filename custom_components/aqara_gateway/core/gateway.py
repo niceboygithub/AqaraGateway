@@ -74,6 +74,8 @@ class Gateway:
         self._gateway_did = ''
         self._model = self.options.get(CONF_MODEL, '')  # long model, will replace to short later
         self.cloud = 'aiot'  # for fast access
+        self._speaker_snapshot = {'label': 'Doorbell 1'}
+        self.speaker_play_lock = asyncio.Lock()
 
     @property
     def device(self):
@@ -454,6 +456,48 @@ class Gateway:
 
                     self.setups[domain](self, device, attr)
 
+                if (device['type'] == 'gateway' and
+                        Utils.gateway_speaker_supported(device['model'])):
+                    _LOGGER.info(
+                        "speaker: gateway qualifies model=%s did=%s host=%s",
+                        device.get("model"),
+                        device.get("did"),
+                        self.host,
+                    )
+                    sp_timeout = 300
+                    needed = ('select', 'button')
+                    while (not all(d in self.setups for d in needed)
+                           ) and sp_timeout > 0:
+                        missing = [d for d in needed if d not in self.setups]
+                        if sp_timeout % 30 == 0:
+                            _LOGGER.debug(
+                                "speaker: waiting domains missing=%s "
+                                "registered=%s timeout_left=%s",
+                                missing,
+                                list(self.setups.keys()),
+                                sp_timeout,
+                            )
+                        await asyncio.sleep(1)
+                        sp_timeout -= 1
+                    if all(d in self.setups for d in needed):
+                        _LOGGER.info(
+                            "speaker: registering 2 entities host=%s model=%s",
+                            self.host,
+                            device.get("model"),
+                        )
+                        self.setups['select'](self, device, 'speaker_sound')
+                        self.setups['button'](self, device, 'speaker_play')
+                    else:
+                        missing = [d for d in needed if d not in self.setups]
+                        _LOGGER.error(
+                            "speaker: SKIPPED — platforms not ready host=%s "
+                            "model=%s missing=%s have=%s",
+                            self.host,
+                            device.get("model"),
+                            missing,
+                            list(self.setups.keys()),
+                        )
+
             if self.options.get('stats'):
                 while 'sensor' not in self.setups:
                     await asyncio.sleep(1)
@@ -539,10 +583,21 @@ class Gateway:
             self.hass.data[DOMAIN]["mqtt"].remove(self.host)
         self.available = False
 #        self.process_gateway_stats()
-        self.hass.create_task(self.async_run())
+        try:
+            loop = self.hass.loop
+            if not loop.is_closed():
+                loop.create_task(self.async_run())
+        except RuntimeError:
+            pass
 
     def on_message(self, client: Client, userdata, msg: MQTTMessage):
-        self.hass.loop.call_soon_threadsafe(self._on_message, msg)
+        try:
+            loop = self.hass.loop
+            if loop.is_closed():
+                return
+            loop.call_soon_threadsafe(self._on_message, msg)
+        except RuntimeError:
+            pass
 
     def _on_message(self, msg: MQTTMessage):
         # pylint: disable=unused-argument
