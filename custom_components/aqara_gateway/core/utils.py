@@ -976,11 +976,11 @@ DEVICES = [{
 }, {
     'lumi.curtain.acn010': ["Aqara", "Organ™ Smart Curtain Motor C4", "DSKDJ11LM"],
     'params': [
-        ['0.57.85', 'curtain_ch0_level', 'position', None],
-        ['0.58.85', 'curtain_ch1_level', 'position', None],
+        ['0.57.85', 'curtain_ch0_level', 'ch0_position', None],
+        ['0.58.85', 'curtain_ch1_level', 'ch1_position', None],
         ['13.4.85', 'run_status', 'run_state', None],
-        ['13.11.85', 'ch0_run_state', 'run_state', None],
-        ['13.21.85', 'ch1_run_state', 'run_state', None],
+        ['13.11.85', 'ch0_run_state', 'ch0_run_state', None],
+        ['13.21.85', 'ch1_run_state', 'ch1_run_state', None],
         ['0.21.85', '0.21.85', '0.21.85', None],
         ['13.14.85', '13.14.85', '13.14.85', None],
         ['13.15.85', '13.15.85', '13.15.85', None],

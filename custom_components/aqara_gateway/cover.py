@@ -308,6 +308,23 @@ class AqaraCurtainMotorC4(XiaomiGenericCover):
         | CoverEntityFeature.SET_POSITION
     )
 
+    def update(self, data: dict = None):
+        """Update only the matching channel state for this entity."""
+        data = dict(data or {})
+        data.pop(RUN_STATE, None)
+
+        if self._attr == 'ch0_motor':
+            if 'ch0_position' in data:
+                data[POSITION] = data['ch0_position']
+            if 'ch0_run_state' in data:
+                data[RUN_STATE] = data['ch0_run_state']
+        elif self._attr == 'ch1_motor':
+            if 'ch1_position' in data:
+                data[POSITION] = data['ch1_position']
+            if 'ch1_run_state' in data:
+                data[RUN_STATE] = data['ch1_run_state']
+
+        super().update(data)
 
     def close_cover(self, **kwargs):
         """Close the cover."""
