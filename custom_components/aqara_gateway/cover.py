@@ -56,6 +56,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             async_add_entities([AqaraRollerShadeE1(gateway, device, attr)])
         elif device['model'] == 'lumi.curtain.acn011':
             async_add_entities([AqaraVerticalBlindsController(gateway, device, attr)])
+        elif device['model'] == 'lumi.curtain.acn010':
+            async_add_entities([AqaraCurtainMotorC4(gateway, device, attr)])
         else:
             if device.get('mi_spec') or device['model'] == 'lumi.airer.acn001':
                 async_add_entities([XiaomiCoverMIOT(gateway, device, attr)])
@@ -295,3 +297,31 @@ class AqaraVerticalBlindsController(XiaomiGenericCover):
 
     def stop_cover_tilt(self, **kwargs: Any) -> None:
         self.gateway.send(self.device, {'tilt_motor': 2})
+
+
+class AqaraCurtainMotorC4(XiaomiGenericCover):
+    """Aqara curtain motor C4 (lumi.curtain.acn010)."""
+
+    _attr_supported_features = (
+        CoverEntityFeature.OPEN
+        | CoverEntityFeature.CLOSE
+        | CoverEntityFeature.SET_POSITION
+    )
+
+
+    def close_cover(self, **kwargs):
+        """Close the cover."""
+        self.gateway.send(self.device, {self._attr: 0})
+
+    def open_cover(self, **kwargs):
+        """Open the cover."""
+        self.gateway.send(self.device, {self._attr: 100})
+
+    def stop_cover(self, **kwargs):
+        """Stop is not supported by this device mapping."""
+        return None
+
+    def set_cover_position(self, **kwargs):
+        """Move the cover to a specific position."""
+        position = kwargs.get(ATTR_POSITION)
+        self.gateway.send(self.device, {self._attr: position})
