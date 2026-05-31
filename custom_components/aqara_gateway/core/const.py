@@ -189,6 +189,7 @@ DOMAINS = [
     'air_quality',
     'alarm_control_panel',
     'binary_sensor',
+    'button',
     'climate',
     'cover',
     'fan',
