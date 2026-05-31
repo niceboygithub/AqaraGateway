@@ -302,43 +302,64 @@ class AqaraVerticalBlindsController(XiaomiGenericCover):
 class AqaraCurtainMotorC4(XiaomiGenericCover):
     """Aqara curtain motor C4 (lumi.curtain.acn010)."""
 
-    _attr_supported_features = (
-        CoverEntityFeature.OPEN
-        | CoverEntityFeature.CLOSE
-        | CoverEntityFeature.SET_POSITION
-    )
+    def __init__(self, gateway, device, atrr):
+        if atrr == 'motor':
+            self._attr_supported_features = (
+                CoverEntityFeature.OPEN
+                | CoverEntityFeature.CLOSE
+                | CoverEntityFeature.STOP
+            )
+        else:
+            self._attr_supported_features = (
+                CoverEntityFeature.OPEN
+                | CoverEntityFeature.CLOSE
+                | CoverEntityFeature.SET_POSITION
+            )
+        super().__init__(gateway, device, atrr)
 
     def update(self, data: dict = None):
-        """Update only the matching channel state for this entity."""
-        data = dict(data or {})
-        data.pop(RUN_STATE, None)
+        """Update only the matching state for this entity."""
+        payload = {}
+        data = data or {}
 
-        if self._attr == 'ch0_motor':
+        if self._attr == 'motor':
+            if RUN_STATE in data:
+                payload[RUN_STATE] = data[RUN_STATE]
+        elif self._attr == 'ch0_motor':
             if 'ch0_position' in data:
-                data[POSITION] = data['ch0_position']
+                payload[POSITION] = data['ch0_position']
             if 'ch0_run_state' in data:
-                data[RUN_STATE] = data['ch0_run_state']
+                payload[RUN_STATE] = data['ch0_run_state']
         elif self._attr == 'ch1_motor':
             if 'ch1_position' in data:
-                data[POSITION] = data['ch1_position']
+                payload[POSITION] = data['ch1_position']
             if 'ch1_run_state' in data:
-                data[RUN_STATE] = data['ch1_run_state']
+                payload[RUN_STATE] = data['ch1_run_state']
 
-        super().update(data)
+        super().update(payload)
 
     def close_cover(self, **kwargs):
         """Close the cover."""
-        self.gateway.send(self.device, {self._attr: 0})
+        if self._attr == 'motor':
+            self.gateway.send(self.device, {'motor': 0})
+        else:
+            self.gateway.send(self.device, {self._attr: 0})
 
     def open_cover(self, **kwargs):
         """Open the cover."""
-        self.gateway.send(self.device, {self._attr: 100})
+        if self._attr == 'motor':
+            self.gateway.send(self.device, {'motor': 1})
+        else:
+            self.gateway.send(self.device, {self._attr: 100})
 
     def stop_cover(self, **kwargs):
-        """Stop is not supported by this device mapping."""
-        return None
+        """Stop the cover."""
+        if self._attr == 'motor':
+            self.gateway.send(self.device, {'motor': 2})
 
     def set_cover_position(self, **kwargs):
         """Move the cover to a specific position."""
+        if self._attr == 'motor':
+            return None
         position = kwargs.get(ATTR_POSITION)
         self.gateway.send(self.device, {self._attr: position})

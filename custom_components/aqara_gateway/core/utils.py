@@ -988,6 +988,7 @@ DEVICES = [{
         ['14.11.85', None, 'ch0_polarity', None],
         ['14.21.85', None, 'ch1_polarity', None],
         ['14.35.85', None, 'speed', None],
+        ['14.2.85', None, 'motor', 'cover'],
         ['1.11.85', None, 'ch0_motor', 'cover'],
         ['1.21.85', None, 'ch1_motor', 'cover'],
     ]
