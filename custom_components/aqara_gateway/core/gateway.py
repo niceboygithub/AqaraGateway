@@ -205,6 +205,11 @@ class Gateway:
         finally:
             skt.close()
 
+    @staticmethod
+    def _parse_device_conf(raw: str) -> dict:
+        """Parse miio device.conf key-value lines."""
+        return dict(re.findall(r"^([A-Za-z0-9_]+)=([^\r\n]*)", raw, re.MULTILINE))
+
     def _get_shell(self, device_name: str) -> TelnetShell:
         """ get shell according to the model
         """
@@ -288,6 +293,11 @@ class Gateway:
             if len(model) < 1:
                 data = re.search(r"\[ro\.sys\.model\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
                 model = data.group(1) if data else shell.get_prop("ro.sys.model")
+            if len(model) < 1:
+                device_conf = self._parse_device_conf(
+                    str(shell.read_file('/mnt/config/miio/device.conf')))
+                did = device_conf.get('did', '')
+                model = device_conf.get('model', '')
             if len(zb_coordinator) >= 1:
                 raw = shell.read_file(zb_coordinator, with_newline=False)
                 data = re.search(r"\[persist\.sys\.did\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
@@ -305,14 +315,13 @@ class Gateway:
                 did = data.group(1) if data else shell.get_prop("persist.sys.did")
                 data = re.search(r"\[persist\.sys\.model\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
                 model = data.group(1) if data else shell.get_prop("persist.sys.model")
-            elif any(name in model for name in ['lumi.camera.gwagl02']):
+            elif any(name in model for name in ['lumi.camera.gwagl02', 'lumi.camera.gwag03']):
                 raw = str(shell.read_file('/mnt/config/miio/device.conf'))
                 if len(raw) <= 1:
                     raw = str(shell.read_file('/mnt/config/miio/device.conf'))
-                data = re.search(r"did=([0-9]+).+", raw)
-                did = data.group(1) if data else ''
-                data = re.search(r"model=([a-zA-Z0-9.-]+).+", raw)
-                model = data.group(1) if data else ''
+                device_conf = self._parse_device_conf(raw)
+                did = device_conf.get('did', '')
+                model = device_conf.get('model', '')
                 raw = str(shell.read_file('/etc/build.prop'))
                 if len(raw) >= 1:
                     data = re.search(r"ro.sys.fw_ver=([0-9]+).+", raw)
