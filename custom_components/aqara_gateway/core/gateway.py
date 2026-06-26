@@ -447,6 +447,14 @@ class Gateway:
 
                 self.devices[device['did']] = device
 
+                if device['type'] == 'zigbee':
+                    last_seen_timeout = 300
+                    while 'sensor' not in self.setups and last_seen_timeout > 0:
+                        await asyncio.sleep(1)
+                        last_seen_timeout = last_seen_timeout - 1
+                    if 'sensor' in self.setups:
+                        self.setups['sensor'](self, device, 'last_seen')
+
                 for param in (device['params'] or device['mi_spec']):
                     domain = param[3]
                     if not domain:

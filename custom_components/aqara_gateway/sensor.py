@@ -5,6 +5,7 @@ from homeassistant.util.dt import now, utc_from_timestamp
 from homeassistant.const import (
     ATTR_BATTERY_LEVEL,
     ATTR_VOLTAGE,
+    EntityCategory,
     STATE_PROBLEM,
 )
 from homeassistant.components.sensor import SensorEntity
@@ -68,6 +69,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
             async_add_entities([GatewayStats(gateway, device, attr)])
         elif attr == 'zigbee':
             async_add_entities([ZigbeeStats(gateway, device, attr)])
+        elif attr == 'last_seen':
+            async_add_entities([GatewayLastSeenSensor(gateway, device, attr)])
         elif attr == 'gas density':
             async_add_entities([GatewayGasSensor(gateway, device, attr)])
         elif attr == 'lock':
@@ -188,6 +191,38 @@ class GatewaySensor(GatewayGenericDevice, SensorEntity):
                 self._state = data[LOAD_POWER]
             if self._attr == key:
                 self._state = data[key]
+        self.async_write_ha_state()
+
+
+class GatewayLastSeenSensor(GatewaySensor):
+    """Last seen timestamp for Aqara devices."""
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_entity_registry_enabled_default = False
+
+    def __init__(self, gateway, device, attr):
+        """Initialize the last seen sensor."""
+        super().__init__(gateway, device, attr)
+        self._state = None
+
+    @property
+    def device_class(self):
+        """return device class."""
+        # don't use const to support older Hass version
+        return 'timestamp'
+
+    @property
+    def available(self):
+        """return available."""
+        return True
+
+    @property
+    def icon(self):
+        """return icon."""
+        return 'mdi:clock-outline'
+
+    def update(self, data: dict = None):
+        """update last seen timestamp."""
+        self._state = now().isoformat(timespec='seconds')
         self.async_write_ha_state()
 
 
