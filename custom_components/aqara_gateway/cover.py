@@ -56,6 +56,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             async_add_entities([AqaraRollerShadeE1(gateway, device, attr)])
         elif device['model'] == 'lumi.curtain.acn011':
             async_add_entities([AqaraVerticalBlindsController(gateway, device, attr)])
+        elif device['model'] == 'lumi.curtain.acn010':
+            async_add_entities([AqaraCurtainMotorC4(gateway, device, attr)])
         else:
             if device.get('mi_spec') or device['model'] == 'lumi.airer.acn001':
                 async_add_entities([XiaomiCoverMIOT(gateway, device, attr)])
@@ -295,3 +297,69 @@ class AqaraVerticalBlindsController(XiaomiGenericCover):
 
     def stop_cover_tilt(self, **kwargs: Any) -> None:
         self.gateway.send(self.device, {'tilt_motor': 2})
+
+
+class AqaraCurtainMotorC4(XiaomiGenericCover):
+    """Aqara curtain motor C4 (lumi.curtain.acn010)."""
+
+    def __init__(self, gateway, device, atrr):
+        if atrr == 'motor':
+            self._attr_supported_features = (
+                CoverEntityFeature.OPEN
+                | CoverEntityFeature.CLOSE
+                | CoverEntityFeature.STOP
+            )
+        else:
+            self._attr_supported_features = (
+                CoverEntityFeature.OPEN
+                | CoverEntityFeature.CLOSE
+                | CoverEntityFeature.SET_POSITION
+            )
+        super().__init__(gateway, device, atrr)
+
+    def update(self, data: dict = None):
+        """Update only the matching state for this entity."""
+        payload = {}
+        data = data or {}
+
+        if self._attr == 'motor':
+            if RUN_STATE in data:
+                payload[RUN_STATE] = data[RUN_STATE]
+        elif self._attr == 'ch0_motor':
+            if 'ch0_position' in data:
+                payload[POSITION] = data['ch0_position']
+            if 'ch0_run_state' in data:
+                payload[RUN_STATE] = data['ch0_run_state']
+        elif self._attr == 'ch1_motor':
+            if 'ch1_position' in data:
+                payload[POSITION] = data['ch1_position']
+            if 'ch1_run_state' in data:
+                payload[RUN_STATE] = data['ch1_run_state']
+
+        super().update(payload)
+
+    def close_cover(self, **kwargs):
+        """Close the cover."""
+        if self._attr == 'motor':
+            self.gateway.send(self.device, {'motor': 0})
+        else:
+            self.gateway.send(self.device, {self._attr: 0})
+
+    def open_cover(self, **kwargs):
+        """Open the cover."""
+        if self._attr == 'motor':
+            self.gateway.send(self.device, {'motor': 1})
+        else:
+            self.gateway.send(self.device, {self._attr: 100})
+
+    def stop_cover(self, **kwargs):
+        """Stop the cover."""
+        if self._attr == 'motor':
+            self.gateway.send(self.device, {'motor': 2})
+
+    def set_cover_position(self, **kwargs):
+        """Move the cover to a specific position."""
+        if self._attr == 'motor':
+            return None
+        position = kwargs.get(ATTR_POSITION)
+        self.gateway.send(self.device, {self._attr: position})

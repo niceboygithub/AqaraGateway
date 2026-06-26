@@ -976,20 +976,24 @@ DEVICES = [{
 }, {
     'lumi.curtain.acn010': ["Aqara", "Organ™ Smart Curtain Motor C4", "DSKDJ11LM"],
     'params': [
-        ['0.57.85', 'curtain_ch0_level', 'position', None],
-        ['0.58.85', 'curtain_ch1_level', 'position', None],
+        ['0.57.85', 'curtain_ch0_level', 'ch0_position', None],
+        ['0.58.85', 'curtain_ch1_level', 'ch1_position', None],
         ['13.4.85', 'run_status', 'run_state', None],
-        ['13.11.85', 'ch0_run_state', 'run_state', None],
+        ['13.11.85', 'ch0_run_state', 'ch0_run_state', None],
+        ['13.21.85', 'ch1_run_state', 'ch1_run_state', None],
         ['0.21.85', '0.21.85', '0.21.85', None],
         ['13.14.85', '13.14.85', '13.14.85', None],
         ['13.15.85', '13.15.85', '13.15.85', None],
-        ['13.21.85', 'ch1_run_state', 'run_state', None],
         ['13.13.85', None, 'mode', None],
         ['14.11.85', None, 'ch0_polarity', None],
         ['14.21.85', None, 'ch1_polarity', None],
-        ['14.35.85', None, 'speed', None],
+        ['14.35.85', None, 'speed', 'select'],
+        ['14.2.85', None, 'motor', 'cover'],
         ['1.11.85', None, 'ch0_motor', 'cover'],
         ['1.21.85', None, 'ch1_motor', 'cover'],
+        ['4.3.85', None, 'manual_enable', 'switch'], # 手动开/关窗帘
+        ['8.0.2032', None, 'en_night_tip_light', 'switch'], #指示灯勿扰，1是关闭指示灯
+        ['8.0.2096', None, 'find_device', 'button'], # 查找设备
     ]
 }, {
     'lumi.curtain.acn011': ["Aqara", "Smart Vertical Blinds Controller H1", "ZNMHLDJ01LM"],
@@ -2094,6 +2098,9 @@ class Utils:
                 return {"Weak": 0, "Middle Weak": 1, "Middle": 2, "Middle Strong": 3, "Strong": 4}
             if attr == 'warn dry':
                 return {"Off": 0, "Normal": 1, "Low": 2, "Middle Low": 3, "Middle": 4, "Middle High": 5, "High": 6}
+        if zigbee_model in ['lumi.curtain.acn010']:
+            if attr == 'speed':
+                return {"Low": 2, "Middle": 3, "High": 4}
         return {"Off": 0, "On": 1}
 
     @staticmethod
