@@ -14,5 +14,6 @@
   ],
   "requirements": [
     "paho-mqtt>=1.5.0"
-  ]
+  ],
+  "loggers": ["custom_components.aqara_gateway"]
 }

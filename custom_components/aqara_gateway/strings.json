@@ -2,7 +2,7 @@
   "title": "Aqara Gateway",
   "config":{
      "abort":{
-        "already_configured":"[%key:common::config_flow::abort::already_configured_device%]",
+        "already_configured":"[%key:common::config_flow::abort::already_configured_device%]"
      },
      "step":{
         "user":{
@@ -17,5 +17,20 @@
         }
      },
      "flow_title":"Aqara Gateway: {name}"
+  },
+  "options":{
+     "step":{
+        "init":{
+           "title":"Aqara Gateway Options",
+           "description":"Configure gateway connection settings."
+        },
+        "vrf":{
+           "title":"VRF Indoor Units",
+           "description":"Enter DIP switch IDs (1-64) for each VRF indoor unit, separated by commas (max 10). Example: 8, 9, 10, 11. If you don't have a VRF device, leave as -1 and submit.",
+           "data":{
+              "vrf_units":"DIP Switch IDs"
+           }
+        }
+     }
   }
 }

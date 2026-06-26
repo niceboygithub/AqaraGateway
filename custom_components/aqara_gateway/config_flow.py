@@ -5,6 +5,7 @@ import socket
 
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.selector import NumberSelector, NumberSelectorConfig, NumberSelectorMode
 from homeassistant.config_entries import (
     CONN_CLASS_LOCAL_PUSH,
     ConfigFlow,
@@ -20,7 +21,7 @@ from .core import gateway
 from .core.const import (
     DOMAIN, OPT_DEVICE_NAME, CONF_MODEL, OPT_DEBUG,
     CONF_DEBUG, CONF_STATS, CONF_NOFFLINE, SUPPORTED_MODELS,
-    CONF_PATCHED_FW
+    CONF_PATCHED_FW, CONF_VRF_UNITS, VRF_DIP_MIN, VRF_DIP_MAX
 )
 from .core.utils import Utils
 
@@ -256,7 +257,6 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
 
 
 class OptionsFlowHandler(OptionsFlow):
-    # pylint: disable=too-few-public-methods
     """Handle options flow changes."""
     _host = None
     _password = None
@@ -272,23 +272,15 @@ class OptionsFlowHandler(OptionsFlow):
             if len(user_input.get(CONF_PASSWORD, "")) >= 1:
                 self._password = user_input.get(CONF_PASSWORD)
             self._token = user_input.get(CONF_TOKEN, "")
-            return self.async_create_entry(
-                title='',
-                data={
-                    CONF_HOST: self._host,
-                    CONF_PASSWORD: self._password,
-                    CONF_TOKEN: self._token,
-                    CONF_MODEL: self._model,
-                    # CONF_STATS: user_input.get(CONF_STATS, False),
-                    CONF_DEBUG: user_input.get(CONF_DEBUG, []),
-                    CONF_NOFFLINE: user_input.get(CONF_NOFFLINE, True),
-                },
-            )
+            self._debug = user_input.get(CONF_DEBUG, [])
+            self._noffline = user_input.get(CONF_NOFFLINE, True)
+            # Proceed to VRF config step
+            return await self.async_step_vrf()
+
         self._host = self.config_entry.options[CONF_HOST]
         self._password = self.config_entry.options.get(CONF_PASSWORD, '')
         self._token = self.config_entry.options.get(CONF_TOKEN, '')
         self._model = self.config_entry.options.get(CONF_MODEL, '')
-        # stats = self.config_entry.options.get(CONF_STATS, False)
         debug = self.config_entry.options.get(CONF_DEBUG, [])
         ignore_offline = self.config_entry.options.get(CONF_NOFFLINE, True)
 
@@ -299,11 +291,60 @@ class OptionsFlowHandler(OptionsFlow):
                     vol.Required(CONF_HOST, default=self._host): str,
                     vol.Optional(CONF_PASSWORD, default=self._password): str,
                     vol.Optional(CONF_TOKEN, default=self._token): str,
-                    # vol.Required(CONF_STATS, default=stats): bool,
                     vol.Optional(CONF_DEBUG, default=debug): cv.multi_select(
                         OPT_DEBUG
                     ),
                     vol.Required(CONF_NOFFLINE, default=ignore_offline): bool,
                 }
             ),
+        )
+
+    async def async_step_vrf(self, user_input=None):
+        """Configure VRF indoor unit DIP switch IDs."""
+        if user_input is not None:
+            vrf_units = []
+            raw = user_input.get(CONF_VRF_UNITS, "")
+            for part in raw.split(","):
+                part = part.strip()
+                if not part:
+                    continue
+                try:
+                    val = int(part)
+                except ValueError:
+                    val = -1
+                if val != -1 and (val < VRF_DIP_MIN or val > VRF_DIP_MAX):
+                    val = -1
+                vrf_units.append(val)
+            # Pad to 10 slots
+            while len(vrf_units) < 10:
+                vrf_units.append(-1)
+            vrf_units = vrf_units[:10]
+
+            return self.async_create_entry(
+                title='',
+                data={
+                    CONF_HOST: self._host,
+                    CONF_PASSWORD: self._password,
+                    CONF_TOKEN: self._token,
+                    CONF_MODEL: self._model,
+                    CONF_DEBUG: self._debug,
+                    CONF_NOFFLINE: self._noffline,
+                    CONF_VRF_UNITS: vrf_units,
+                },
+            )
+
+        # Load existing VRF config
+        existing = self.config_entry.options.get(CONF_VRF_UNITS, [])
+        # Build display string: only show active IDs
+        active = [str(v) for v in existing if v >= 0]
+        default_str = ", ".join(active) if active else "-1"
+
+        return self.async_show_form(
+            step_id="vrf",
+            data_schema=vol.Schema({
+                vol.Required(
+                    CONF_VRF_UNITS,
+                    default=default_str
+                ): str,
+            }),
         )

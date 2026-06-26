@@ -292,6 +292,15 @@ YUBA_STATE_FAN = {
     FAN_HIGH: 2
 }
 
+# VRF Air Conditioning
+VRF_MODELS = (
+    'lumi.airrtc.vrfegl01',
+    'aqara.airrtc.ecn001',
+)
+CONF_VRF_UNITS = 'vrf_units'
+VRF_DIP_MIN = 1
+VRF_DIP_MAX = 64
+
 # Cover
 RUN_STATES = {0: CoverState.CLOSING, 1: CoverState.OPENING, 2: "stop", 3: "hinder_stop"}
 

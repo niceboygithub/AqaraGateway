@@ -918,9 +918,12 @@ DEVICES = [{
     'lumi.airrtc.vrfegl01': ["Xiaomi", "VRF Air Conditioning"],
     'aqara.airrtc.ecn001': ["Aqara", "VRF Air Conditioning T1"],
     'params': [
-        ['13.1.85', None, 'channels', 'sensor'],
-        ['4.1.85', 'ac_state', 'climate 1', 'climate'],
-        ['4.2.85', 'ac_state', 'climate 2', 'climate'],
+        # Base sensors only; climate zones are injected dynamically
+        # by gateway.py based on user-configured VRF unit IDs.
+        ['8.0.2007', 'lqi', 'LQI', 'sensor'],
+        ['8.0.2223', 'back_version', 'back_version', None],
+        ['8.0.2238', 'db_version', 'DB Version', 'sensor'],
+        ['8.0.2226', 'sn_code', 'sn_code', None],
     ]
 }, {
     # button rotation
