@@ -5,14 +5,13 @@ from homeassistant.components.lock import LockState
 from homeassistant.const import (
     LIGHT_LUX,
     PERCENTAGE,
-    CONCENTRATION_PARTS_PER_BILLION,
-    CONCENTRATION_PARTS_PER_MILLION,
     MAJOR_VERSION,
     MINOR_VERSION,
     UnitOfEnergy,
     UnitOfPower,
     UnitOfPressure,
     UnitOfTemperature,
+    UnitOfRatio,
 )
 
 if (MAJOR_VERSION, MINOR_VERSION) >= (2024, 11):
@@ -208,7 +207,7 @@ UNITS = {
     SensorDeviceClass.POWER: UnitOfPower.WATT,
     SensorDeviceClass.PRESSURE: UnitOfPressure.HPA,
     SensorDeviceClass.TEMPERATURE: UnitOfTemperature.CELSIUS,
-    SensorDeviceClass.CO2: CONCENTRATION_PARTS_PER_MILLION,
+    SensorDeviceClass.CO2: UnitOfRatio.PARTS_PER_MILLION,
     SensorDeviceClass.PM25: 'µg/m³',
     SensorDeviceClass.PM10: 'µg/m³',
     SensorDeviceClass.PM1: 'µg/m³',
@@ -217,7 +216,7 @@ UNITS = {
     'gas density': '% LEL',
     'smoke density': '% obs/ft',
     'moisture': PERCENTAGE,
-    'tvoc': CONCENTRATION_PARTS_PER_BILLION,
+    'tvoc': UnitOfRatio.PARTS_PER_BILLION,
     'li battery': PERCENTAGE,
     # 'link_quality': 'lqi',
     # 'rssi': 'dBm',
