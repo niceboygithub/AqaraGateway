@@ -43,6 +43,42 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
+def _parse_gateway_json(raw, filename: str):
+    """Extract and parse JSON returned through the gateway Telnet shell."""
+
+    if isinstance(raw, bytes):
+        raw = raw.decode("utf-8", errors="replace")
+
+    raw = str(raw).replace("\r", "").strip()
+
+    if not raw:
+        raise ValueError("Empty response while reading {}".format(filename))
+
+    # Telnet may include an echoed command, prompt, or other shell output.
+    json_start = raw.find("{")
+    json_end = raw.rfind("}")
+
+    if json_start == -1 or json_end == -1 or json_end < json_start:
+        raise ValueError(
+            "No complete JSON object found in {}; raw={!r}".format(
+                filename,
+                raw[:300]
+            )
+        )
+
+    json_text = raw[json_start:json_end + 1]
+
+    try:
+        return json.loads(json_text)
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            "Invalid JSON from {}: {}; json_start={!r}".format(
+                filename,
+                exc,
+                json_text[:300]
+            )
+        ) from exc
+
 class Gateway:
     # pylint: disable=too-many-instance-attributes, unused-argument
     """ Aqara Gateway """
@@ -228,6 +264,9 @@ class Gateway:
         elif "e1" in device_name:
             shell = TelnetShellE1(self.host,
                                     self.options.get(CONF_PASSWORD, ''))
+        elif "m1s" in device_name:
+            shell = TelnetShell(self.host, 
+                                    self.options.get(CONF_PASSWORD, ''))
         elif (("m2 2022" in device_name) or ("m1s 2022" in device_name) or
                 ("m3" in device_name) or ("m1s gen2" in device_name) or
                 ("v1" in device_name)):
@@ -303,7 +342,8 @@ class Gateway:
                 did = device_conf.get('did', '')
                 model = device_conf.get('model', '')
             if len(zb_coordinator) >= 1:
-                raw = shell.read_file(zb_coordinator, with_newline=False)
+                coordinator_path = zb_coordinator
+                raw = shell.read_file(coordinator_path, with_newline=False)
                 data = re.search(r"\[persist\.sys\.did\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
                 did = data.group(1) if data else shell.get_prop("persist.sys.did")
                 data = re.search(r"\[persist\.sys\.model\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
@@ -313,8 +353,9 @@ class Gateway:
                     'lumi.camera.gwpagl01', 'lumi.camera.agl001',
                     'lumi.camera.acn003', 'lumi.camera.acn008', 'lumi.camera.acn009',
                     'lumi.camera.acn010', 'lumi.camera.acn011', 'lumi.gateway.agl011']):
+                coordinator_path = '/data/zigbee/coordinator.info'
                 raw = shell.read_file(
-                    '/data/zigbee/coordinator.info', with_newline=False)
+                    coordinator_path, with_newline=False)
                 data = re.search(r"\[persist\.sys\.did\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
                 did = data.group(1) if data else shell.get_prop("persist.sys.did")
                 data = re.search(r"\[persist\.sys\.model\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
@@ -332,8 +373,9 @@ class Gateway:
                     version_g2h = data.group(1) if data else ''
                     data = re.search(r"ro.sys.build_num=([0-9]+).+", raw)
                     build_num_g2h = data.group(1) if data else ''
+                coordinator_path = '/mnt/config/zigbee/coordinator.info'
                 raw = shell.read_file(
-                    '/mnt/config/zigbee/coordinator.info', with_newline=False)
+                    coordinator_path, with_newline=False)
             else:
                 raw = shell.read_file(
                     '/data/zigbee/coordinator.info', with_newline=False)
@@ -341,7 +383,7 @@ class Gateway:
                 did = data.group(1) if data else shell.get_prop("persist.sys.did")
                 data = re.search(r"\[ro\.sys\.model\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
                 model = data.group(1) if data else shell.get_prop("ro.sys.model")
-            value = json.loads(raw)
+            value = _parse_gateway_json(raw, coordinator_path)
             devices = [{
                 'coordinator': 'lumi.0',
                 'did': did,
@@ -391,6 +433,7 @@ class Gateway:
             data = re.search(r"\[sys\.zb_device\]: \[([a-zA-Z0-9.-]+)\]", prop_raw)
             zb_device = data.group(1) if data else shell.get_prop("sys.zb_device")
             if len(zb_device) >= 1:
+                device_info_path = zb_device
                 raw = shell.read_file(zb_device, with_newline=False)
             else:
                 device_info_path = '{}/zigbee/device.info'.format(Utils.get_info_store_path(self._model))
@@ -398,7 +441,7 @@ class Gateway:
                     device_info_path = '/mnt/config/zigbee/device.info'
                 raw = shell.read_file(device_info_path)
 
-            value = json.loads(raw)
+            value = _parse_gateway_json(raw, device_info_path)
             dev_info = value.get("devInfo", 'null') or []
             if not Utils.gateway_is_aiot_only(model):
                 self.cloud = shell.get_prop("persist.sys.cloud")
