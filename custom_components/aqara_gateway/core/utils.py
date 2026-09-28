@@ -352,7 +352,7 @@ DEVICES = [{
     'lumi.light.acn024': ["Aqara", "Spotlight T2 (24 degree)", "LTSZNSD02LM"],
     'lumi.light.acn023': ["Aqara", "Spotlight T2 (15 degree)", "LTSZNSD01LM"],
     'lumi.light.acn131': ["Aqara", "Downlight T3", "LGYCDD02LM"],
-    'lumi.light.acn132': ["Aqara", "Colorful Light Strip T3", "LGYCDD01LM"],
+#    'lumi.light.acn132': ["Aqara", "Colorful Light Strip T3", "LGYCDD01LM"],
     'lumi.light.acn130': ["Aqara", "Spotlight T3 (36 degree)", "LGYCDD03LM"],
     'lumi.light.acn129': ["Aqara", "Spotlight T3 (24 degree)", "LGYCDD04LM"],
     'lumi.light.acn128': ["Aqara", "Spotlight T3", "LGYCDD05LM"],
@@ -380,7 +380,6 @@ DEVICES = [{
     'lumi.dimmer.acn003': ["Aqara", "RGBW LED Dimmer T1 (60W)", "AL010CNW01"],
     'lumi.dimmer.acn002': ["Aqara", "RGBW LED Dimmer T2 (24W)", ""],
     'lumi.dimmer.acn001': ["Aqara", "RGBW LED Dimmer T2", ""],
-    'lumi.light.acn132': ["Aqara", "LED Strip T1", "LGYCDD01LM"],
     'params': [
         ['1.10.85', None, 'present_mode', None],
         ['0.12.85', 'load_power', 'power', 'sensor'],
@@ -394,6 +393,26 @@ DEVICES = [{
         ['14.46.85', None, 'dual_color_temperature_mode', None],
         ['8.0.2022', None, 'ambilight', None],
         ['8.0.2150', None, 'dynamic', None],
+    ]
+}, {
+    # light with brightness and color temp
+    'lumi.light.acn132': ["Aqara", "LED Strip T1", "LGYCDD01LM"],
+    'params': [
+        ['1.7.85', 'light_level', 'brightness', None],
+        ['1.9.85', 'colour_temperature', 'color_temp', None],
+        ['1.10.85', None, 'present_mode', None],
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['14.1.85', 'light_level', 'brightness', None],
+        ['14.2.85', 'colour_temperature', 'color_temp', None],
+        ['14.5.85', 'rgb_color', 'rgb_color', None],
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['14.12.85', 'light_level', 'brightness', None],
+        ['14.16.85', 'colour_temperature', 'color_temp', None],
+        ['4.2.85', 'power_status', 'sub light', 'light'],
+        ['14.46.85', None, 'dual_color_temperature_mode', None],
+        ['8.0.2022', None, 'ambilight', None],
+        ['8.0.2150', None, 'dynamic', None],
+        ['14.163.85', None, 'music_mode', 'select'],
     ]
 }, {
     # light with brightness and color temp
@@ -516,7 +535,7 @@ DEVICES = [{
         ['14.56.85', None, 'detecting_region', None],
         ['13.21.85', None, 'occupancy_region', 'sensor'],
         ['13.27.85', None, 'movements', 'sensor'],
-        ['4.1.85', None, 'monitoring_mode', 'select'],
+        ['4.1.85', None, 'monitoring_mode', None],
         ['4.2.85', None, 'reverted_mode', 'select'],
         ['14.47.85', None, 'approaching_distance', 'select'],
     ]
