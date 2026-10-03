@@ -16,6 +16,8 @@ BUTTON_EVENT_TYPES = [
     ButtonEventType.MULTI_PRESS_END,
     ButtonEventType.LONG_PRESS_START,
     ButtonEventType.LONG_PRESS_END,
+    'slide_up',
+    'slide_down',
 ]
 
 BUTTON_EVENTS = {
@@ -25,6 +27,14 @@ BUTTON_EVENTS = {
     4: ButtonEventType.MULTI_PRESS_END,
     16: ButtonEventType.LONG_PRESS_START,
     17: ButtonEventType.LONG_PRESS_END,
+}
+
+SLIDER_BUTTON_EVENTS = {
+    1: ButtonEventType.PRESS_END,
+    2: ButtonEventType.MULTI_PRESS_END,
+    3: ButtonEventType.LONG_PRESS_END,
+    4: 'slide_up',
+    5: 'slide_down',
 }
 
 
@@ -101,7 +111,12 @@ class GatewayButtonEvent(GatewayGenericDevice, EventEntity):
         except (TypeError, ValueError):
             return None, {}
 
-        event = BUTTON_EVENTS.get(raw_value)
+        events = (
+            SLIDER_BUTTON_EVENTS
+            if self._attr.startswith('slider')
+            else BUTTON_EVENTS
+        )
+        event = events.get(raw_value)
         if event is None:
             return None, {}
 

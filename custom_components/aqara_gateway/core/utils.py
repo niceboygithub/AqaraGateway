@@ -1202,7 +1202,7 @@ DEVICES_AIOT = [{
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
         ['4.3.85', 'channel_2', 'channel 3', 'switch'],
-        ['13.1.85', None, 'button', None],
+        ['13.1.85', None, 'slider_button', 'event'],
         ['13.21.85', None, 'button_1', 'event'],
         ['13.22.85', None, 'button_2', 'event'],
         ['13.23.85', None, 'button_3', 'event'],
