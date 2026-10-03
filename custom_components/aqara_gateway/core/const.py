@@ -197,7 +197,8 @@ DOMAINS = [
     'remote',
     'select',
     'sensor',
-    'switch'
+    'switch',
+    'event'
 ]
 
 UNITS = {
