@@ -1,4 +1,5 @@
-""" Telnet Shell """
+"""Telnet Shell"""
+
 # pylint: disable=line-too-long
 import time
 import base64
@@ -10,32 +11,37 @@ from .const import (
     SIGMASTAR_MODELS,
     MD5_MOSQUITTO_NEW_ARMV7L,
     MD5_MOSQUITTO_G2HPRO_ARMV7L,
-    MD5_MOSQUITTO_MIPSEL
+    MD5_MOSQUITTO_MIPSEL,
 )
 
-WGET = "(wget http://master.dl.sourceforge.net/project/aqarahub/{0}?viasf=1 " \
-            "-O /data/bin/{1} && chmod +x /data/bin/{1})"
+WGET = (
+    "(wget http://master.dl.sourceforge.net/project/aqarahub/{0}?viasf=1 "
+    "-O /data/bin/{1} && chmod +x /data/bin/{1})"
+)
 
 CHECK_SOCAT = "(md5sum /data/socat | grep 92b77e1a93c4f4377b4b751a5390d979)"
-DOWNLOAD_SOCAT = "(wget -O /data/socat http://pkg.simple-ha.ru/mipsel/socat && chmod +x /data/socat)"
+DOWNLOAD_SOCAT = (
+    "(wget -O /data/socat http://pkg.simple-ha.ru/mipsel/socat && chmod +x /data/socat)"
+)
 RUN_SOCAT_BT_IRDA = "/data/socat tcp-l:8888,reuseaddr,fork /dev/ttyS2"
 RUN_SOCAT_ZIGBEE = "/data/socat tcp-l:8888,reuseaddr,fork /dev/ttyS1"
 
 
 class TelnetShell(Telnet):
-    """ Telnet Shell """
+    """Telnet Shell"""
+
     _aqara_property = False
     _suffix = "# "
     # pylint: disable=unsubscriptable-object
 
     def __init__(self, host: str, password=""):
-        """ init function """
+        """init function"""
         super().__init__(host, timeout=5)
         self._host = host
         self._password = password
 
     def login(self):
-        """ login function """
+        """login function"""
         self.write(b"\n")
         self.read_until(b"login: ", timeout=10)
 
@@ -47,7 +53,7 @@ class TelnetShell(Telnet):
         self.write(b"\n")
         self.read_until(b" # ", timeout=2)
 
-#        self.run_command("export PS1='# '")
+    #        self.run_command("export PS1='# '")
 
     def run_command(self, command: str, as_bytes=False) -> Union[str, bytes]:
         """Run command and return it result."""
@@ -57,7 +63,7 @@ class TelnetShell(Telnet):
             suffix = "\r\n{}".format(self._suffix)
             raw = self.read_until(suffix.encode(), timeout=15)
         except Exception:
-            raw = b''
+            raw = b""
         return raw if as_bytes else raw.decode()
 
     def check_bin(self, filename: str, md5: str, url=None) -> bool:
@@ -79,44 +85,94 @@ class TelnetShell(Telnet):
         self.read_until(self._suffix.encode())
 
     def file_exist(self, filename: str) -> bool:
-        """ check file exit """
+        """check file exit"""
         raw = self.run_command("ls -al {}".format(filename))
         if "No such" not in str(raw):
             return True
         return False
 
     def run_public_mosquitto(self, model):
-        """ run mosquitto as public """
+        """run mosquitto as public"""
         if not self.file_exist("/data/bin/mosquitto"):
             command = "mkdir -p /data/bin"
             self.write(command.encode() + b"\n")
-            if model in ('lumi.camera.agl001'):
-                self.check_bin('mosquitto', MD5_MOSQUITTO_G2HPRO_ARMV7L , 'bin/armv7l/mosquitto_g2hpro')
+            if model in ("lumi.camera.agl001"):
+                self.check_bin(
+                    "mosquitto",
+                    MD5_MOSQUITTO_G2HPRO_ARMV7L,
+                    "bin/armv7l/mosquitto_g2hpro",
+                )
             elif model in SIGMASTAR_MODELS:
-                self.check_bin('mosquitto', MD5_MOSQUITTO_NEW_ARMV7L , 'bin/armv7l/mosquitto_new')
+                self.check_bin(
+                    "mosquitto", MD5_MOSQUITTO_NEW_ARMV7L, "bin/armv7l/mosquitto_new"
+                )
             else:
-                self.check_bin('mosquitto', MD5_MOSQUITTO_MIPSEL, 'bin/mipsel/mosquitto')
+                self.check_bin(
+                    "mosquitto", MD5_MOSQUITTO_MIPSEL, "bin/mipsel/mosquitto"
+                )
         self.run_command("killall mosquitto")
         self.run_command("sleep .1")
         self.run_command("/data/bin/mosquitto -d")
 
     def check_public_mosquitto(self) -> bool:
-        """ get processes list """
+        """get processes list"""
         raw = self.run_command("mosquitto")
         if 'Binding listener to interface ""' in raw:
             return True
-        if 'Binding listener to interface ' not in raw:
+        if "Binding listener to interface " not in raw:
             return True
         return False
 
     def get_running_ps(self, ps=None) -> str:
-        """ get processes list """
+        """get processes list"""
         if isinstance(ps, str):
             return self.run_command(f"ps | grep {ps}")
         return self.run_command("ps")
 
-    def read_file(self, filename: str, as_base64=False, with_newline=True):
-        """ read file content """
+    def read_file(self, filename: str, as_base64: bool = False, with_newline: bool = True):
+        """Read complete file content from the gateway."""
+
+        try:
+            command = "cat {} | base64".format(filename) if as_base64 \
+                else "cat {}".format(filename)
+            raw = self.run_command(command)
+
+            if not raw:
+                raise RuntimeError(
+                    "Gateway returned no data for {}".format(filename)
+                )
+
+            raw = raw.replace("\r\n", "\n").replace("\r", "\n")
+            lines = raw.splitlines()
+            suffix = self._suffix.strip()
+
+            while lines and lines[-1].strip() == suffix:
+                lines.pop()
+
+            if lines and lines[0].strip() == command:
+                lines.pop(0)
+
+            raw = "\n".join(lines).strip()
+
+            if not raw:
+                raise RuntimeError(
+                    "Gateway returned empty file content for {}".format(
+                        filename
+                    )
+                )
+
+            if as_base64:
+                return base64.b64decode("".join(raw.splitlines()))
+
+            return raw if with_newline else "".join(raw.splitlines())
+
+        except Exception as exc:
+            raise RuntimeError(
+                "Failed reading gateway file {}: {}".format(filename, exc)
+            ) from exc
+
+    def read_file_backup(self, filename: str, as_base64=False, with_newline=True):
+        """read file content"""
         # pylint: disable=broad-except
         try:
             if as_base64:
@@ -135,10 +191,10 @@ class TelnetShell(Telnet):
                 ret = "".join(ret.rsplit(self._suffix, 1))
             return ret.strip("\n")
         except Exception:
-            return ''
+            return ""
 
     def get_prop(self, property_value: str):
-        """ get property """
+        """get property"""
         # pylint: disable=broad-except
         try:
             if self._aqara_property:
@@ -152,10 +208,10 @@ class TelnetShell(Telnet):
                 ret = ret.replace(self._suffix, "", 2)
             return ret.replace("\r", "").replace("\n", "")
         except Exception:
-            return ''
+            return ""
 
     def set_prop(self, property_value: str, value: str):
-        """ set property """
+        """set property"""
         if self._aqara_property:
             command = "asetprop {} {}\n".format(property_value, value)
         else:
@@ -165,19 +221,19 @@ class TelnetShell(Telnet):
         self.read_until(self._suffix.encode())
 
     def get_version(self):
-        """ get gateway version """
+        """get gateway version"""
         return self.get_prop("ro.sys.fw_ver")
 
     def set_audio_volume(self, value):
-        """ set gateway audio volume """
+        """set gateway audio volume"""
         if value > 100:
             value = 100
         command = "-sys -v {}".format(value)
         raw = self.run_basis_cli(command)
-        return raw[raw.find(">>>") + 4:]
+        return raw[raw.find(">>>") + 4 :]
 
     def get_token(self):
-        """ get gateway token """
+        """get gateway token"""
         filename = "/data/miio/device.token"
         if self.file_exist(filename):
             return self.read_file(filename).rstrip().encode().hex()
@@ -189,7 +245,7 @@ class TelnetShell(Telnet):
             suffix = ":"
             raw = self.read_until(suffix.encode(), timeout=15)
         except Exception:
-            raw = b''
+            raw = b""
         model = raw.decode()
         models = {
             "G2HPro": "g2h pro",
@@ -200,7 +256,7 @@ class TelnetShell(Telnet):
             "M1S": "m1s gen2",
             "V1": "v1",
             "M200": "m200",
-            "M100": "m100"
+            "M100": "m100",
         }
         if len(model) >= 1:
             for key, value in models.items():
@@ -208,25 +264,25 @@ class TelnetShell(Telnet):
                     return value
         return "m2 2022"
 
-class TelnetShellG2H(TelnetShell):
 
+class TelnetShellG2H(TelnetShell):
     def login(self):
-        """ login function """
+        """login function"""
         self._aqara_property = True
 
         self.write(b"\n")
         self.read_until(b"login: ", timeout=10)
 
         password = self._password
-        if ((self._password is None) or
-            (isinstance(self._password, str) and len(self._password) <= 1)
+        if (self._password is None) or (
+            isinstance(self._password, str) and len(self._password) <= 1
         ):
-            password = '\n'
+            password = "\n"
 
         self.write(b"root\n\r")
         if password:
             self.read_until(b"Password: ", timeout=3)
-            #self.write(password.encode() + b"\n")
+            # self.write(password.encode() + b"\n")
             self.run_command(password)
 
         self.run_command("stty -echo")
@@ -235,9 +291,8 @@ class TelnetShellG2H(TelnetShell):
 
 
 class TelnetShellE1(TelnetShell):
-
     def login(self):
-        """ login function """
+        """login function"""
         self._aqara_property = True
 
         self.write(b"\n")
@@ -258,7 +313,7 @@ class TelnetShellG3(TelnetShell):
     _suffix = "~ # "
 
     def login(self):
-        """ login function """
+        """login function"""
         self._aqara_property = True
 
         self.write(b"\n")
@@ -280,7 +335,7 @@ class TelnetShellM2POE(TelnetShell):
     _suffix = "/ # "
 
     def login(self):
-        """ login function """
+        """login function"""
         self._aqara_property = True
 
         self.write(b"\n")
@@ -294,4 +349,3 @@ class TelnetShellM2POE(TelnetShell):
         self.read_until(b"/ # ", timeout=10)
         self.run_command("stty -echo")
         self.read_until(self._suffix.encode(), timeout=10)
-
