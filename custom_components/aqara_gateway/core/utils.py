@@ -1193,6 +1193,24 @@ DEVICES_AIOT = [{
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
+    # Aqara Scene Panel S100 (Zigbee side of the panel)
+    'lumi.switch.acn067': ["Aqara", "Scene Panel S100", ""],
+    'params': [
+        ['0.12.85', 'load_power', 'power', 'sensor'],
+        ['0.13.85', None, 'consumption', 'sensor'],
+        ['0.3.85', 'illumination', 'illuminance', 'sensor'],
+        ['4.1.85', 'channel_0', 'channel 1', 'switch'],
+        ['4.2.85', 'channel_1', 'channel 2', 'switch'],
+        ['4.3.85', 'channel_2', 'channel 3', 'switch'],
+        ['13.21.85', None, 'button_1', 'event'],
+        ['13.22.85', None, 'button_2', 'event'],
+        ['13.23.85', None, 'button_3', 'event'],
+        ['13.24.85', None, 'button_4', 'event'],
+        ['13.25.85', None, 'button_5', 'event'],
+        ['13.26.85', None, 'button_6', 'event'],
+        [None, None, 'switch', 'binary_sensor'],
+    ]
+}, {
     # with neutral wire
     'lumi.switch.acn059': ["Aqara", "Canon Smart Wall Switch Z1 Pro (Four-button Version)", "ZNQBKG45LM"],
     'lumi.switch.agl006': ["Aqara", "Smart Wall Switch H2 (Four-button Version)", ""],
