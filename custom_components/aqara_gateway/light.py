@@ -82,6 +82,13 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                 color_modes = {ColorMode.RGB}
         if self.device['type'] == 'gateway':
             color_modes = {ColorMode.RGB}
+        self._sub_cct = attr == "sub light" and any(
+            param[2] == "sub_color_temp" for param in device["params"]
+        )
+        self._brightness_key = "sub_brightness" if self._sub_cct else ATTR_BRIGHTNESS
+        self._color_temp_key = "sub_color_temp" if self._sub_cct else ATTR_COLOR_TEMP
+        if any(param[2] == "sub_color_temp" for param in device["params"]):
+            color_modes = {ColorMode.COLOR_TEMP}
         self._attr_supported_color_modes = color_modes
         self._attr_supported_features = LightEntityFeature.EFFECT
 
@@ -127,15 +134,15 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                     self._state = any(data[self._attr])
                 else:
                     self._state = data[self._attr] >= 1
-            if ATTR_BRIGHTNESS in data:
-                self._attr_brightness = int(data[ATTR_BRIGHTNESS] / 100.0 * 255.0)
-            if ATTR_COLOR_TEMP in data:
-                self._attr_color_temp_kelvin = color_util.color_temperature_mired_to_kelvin(data[ATTR_COLOR_TEMP])
-            if ATTR_RGB_COLOR in data:
+            if self._brightness_key in data:
+                self._attr_brightness = int(data[self._brightness_key] / 100.0 * 255.0)
+            if self._color_temp_key in data:
+                self._attr_color_temp_kelvin = color_util.color_temperature_mired_to_kelvin(data[self._color_temp_key])
+            if ATTR_RGB_COLOR in data and not self._sub_cct:
                 x_val = float(data[ATTR_RGB_COLOR] / (2**16))
                 y_val = float(data[ATTR_RGB_COLOR] - x_val)
                 self._attr_rgb_color = color_util.color_xy_to_RGB(x_val, y_val)
-            if ATTR_HS_COLOR in data:
+            if ATTR_HS_COLOR in data and not self._sub_cct:
                 if self.device['type'] == 'zigbee':
                     if isinstance(data[ATTR_HS_COLOR], int):
                         value = hex(data[ATTR_HS_COLOR] & 0xFFFFFF).replace('0x', '')
@@ -163,11 +170,11 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
 
         if ATTR_BRIGHTNESS in kwargs:
             self._attr_brightness = int(kwargs[ATTR_BRIGHTNESS] / 255.0 * 100.0)
-            payload[ATTR_BRIGHTNESS] = self._attr_brightness
+            payload[self._brightness_key] = self._attr_brightness
 
         if ATTR_COLOR_TEMP_KELVIN in kwargs:
             self._attr_color_temp_kelvin = kwargs[ATTR_COLOR_TEMP_KELVIN]
-            payload[ATTR_COLOR_TEMP] = color_util.color_temperature_kelvin_to_mired(self._attr_color_temp_kelvin)
+            payload[self._color_temp_key] = color_util.color_temperature_kelvin_to_mired(self._attr_color_temp_kelvin)
 
         if ATTR_RGB_COLOR in kwargs:
             self._attr_rgb_color = kwargs[ATTR_RGB_COLOR]
