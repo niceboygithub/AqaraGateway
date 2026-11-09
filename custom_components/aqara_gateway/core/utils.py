@@ -342,6 +342,31 @@ DEVICES = [{
         ['14.7.85', None, 'dynamic', None],
     ]
 }, {
+    # LED Bulb T2 RGB CCT: power 4.1.85, brightness 1.7.85 (%),
+    # color temp 1.9.85 (mired), colour 14.8.85 (xy packed), 14.165.85 colour mode (2 = xy)
+    'lumi.light.agl001': ["Aqara", "LED Bulb T2 (E26, RGB CCT)", ""],
+    'lumi.light.agl003': ["Aqara", "LED Bulb T2 (E27, RGB CCT)", ""],
+    'lumi.light.agl005': ["Aqara", "LED Bulb T2 (GU10, RGB CCT)", ""],
+    'lumi.light.agl007': ["Aqara", "LED Bulb T2 (GU10, RGB CCT)", ""],
+    'params': [
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['1.7.85', 'light_level', 'brightness', None],
+        ['1.9.85', 'colour_temperature', 'color_temp', None],
+        ['14.8.85', None, 'xy_color', None],
+        ['14.165.85', None, 'lumi_color_mode', None],
+    ]
+}, {
+    # LED Bulb T2 CCT (untested): same ids without colour
+    'lumi.light.agl002': ["Aqara", "LED Bulb T2 (E26, CCT)", ""],
+    'lumi.light.agl004': ["Aqara", "LED Bulb T2 (E27, CCT)", ""],
+    'lumi.light.agl006': ["Aqara", "LED Bulb T2 (GU10, CCT)", ""],
+    'lumi.light.agl008': ["Aqara", "LED Bulb T2 (GU10, CCT)", ""],
+    'params': [
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['1.7.85', 'light_level', 'brightness', None],
+        ['1.9.85', 'colour_temperature', 'color_temp', None],
+    ]
+}, {
     # light with brightness and color temp
     'lumi.light.cwacn1': ["Aqara", "0-10V Dimmer", "ZNTGMK12LM"],  # @miniknife88
     'lumi.light.cwjwcn01': ["Aqara", "Jiawen 0-12V Dimmer", "Z204"],  # @Kris
