@@ -30,7 +30,9 @@ class InitialStateSync:
         self.mqtt_ready = False
         self.stopped = False
         self.session_started = 0
-        self.sequence = random.randint(1, 65535)
+        # Per-device contiguous ranges recognize retired replies in constant space.
+        # Never reuse an ID during this Gateway lifetime, including reconnects.
+        self.request_ids = {}
         self.arrival = 0
         self.response_timeout = 2.0
         self.debounce = 0.1
@@ -86,7 +88,9 @@ class InitialStateSync:
         did, key, params, command = self.decode(data)
         if command not in ('report', 'heartbeat', 'read_rsp') or not isinstance(did, str) or did == 'lumi.0' or not isinstance(params, list):
             return data
-        record = self.requests.get(data.get('id')) if command == 'read_rsp' else None
+        record = self.requests.get((did, data.get('id'))) if command == 'read_rsp' else None
+        if command == 'read_rsp' and record is None and self.was_requested(did, data.get('id')):
+            return None
         if record and record[0] == did:
             if record[1] != self.generation or not self.mqtt_ready:
                 return None
@@ -109,6 +113,21 @@ class InitialStateSync:
     def _seen(self, did, attr):
         item = self.cache.get(did, {}).get(attr)
         return item[1] if item and item[0] == self.generation else -1
+
+    def next_request_id(self, did):
+        first, count = self.request_ids.get(did, (random.randint(1, 65535), 0))
+        if count >= 65535:
+            _LOGGER.warning('Initial state request IDs exhausted; keeping report-only updates')
+            return None
+        identifier = (first + count - 1) % 65535 + 1
+        self.request_ids[did] = (first, count + 1)
+        return identifier
+
+    def was_requested(self, did, identifier):
+        if not isinstance(identifier, int) or isinstance(identifier, bool) or not 1 <= identifier <= 65535:
+            return False
+        first, count = self.request_ids.get(did, (1, 0))
+        return (identifier - first) % 65535 < count
 
     def _order(self, did, attr):
         item = self.orders.get(did, {}).get(attr)
@@ -209,13 +228,13 @@ class InitialStateSync:
             missing = [code for code, attr in props.items() if self._seen(did, attr) < self.session_started]
             if not missing:
                 return
-            self.sequence = self.sequence % 65535 + 1
-            while self.sequence in self.requests:
-                self.sequence = self.sequence % 65535 + 1
-            self.requests[self.sequence] = (did, generation, self.clock(), set(missing), {attr: self._order(did, attr) for attr in props.values()})
+            identifier = self.next_request_id(did)
+            if identifier is None:
+                return
+            self.requests[(did, identifier)] = (did, generation, self.clock(), set(missing), {attr: self._order(did, attr) for attr in props.values()})
             while len(self.requests) > 128:
                 self.requests.popitem(last=False)
-            message = {'cmd': 'read', 'did': did, 'id': self.sequence}
+            message = {'cmd': 'read', 'did': did, 'id': identifier}
             if self.gateway.devices[did].get('params'):
                 message['params'] = [{'res_name': code} for code in missing]
             else:

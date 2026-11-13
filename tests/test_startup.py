@@ -15,13 +15,13 @@ class StartupTests(unittest.IsolatedAsyncioTestCase):
     def engine(self):
         module = ast.parse(SOURCE.read_text(encoding='utf-8'))
         cls = next((n for n in module.body if isinstance(n, ast.ClassDef) and n.name == 'Gateway'))
-        cls.body = [n for n in cls.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name in ('async_run', '_async_run_startup', 'async_connect', '_async_connect_startup', 'stop', 'async_disconnect', '_check_port', '_mqtt_connect')]
+        cls.body = [n for n in cls.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name in ('async_run', '_async_run_startup', 'async_connect', '_async_connect_startup', '_async_lifecycle_io', 'stop', 'async_disconnect', '_check_port', '_mqtt_connect')]
         self.pauses = []
 
         async def sleep(seconds):
             self.pauses.append(seconds)
             await asyncio.sleep(0)
-        self.ns = dict(asyncio=SimpleNamespace(sleep=sleep, Lock=asyncio.Lock), socket=socket, DOMAIN='fixture', _LOGGER=logging.getLogger('fixture'))
+        self.ns = dict(asyncio=SimpleNamespace(sleep=sleep, Lock=asyncio.Lock, ensure_future=asyncio.ensure_future, shield=asyncio.shield, CancelledError=asyncio.CancelledError), socket=socket, DOMAIN='fixture', _LOGGER=logging.getLogger('fixture'))
         exec(compile(ast.Module(body=[cls], type_ignores=[]), str(SOURCE), 'exec'), self.ns)
         obj = self.ns['Gateway']()
         self.main_thread = threading.get_ident()
@@ -237,6 +237,33 @@ class StartupTests(unittest.IsolatedAsyncioTestCase):
         release.set()
         await asyncio.gather(task, shutdown)
         self.assertEqual(self.setup_rows, [])
+        self.assertFalse(obj.available)
+
+    async def test_cancelled_legacy_task_drains_worker_before_disconnect_returns(self):
+        obj = self.engine()
+        obj.devices = {'existing': {'model':'retained'}}
+        entered = threading.Event()
+        release = threading.Event()
+        actions = []
+        def start_loop():
+            entered.set()
+            release.wait(1)
+            actions.append('started')
+        obj._mqttc.loop_start = start_loop
+        obj._mqttc.loop_stop = lambda: actions.append('stopped')
+        obj.main_task = asyncio.create_task(obj.async_run())
+        for _ in range(100):
+            if entered.is_set():break
+            await asyncio.sleep(.002)
+        self.assertTrue(entered.is_set())
+        obj.stop()
+        shutdown = asyncio.create_task(obj.async_disconnect())
+        await asyncio.sleep(.02)
+        self.assertFalse(shutdown.done(), 'Shutdown must drain the outstanding executor worker')
+        release.set()
+        await asyncio.gather(obj.main_task, return_exceptions=True)
+        await shutdown
+        self.assertEqual(actions[-2:], ['started','stopped'])
         self.assertFalse(obj.available)
 if __name__ == '__main__':
     unittest.main()

@@ -152,6 +152,23 @@ class Gateway:
         if self.main_task:  # HA < 2023.3
             self.main_task.cancel()
 
+    async def _async_lifecycle_io(self, function, *args):
+        """Keep lifecycle lock ownership until even a cancelled worker drains."""
+        work = asyncio.ensure_future(self.hass.async_add_executor_job(function, *args))
+        try:
+            return await asyncio.shield(work)
+        except asyncio.CancelledError:
+            while not work.done():
+                try:
+                    await asyncio.shield(work)
+                except asyncio.CancelledError:
+                    continue
+                except Exception:
+                    break
+            if not work.cancelled():
+                work.exception()
+            raise
+
     async def async_connect(self):
         """Serialize the first MQTT connection with startup/reconnect."""
         if getattr(self, "_stopping", False):
@@ -167,7 +184,7 @@ class Gateway:
         """Connect to the host. Does not process messages yet."""
         result: int | None = None
         try:
-            result = await self.hass.async_add_executor_job(
+            result = await self._async_lifecycle_io(
                 self._mqttc.connect,
                 self.host
             )
@@ -182,7 +199,7 @@ class Gateway:
 
         if getattr(self, "_stopping", False):
             return
-        await self.hass.async_add_executor_job(self._mqttc.loop_start)
+        await self._async_lifecycle_io(self._mqttc.loop_start)
         if not getattr(self, "_stopping", False):
             self.enabled = True
 
@@ -191,12 +208,13 @@ class Gateway:
         self._stopping = True
         self._initial_state.stop()
         self.enabled = False
+        self.available = False
         lock = getattr(self, "_async_run_lock", None)
         if lock is None:
             lock = self._async_run_lock = asyncio.Lock()
         async with lock:
             # Join lifecycle I/O before final loop_stop so it cannot restart later.
-            await self.hass.async_add_executor_job(self._mqttc.loop_stop)
+            await self._async_lifecycle_io(self._mqttc.loop_stop)
             self.available = False
 
     def start(self):
@@ -229,7 +247,7 @@ class Gateway:
             self.hass.data[DOMAIN]["mqtt"] = []
 
         while not telnetshell and not self.devices and not getattr(self, "_stopping", False):
-            port_open = await self.hass.async_add_executor_job(self._check_port, 23)
+            port_open = await self._async_lifecycle_io(self._check_port, 23)
             if getattr(self, "_stopping", False):
                 return
             if not port_open:
@@ -239,7 +257,7 @@ class Gateway:
                 await asyncio.sleep(30)
                 continue
 
-            devices = await self.hass.async_add_executor_job(self._prepare_gateway, True)
+            devices = await self._async_lifecycle_io(self._prepare_gateway, True)
             if getattr(self, "_stopping", False):
                 return
             if isinstance(devices, list):
@@ -257,16 +275,16 @@ class Gateway:
                 self.hass.data[DOMAIN]["telnet"].append(self.host)
 
         while not self.available and not getattr(self, "_stopping", False):
-            await self.hass.async_add_executor_job(self._mqttc.loop_stop)
+            await self._async_lifecycle_io(self._mqttc.loop_stop)
             if getattr(self, "_stopping", False):
                 return
-            connected = await self.hass.async_add_executor_job(self._mqtt_connect)
+            connected = await self._async_lifecycle_io(self._mqtt_connect)
             if getattr(self, "_stopping", False):
                 return
             if not connected:
                 if self.host in self.hass.data[DOMAIN]["mqtt"]:
                     self.hass.data[DOMAIN]["mqtt"].remove(self.host)
-                prepared = await self.hass.async_add_executor_job(self._prepare_gateway)
+                prepared = await self._async_lifecycle_io(self._prepare_gateway)
                 if getattr(self, "_stopping", False):
                     return
                 if not prepared:
@@ -274,7 +292,7 @@ class Gateway:
                     await asyncio.sleep(30)
                     continue
 
-            await self.hass.async_add_executor_job(self._mqttc.loop_start)
+            await self._async_lifecycle_io(self._mqttc.loop_start)
             if getattr(self, "_stopping", False):
                 return
             self.available = True

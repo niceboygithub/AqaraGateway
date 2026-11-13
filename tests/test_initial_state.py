@@ -85,6 +85,22 @@ class InitialTests(unittest.IsolatedAsyncioTestCase):
             self.helper.debounce = 0.001
         g._initial_state = self.helper
 
+    async def test_request_ids_are_not_reused_across_reconnects_or_devices(self):
+        self.helper.request_ids['lumi.one'] = (65535, 0)
+        self.assertEqual(self.helper.next_request_id('lumi.one'), 65535)
+        self.assertEqual(self.helper.next_request_id('lumi.one'), 1)
+        self.helper.disconnected()
+        self.assertEqual(self.helper.next_request_id('lumi.one'), 2)
+        self.assertTrue(self.helper.was_requested('lumi.one', 65535))
+        self.assertFalse(self.helper.was_requested('lumi.two', 65535))
+        self.assertFalse(self.helper.was_requested('lumi.one', True))
+
+    async def test_exhausted_request_ids_keep_report_only_updates(self):
+        self.helper.request_ids['lumi.demo'] = (17, 65535)
+        self.assertIsNone(self.helper.next_request_id('lumi.demo'))
+        self.assertTrue(self.helper.was_requested('lumi.demo', 16))
+        self.assertTrue(self.helper.was_requested('lumi.demo', 17))
+
     async def asyncTearDown(self):
         if self.helper:
             self.helper.stop()
@@ -349,7 +365,7 @@ class InitialTests(unittest.IsolatedAsyncioTestCase):
         self.helper.session_started = self.helper.clock()
         reporter = Reporter()
         self.g.add_update('lumi.demo', reporter.update)
-        self.helper.requests[10] = ('lumi.demo', 1, self.helper.clock(), {'4.1.85'}, {'light': -1})
+        self.helper.requests[('lumi.demo', 10)] = ('lumi.demo', 1, self.helper.clock(), {'4.1.85'}, {'light': -1})
         self.g._process_message(self.frame(value=1))
         for index in range(64):
             did = 'lumi.other' + str(index)
@@ -377,5 +393,36 @@ class InitialTests(unittest.IsolatedAsyncioTestCase):
         await asyncio.sleep(.01)
         self.assertFalse(self.g.available)
         self.assertEqual(self.mqtt, [])
+
+    async def test_evicted_request_cannot_override_a_newer_report(self):
+        self.device()
+        self.mode = 'hold'
+        reporter = Reporter()
+        self.helper.connected()
+        self.g.add_update('lumi.demo', reporter.update)
+        await self.wait_publish()
+        old = self.mqtt[0]
+        self.g._process_message(self.frame(value=1))
+        for index in range(128):
+            key = ('lumi.other', index)
+            self.helper.requests[key] = ('lumi.other', self.helper.generation, 0, {'4.1.85'}, {})
+            if len(self.helper.requests) > 128:
+                self.helper.requests.popitem(last=False)
+        self.g._process_message({'cmd':'read_rsp','did':'lumi.demo','id':old['id'],'results':[{'res_name':'4.1.85','value':0}]})
+        self.assertEqual(reporter._state, 1)
+
+    async def test_evicted_old_session_reply_is_discarded(self):
+        self.device()
+        self.mode = 'hold'
+        reporter = Reporter()
+        self.helper.connected()
+        self.g.add_update('lumi.demo', reporter.update)
+        await self.wait_publish()
+        old = self.mqtt[0]
+        self.helper.requests.clear()
+        self.helper.disconnected()
+        self.helper.connected()
+        self.g._process_message({'cmd':'read_rsp','did':'lumi.demo','id':old['id'],'results':[{'res_name':'4.1.85','value':0}]})
+        self.assertIsNone(reporter._state)
 if __name__ == '__main__':
     unittest.main()
