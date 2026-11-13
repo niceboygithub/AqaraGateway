@@ -15,7 +15,7 @@ class StartupTests(unittest.IsolatedAsyncioTestCase):
     def engine(self):
         module = ast.parse(SOURCE.read_text(encoding='utf-8'))
         cls = next((n for n in module.body if isinstance(n, ast.ClassDef) and n.name == 'Gateway'))
-        cls.body = [n for n in cls.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name in ('async_run', '_async_run_startup', 'async_connect', '_async_connect_startup', '_check_port', '_mqtt_connect')]
+        cls.body = [n for n in cls.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name in ('async_run', '_async_run_startup', 'async_connect', '_async_connect_startup', 'stop', 'async_disconnect', '_check_port', '_mqtt_connect')]
         self.pauses = []
 
         async def sleep(seconds):
@@ -33,6 +33,8 @@ class StartupTests(unittest.IsolatedAsyncioTestCase):
             return await asyncio.to_thread(fn, *args)
         obj.hass = SimpleNamespace(data={'fixture': {}}, async_add_executor_job=executor)
         obj.enabled = obj.available = False
+        obj.main_task = None
+        obj._initial_state = SimpleNamespace(stop=lambda: None, disconnected=lambda: None)
         obj.devices = {}
         obj.host = 'synthetic.invalid'
 
@@ -189,5 +191,52 @@ class StartupTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.setup_rows, [self.devices])
         self.assertLess(self.calls.index('connect'), self.calls.index('probe'))
         self.assertLess(self.calls.index('start'), self.calls.index('probe'))
+
+    async def test_unload_during_reconnect_does_not_restart_mqtt(self):
+        obj = self.engine()
+        obj.devices = {'existing': {'model': 'retained'}}
+        entered = threading.Event()
+        release = threading.Event()
+        def reconnect():
+            entered.set()
+            release.wait(1)
+        obj._mqttc.reconnect = reconnect
+        task = asyncio.create_task(obj.async_run())
+        for _ in range(100):
+            if entered.is_set():
+                break
+            await asyncio.sleep(.002)
+        self.assertTrue(entered.is_set())
+        obj.stop()
+        shutdown = asyncio.create_task(obj.async_disconnect())
+        await asyncio.sleep(.01)
+        release.set()
+        await asyncio.gather(task, shutdown)
+        self.assertFalse(obj.available)
+        self.assertFalse(obj.enabled)
+        self.assertNotIn('start', self.calls)
+
+    async def test_stop_during_discovery_does_not_create_devices(self):
+        obj = self.engine()
+        entered = threading.Event()
+        release = threading.Event()
+        def prepare(*args):
+            entered.set()
+            release.wait(1)
+            return self.devices
+        obj._prepare_gateway = prepare
+        task = asyncio.create_task(obj.async_run())
+        for _ in range(100):
+            if entered.is_set():
+                break
+            await asyncio.sleep(.002)
+        self.assertTrue(entered.is_set())
+        obj.stop()
+        shutdown = asyncio.create_task(obj.async_disconnect())
+        await asyncio.sleep(.01)
+        release.set()
+        await asyncio.gather(task, shutdown)
+        self.assertEqual(self.setup_rows, [])
+        self.assertFalse(obj.available)
 if __name__ == '__main__':
     unittest.main()

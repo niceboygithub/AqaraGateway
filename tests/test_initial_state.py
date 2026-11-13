@@ -336,5 +336,46 @@ class InitialTests(unittest.IsolatedAsyncioTestCase):
         await self.settle()
         self.assertEqual(len(self.mqtt), 3)
         self.assertIsNone(r._state)
+
+    async def test_virtual_catalog_attribute_is_not_queried(self):
+        device = self.device()
+        device['params'].append([None, 'hs_color', 'hs_color', None])
+        self.assertNotIn('None', self.helper.properties('lumi.demo'))
+
+    async def test_freshness_survives_value_cache_eviction(self):
+        self.device()
+        self.helper.generation = 1
+        self.helper.mqtt_ready = True
+        self.helper.session_started = self.helper.clock()
+        reporter = Reporter()
+        self.g.add_update('lumi.demo', reporter.update)
+        self.helper.requests[10] = ('lumi.demo', 1, self.helper.clock(), {'4.1.85'}, {'light': -1})
+        self.g._process_message(self.frame(value=1))
+        for index in range(64):
+            did = 'lumi.other' + str(index)
+            self.device(did=did)
+            self.helper.arrival += 1
+            self.helper.remember(did, {'light': 1})
+        self.assertNotIn('lumi.demo', self.helper.cache)
+        self.g._process_message({'cmd': 'read_rsp', 'did': 'lumi.demo', 'id': 10, 'results': [{'res_name': '4.1.85', 'value': 0}]})
+        self.assertEqual(reporter._state, 1)
+
+    async def test_disconnect_callback_runs_on_loop_without_restarting_after_stop(self):
+        starts = []
+        self.g.start = lambda: starts.append(threading.get_ident())
+        await asyncio.to_thread(self.g.on_disconnect, self.g._mqttc, None, 1)
+        await asyncio.sleep(.01)
+        self.assertEqual(starts, [self.thread])
+        self.g.stop()
+        await asyncio.to_thread(self.g.on_disconnect, self.g._mqttc, None, 1)
+        await asyncio.sleep(.01)
+        self.assertEqual(starts, [self.thread])
+
+    async def test_late_connect_callback_cannot_mark_stopped_gateway_available(self):
+        self.g.stop()
+        await asyncio.to_thread(self.g.on_connect, self.g._mqttc, None, None, 0)
+        await asyncio.sleep(.01)
+        self.assertFalse(self.g.available)
+        self.assertEqual(self.mqtt, [])
 if __name__ == '__main__':
     unittest.main()

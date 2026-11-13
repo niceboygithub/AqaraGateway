@@ -21,6 +21,8 @@ class InitialStateSync:
         self.clock = time.monotonic
         self.raw = OrderedDict()
         self.cache = OrderedDict()
+        # Small ordering metadata follows registered devices, not the value LRU.
+        self.orders = {}
         self.requests = OrderedDict()
         self.tasks = {}
         self.requested = set()
@@ -39,7 +41,7 @@ class InitialStateSync:
             return {}
         rows = device.get('params') or device.get('mi_spec') or []
         allowed = LIGHT if any(len(p) >= 4 and p[3] == 'light' for p in rows) else PRESENCE if device.get('model') in FP1 else set()
-        return {str(p[0]): p[2] for p in rows if len(p) >= 4 and p[2] in allowed}
+        return {p[0]: p[2] for p in rows if len(p) >= 4 and isinstance(p[0], str) and p[0] and p[2] in allowed}
 
     def handlers(self, did):
         allowed = set(self.properties(did).values())
@@ -109,8 +111,8 @@ class InitialStateSync:
         return item[1] if item and item[0] == self.generation else -1
 
     def _order(self, did, attr):
-        item = self.cache.get(did, {}).get(attr)
-        return item[3] if item and item[0] == self.generation else -1
+        item = self.orders.get(did, {}).get(attr)
+        return item[1] if item and item[0] == self.generation else -1
 
     def remember(self, did, payload, received=None, order=None):
         allowed = set(self.properties(did).values())
@@ -119,6 +121,7 @@ class InitialStateSync:
         for attr, value in payload.items():
             if attr in allowed and self.accepts(attr, value) and order >= self._order(did, attr):
                 self.cache.setdefault(did, {})[attr] = (self.generation, stamp, copy.deepcopy(value), order)
+                self.orders.setdefault(did, {})[attr] = (self.generation, order)
                 self.cache.move_to_end(did)
         while len(self.cache) > 64:
             self.cache.popitem(last=False)
@@ -168,6 +171,7 @@ class InitialStateSync:
         self.requested.clear()
         self.raw.clear()
         self.cache.clear()
+        self.orders.clear()
 
     def stop(self):
         self.stopped = True
