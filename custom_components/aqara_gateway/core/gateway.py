@@ -24,6 +24,7 @@ from .shell import (
     TelnetShellM2POE
 )
 from .utils import DEVICES, Utils, GLOBAL_PROP
+from .initial_state import InitialStateSync
 from .const import (
     CONF_MODEL,
     CONF_VRF_UNITS,
@@ -108,6 +109,7 @@ class Gateway:
 
         self.devices = {}
         self.updates = {}
+        self._initial_state = InitialStateSync(self, GLOBAL_PROP)
         self.setups = {}
         self._extra_state_attributes = {}
         self._info_ts = None
@@ -124,10 +126,12 @@ class Gateway:
     def add_update(self, did: str, handler):
         """Add handler to device update event."""
         self.updates.setdefault(did, []).append(handler)
+        self._initial_state.handler_added(did, handler)
 
     def remove_update(self, did: str, handler):
         """remove update"""
         self.updates.setdefault(did, []).remove(handler)
+        self._initial_state.handler_removed(did, handler)
 
     def add_setup(self, domain: str, handler):
         """Add hass device setup funcion."""
@@ -140,12 +144,21 @@ class Gateway:
 
     def stop(self):
         """ stop function """
+        self._initial_state.stop()
         self.enabled = False
 
         if self.main_task:  # HA < 2023.3
             self.main_task.cancel()
 
     async def async_connect(self):
+        """Serialize the first MQTT connection with startup/reconnect."""
+        lock = getattr(self, "_async_run_lock", None)
+        if lock is None:
+            lock = self._async_run_lock = asyncio.Lock()
+        async with lock:
+            await self._async_connect_startup()
+
+    async def _async_connect_startup(self):
         """Connect to the host. Does not process messages yet."""
         result: int | None = None
         try:
@@ -162,11 +175,12 @@ class Gateway:
                 f"Failed to connect to MQTT server: {self.host}"
             )
 
-        self._mqttc.loop_start()
+        await self.hass.async_add_executor_job(self._mqttc.loop_start)
         self.enabled = True
 
     async def async_disconnect(self):
         """Stop the MQTT client."""
+        self._initial_state.disconnected()
         self.available = False
 
         def stop():
@@ -185,44 +199,53 @@ class Gateway:
             self.main_task = hass.loop.create_task(self.async_run())
 
     async def async_run(self):
-        """ Main thread loop. """
+        """Serialize startup/reconnect while keeping network I/O off the loop."""
+        lock = getattr(self, "_async_run_lock", None)
+        if lock is None:
+            lock = self._async_run_lock = asyncio.Lock()
+        async with lock:
+            await self._async_run_startup()
+
+    async def _async_run_startup(self):
+        """Discover devices on startup and retain existing devices on reconnect."""
         telnetshell = False
         if "telnet" not in self.hass.data[DOMAIN]:
             self.hass.data[DOMAIN]["telnet"] = []
         if "mqtt" not in self.hass.data[DOMAIN]:
             self.hass.data[DOMAIN]["mqtt"] = []
 
-        while not self.enabled and not self.available:
-            if not self._check_port(23):
+        while not telnetshell and not self.devices:
+            if not await self.hass.async_add_executor_job(self._check_port, 23):
                 if self.host in self.hass.data[DOMAIN]["telnet"]:
                     self.hass.data[DOMAIN]["telnet"].remove(self.host)
                 _LOGGER.error(f"Can not connecto the telnet of the gateway ({self.host})!")
                 await asyncio.sleep(30)
                 continue
 
-            telnetshell = True
-            devices = self._prepare_gateway(get_devices=True)
+            devices = await self.hass.async_add_executor_job(self._prepare_gateway, True)
             if isinstance(devices, list):
+                telnetshell = True
                 if len(devices) >= 1:
                     self._gw_topic = "gw/{}/".format(devices[0]['mac'][2:].upper())
                 await self.async_setup_devices(devices)
                 break
+            await asyncio.sleep(30)
 
         if telnetshell:
             if self.host not in self.hass.data[DOMAIN]["telnet"]:
                 self.hass.data[DOMAIN]["telnet"].append(self.host)
 
         while not self.available:
-            self._mqttc.loop_stop()
-            if not self._mqtt_connect():
+            await self.hass.async_add_executor_job(self._mqttc.loop_stop)
+            if not await self.hass.async_add_executor_job(self._mqtt_connect):
                 if self.host in self.hass.data[DOMAIN]["mqtt"]:
                     self.hass.data[DOMAIN]["mqtt"].remove(self.host)
-                if not self._prepare_gateway():
+                if not await self.hass.async_add_executor_job(self._prepare_gateway):
                     _LOGGER.error(f"Can not connecto the mqtt of the gateway ({self.host})!")
                     await asyncio.sleep(30)
                     continue
 
-            self._mqttc.loop_start()
+            await self.hass.async_add_executor_job(self._mqttc.loop_start)
             self.available = True
 #            self._mqttc.loop_forever()
 
@@ -241,7 +264,10 @@ class Gateway:
         """Check if gateway port open."""
         skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
+            skt.settimeout(5)
             return skt.connect_ex((self.host, port)) == 0
+        except OSError:
+            return False
         finally:
             skt.close()
 
@@ -619,6 +645,7 @@ class Gateway:
         # pylint: disable=unused-argument
         """ on connect to mqtt server """
         self._mqttc.subscribe("#")
+        self.hass.loop.call_soon_threadsafe(self._initial_state.connected)
         self.available = True
         if self.host not in self.hass.data[DOMAIN]["mqtt"]:
             self.hass.data[DOMAIN]["mqtt"].append(self.host)
@@ -629,6 +656,7 @@ class Gateway:
         """ on disconnect to mqtt server """
         if self.host in self.hass.data[DOMAIN]["mqtt"]:
             self.hass.data[DOMAIN]["mqtt"].remove(self.host)
+        self.hass.loop.call_soon_threadsafe(self._initial_state.disconnected)
         self.available = False
 #        self.process_gateway_stats()
         self.hass.create_task(self.async_run())
@@ -726,6 +754,9 @@ class Gateway:
         # pylint: disable=too-many-branches, too-many-statements
         # pylint: disable=too-many-return-statements
 
+        data = self._initial_state.filter_incoming(data)
+        if data is None:
+            return
         if data['cmd'] == 'heartbeat':
             # don't know if only one item
             if len(data['params']) < 1:
@@ -893,6 +924,7 @@ class Gateway:
             device['did'], device['model'], payload, time_stamp
         ))
 
+        self._initial_state.remember(did, payload)
         for handler in self.updates[did]:
             handler(payload)
 

@@ -16,6 +16,22 @@ For Gateway M2 and Switch H1 Hub, to flash modified firmware to M2, please use [
 
 For Gateway M1S CN, AirCondition P3 CN, Hub E1 CN, Gateway M1S 2022 CN, please switch to **Mi Home mode**, and [get the token](https://github.com/piotrmachowski/xiaomi-cloud-tokens-extractor).
 
+## Offline regression tests
+
+Run from the repository root with Python 3.11 or later:
+
+```shell
+python -m unittest discover -s tests -v
+```
+
+The tests exercise the actual gateway lifecycle and message methods using synthetic
+Home Assistant adapters and MQTT clients. They require no Home Assistant installation
+or external devices and send no network traffic. Coverage includes non-blocking
+startup, device discovery/reconnect ordering, initial read-only attribute queries,
+early state reports, event non-replay, timeouts, cancellation and late replies.
+
+These offline checks do not replace validation on supported hubs and firmware.
+
 ## Installation
 
 you can install component with [HACS](https://hacs.xyz),  custom repo: HACS > Integrations > 3 dots (upper top corner) > Custom repositories > URL: `niceboygithub/AqaraGateway` > Category: Integration
