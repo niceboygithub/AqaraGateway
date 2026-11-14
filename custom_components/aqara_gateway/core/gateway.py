@@ -578,6 +578,14 @@ class Gateway:
                 if default_config:
                     device.update(default_config)
 
+                # HA's device registry requires software versions to be text.
+                # Zigbee 'model_ver' is exposed as sw_version by device_info.
+                # Normalize only metadata, preserving identifiers and state.
+                for version_key in ('sw_version', 'model_ver'):
+                    version = device.get(version_key)
+                    if version is not None and not isinstance(version, str):
+                        device[version_key] = str(version)
+
                 # Dynamically inject VRF climate params based on config
                 if device['model'] in VRF_MODELS:
                     vrf_units = self.options.get(CONF_VRF_UNITS, [])
@@ -845,6 +853,12 @@ class Gateway:
         elif data['cmd'] == 'write_ack':
             return
         elif data['cmd'] == 'behaved':
+            return
+        elif data['cmd'] == 'behave' and data.get('type') == 'rgb':
+            # M1S emits transient RGB effect/animation instructions.
+            # They do not describe a settled light state. Ignore them
+            # without changing RGB, brightness, or Zigbee handlers.
+            self.debug('Ignoring transient gateway RGB animation command')
             return
         elif data['cmd'] == 'control':
             data['did'] = 'lumi.0'
