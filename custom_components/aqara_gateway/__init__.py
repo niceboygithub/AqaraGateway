@@ -11,6 +11,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_registry import EntityRegistry
 from homeassistant.helpers.system_info import async_get_system_info
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC
 
 from .core.gateway import Gateway
@@ -203,12 +204,12 @@ class GatewayGenericDevice(Entity):
         self._name = (self.device['device_name'] + ' ' +
                         self._attr.replace('_', ' ').title())
 
-        self.entity_id = f"{DOMAIN}.{self._unique_id}"
-        self.entity_id = self.entity_id.replace(' ', '_').replace(':', '').lower()
+        # Let Home Assistant assign the platform-specific entity_id.
+        # The unique_id stays unchanged, preserving registered entity IDs.
 
     def debug(self, message: str):
         """ debug function """
-        self.gateway.debug(f"{self.entity_id} | {message}")
+        self.gateway.debug(f"{self.entity_id or self._unique_id} | {message}")
 
     async def async_added_to_hass(self):
         """ added to hass """
@@ -240,6 +241,25 @@ class GatewayGenericDevice(Entity):
         """ return available """
         return self.device.get('online', True)
 
+    def _get_gateway_device_id(self):
+        """Resolve the parent gateway ID within the owning config entry.
+
+        The hub is normally registered before its Zigbee devices. If it
+        isn't registered yet, omit the relationship instead of failing
+        setup; it can be restored on a subsequent integration reload.
+        """
+        gateway_mac = self.gateway.device.get('mac')
+        if not gateway_mac:
+            return None
+        try:
+            return dr.async_get_device_id_by_identifier(
+                self.hass,
+                (DOMAIN, gateway_mac),
+                config_entry_id=self.gateway._config_entry.entry_id,
+            )
+        except ValueError:
+            return None
+
     @property
     def device_info(self):
         device = self.device
@@ -259,24 +279,28 @@ class GatewayGenericDevice(Entity):
                 'serial_number': device.get('serial_number', "")
             }
         if type_ == 'zigbee':
-            return {
+            info = {
                 'connections': {(type_, device.get('mac', ""))},
                 'identifiers': {(DOMAIN, device.get('mac', ""))},
                 'manufacturer': device.get('device_manufacturer', ""),
                 'model': device.get('device_model', ""),
                 'name': device.get('device_name', ""),
                 'sw_version': device.get('model_ver', ""),
-                'via_device': (DOMAIN, self.gateway.device['mac'])
             }
-        # ble and mesh
-        return {
-            'connections': {('bluetooth', device['mac'])},
-            'identifiers': {(DOMAIN, device['mac'])},
-            'manufacturer': device.get('device_manufacturer'),
-            'model': device['device_model'],
-            'name': device['device_name'],
-            'via_device': (DOMAIN, self.gateway.device['mac'])
-        }
+        else:
+            # BLE and mesh
+            info = {
+                'connections': {('bluetooth', device['mac'])},
+                'identifiers': {(DOMAIN, device['mac'])},
+                'manufacturer': device.get('device_manufacturer'),
+                'model': device['device_model'],
+                'name': device['device_name'],
+            }
+
+        via_device_id = self._get_gateway_device_id()
+        if via_device_id is not None:
+            info['via_device_id'] = via_device_id
+        return info
 
     def update(self, data: dict):
         """ update """
