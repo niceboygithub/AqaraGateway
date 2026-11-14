@@ -7,7 +7,6 @@ import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.selector import NumberSelector, NumberSelectorConfig, NumberSelectorMode
 from homeassistant.config_entries import (
-    CONN_CLASS_LOCAL_PUSH,
     ConfigFlow,
     OptionsFlow,
     ConfigEntry
@@ -30,7 +29,6 @@ class AqaraGatewayFlowHandler(ConfigFlow, domain=DOMAIN):
     """Handle a Aqara Gateway config flow."""
 
     VERSION = 1
-    CONNECTION_CLASS = CONN_CLASS_LOCAL_PUSH
 
     def __init__(self):
         """Initialize flow."""
