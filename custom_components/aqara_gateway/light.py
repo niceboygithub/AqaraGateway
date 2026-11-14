@@ -36,6 +36,15 @@ ATTR_COLOR_TEMP = "color_temp"
 ATTR_LUMI_XY = "xy_color"
 ATTR_LUMI_COLOR_MODE = "lumi_color_mode"  # 14.165.85, 2 = xy colour
 
+# Aqara Hub M1S model variants. The exact model can differ by region/revision.
+_M1S_RGB_MODELS = frozenset({
+    "lumi.gateway.acn01",   # M1S CN
+    "lumi.gateway.aeu01",   # M1S EU
+    "lumi.gateway.acn004",  # M1S 2022
+    "lumi.gateway.acn008",  # M1S Gen2
+    "lumi.gateway.agl002",  # M1S Gen2
+})
+
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Perform the setup for Xiaomi/Aqara devices."""
     def setup(gateway: Gateway, device: dict, attr: str):
@@ -213,7 +222,7 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
     def turn_on(self, **kwargs):
         """Turn the light on."""
         if (self.device['type'] == 'gateway' and
-                self.device.get('model') == 'lumi.gateway.acn01'):
+                self.device.get('model') in _M1S_RGB_MODELS):
             # The M1S built-in light expects native RGB through ioctl/recv.
             # Keep this path separate from Zigbee bulbs and other gateways.
             if ATTR_RGB_COLOR in kwargs:
@@ -281,7 +290,8 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
 
         if (ATTR_HS_COLOR in kwargs or ATTR_BRIGHTNESS in kwargs):
             if self._attr_hs_color:
-                payload[ATTR_HS_COLOR] = color_util.color_temperature_kelvin_to_mired(self._attr_color_temp_kelvin)
+                # HS represents hue/saturation, not Kelvin. Do not convert
+                # an uninitialized color temperature (None) here.
                 rgb = color_util.color_hs_to_RGB(*self._attr_hs_color)
                 rgba = (self._attr_brightness,) + rgb
                 if isinstance(self._attr_brightness, int):
