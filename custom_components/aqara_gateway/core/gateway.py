@@ -43,6 +43,15 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
+# Aqara Hub M1S model variants. The exact model can differ by region/revision.
+_M1S_RGB_MODELS = frozenset({
+    "lumi.gateway.acn01",   # M1S CN
+    "lumi.gateway.aeu01",   # M1S EU
+    "lumi.gateway.acn004",  # M1S 2022
+    "lumi.gateway.acn008",  # M1S Gen2
+    "lumi.gateway.agl002",  # M1S Gen2
+})
+
 
 def _parse_gateway_json(raw, filename: str):
     """Extract and parse JSON returned through the gateway Telnet shell."""
@@ -569,6 +578,14 @@ class Gateway:
                 if default_config:
                     device.update(default_config)
 
+                # HA's device registry requires software versions to be text.
+                # Zigbee 'model_ver' is exposed as sw_version by device_info.
+                # Normalize only metadata, preserving identifiers and state.
+                for version_key in ('sw_version', 'model_ver'):
+                    version = device.get(version_key)
+                    if version is not None and not isinstance(version, str):
+                        device[version_key] = str(version)
+
                 # Dynamically inject VRF climate params based on config
                 if device['model'] in VRF_MODELS:
                     vrf_units = self.options.get(CONF_VRF_UNITS, [])
@@ -837,6 +854,12 @@ class Gateway:
             return
         elif data['cmd'] == 'behaved':
             return
+        elif data['cmd'] == 'behave' and data.get('type') == 'rgb':
+            # M1S emits transient RGB effect/animation instructions.
+            # They do not describe a settled light state. Ignore them
+            # without changing RGB, brightness, or Zigbee handlers.
+            self.debug('Ignoring transient gateway RGB animation command')
+            return
         elif data['cmd'] == 'control':
             data['did'] = 'lumi.0'
             pkey = 'control'
@@ -1063,6 +1086,9 @@ class Gateway:
                 payload = json.dumps(payload, separators=(',', ':')).encode()
                 self._mqttc.publish('zigbee/recv', payload)
             elif device['type'] == 'gateway':
+                # Native M1S RGB commands use "ver"; preserve "rev" for other hubs.
+                version_field = ('ver' if device.get('model') in _M1S_RGB_MODELS
+                                 else 'rev')
                 if ATTR_HS_COLOR in data:
                     hs_color = data.get(ATTR_HS_COLOR, 0)
                     brightness = (hs_color >> 24) & 0xFF
@@ -1076,7 +1102,7 @@ class Gateway:
                             'red': int(
                                 ((hs_color >> 16) & 0xFF) * brightness / 100)},
                         'type': 'rgb',
-                        'rev': 1,
+                        version_field: 1,
                         'from': 'ha',
                         'id': randint(0, 65535)
                     }
@@ -1084,7 +1110,7 @@ class Gateway:
                     payload = {
                         'cmd': 'control',
                         'data': data,
-                        'rev': 1,
+                        version_field: 1,
                         'from': 'ha',
                         'id': randint(0, 65535)
                     }
