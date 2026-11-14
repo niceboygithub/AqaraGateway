@@ -43,6 +43,15 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
+# Aqara Hub M1S model variants. The exact model can differ by region/revision.
+_M1S_RGB_MODELS = frozenset({
+    "lumi.gateway.acn01",   # M1S CN
+    "lumi.gateway.aeu01",   # M1S EU
+    "lumi.gateway.acn004",  # M1S 2022
+    "lumi.gateway.acn008",  # M1S Gen2
+    "lumi.gateway.agl002",  # M1S Gen2
+})
+
 
 def _parse_gateway_json(raw, filename: str):
     """Extract and parse JSON returned through the gateway Telnet shell."""
@@ -1064,7 +1073,7 @@ class Gateway:
                 self._mqttc.publish('zigbee/recv', payload)
             elif device['type'] == 'gateway':
                 # Native M1S RGB commands use "ver"; preserve "rev" for other hubs.
-                version_field = ('ver' if device.get('model') == 'lumi.gateway.acn01'
+                version_field = ('ver' if device.get('model') in _M1S_RGB_MODELS
                                  else 'rev')
                 if ATTR_HS_COLOR in data:
                     hs_color = data.get(ATTR_HS_COLOR, 0)
