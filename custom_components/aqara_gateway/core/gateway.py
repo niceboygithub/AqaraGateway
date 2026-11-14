@@ -1063,6 +1063,9 @@ class Gateway:
                 payload = json.dumps(payload, separators=(',', ':')).encode()
                 self._mqttc.publish('zigbee/recv', payload)
             elif device['type'] == 'gateway':
+                # Native M1S RGB commands use "ver"; preserve "rev" for other hubs.
+                version_field = ('ver' if device.get('model') == 'lumi.gateway.acn01'
+                                 else 'rev')
                 if ATTR_HS_COLOR in data:
                     hs_color = data.get(ATTR_HS_COLOR, 0)
                     brightness = (hs_color >> 24) & 0xFF
@@ -1076,7 +1079,7 @@ class Gateway:
                             'red': int(
                                 ((hs_color >> 16) & 0xFF) * brightness / 100)},
                         'type': 'rgb',
-                        'rev': 1,
+                        version_field: 1,
                         'from': 'ha',
                         'id': randint(0, 65535)
                     }
@@ -1084,7 +1087,7 @@ class Gateway:
                     payload = {
                         'cmd': 'control',
                         'data': data,
-                        'rev': 1,
+                        version_field: 1,
                         'from': 'ha',
                         'id': randint(0, 65535)
                     }
