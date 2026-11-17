@@ -145,6 +145,14 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                 self._attr_brightness = int(data[self._brightness_key] / 100.0 * 255.0)
             if self._color_temp_key in data:
                 self._attr_color_temp_kelvin = color_util.color_temperature_mired_to_kelvin(data[self._color_temp_key])
+            if (self.device['model'] == 'lumi.bhf_light.acn001'
+                    and isinstance(data.get(self._brightness_key), int)
+                    and data[self._brightness_key] > 1):
+                # remember the last normal (non night-light) level; the
+                # night light reports itself as brightness 1
+                self._bhf_last_level = data[self._brightness_key]
+                if self._color_temp_key in data:
+                    self._bhf_last_ct = data[self._color_temp_key]
             if self._lumi_xy:
                 if ATTR_LUMI_XY in data and isinstance(data[ATTR_LUMI_XY], int):
                     xy_val = data[ATTR_LUMI_XY]
@@ -232,6 +240,13 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
 
         if not payload:
             payload[self._attr] = 1
+            if self.device['model'] == 'lumi.bhf_light.acn001':
+                # a plain power-on brings back the night light if it was
+                # the last mode; sending a level switches to the main light
+                payload[self._brightness_key] = getattr(
+                    self, '_bhf_last_level', 100)
+                if getattr(self, '_bhf_last_ct', None):
+                    payload[self._color_temp_key] = self._bhf_last_ct
 
         try:
             if self.gateway.send(self.device, payload):
