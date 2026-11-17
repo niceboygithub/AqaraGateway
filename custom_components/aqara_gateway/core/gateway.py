@@ -339,13 +339,13 @@ class Gateway:
         elif "e1" in device_name:
             shell = TelnetShellE1(self.host,
                                     self.options.get(CONF_PASSWORD, ''))
-        elif "m1s" in device_name:
-            shell = TelnetShell(self.host, 
-                                    self.options.get(CONF_PASSWORD, ''))
         elif (("m2 2022" in device_name) or ("m1s 2022" in device_name) or
                 ("m3" in device_name) or ("m1s gen2" in device_name) or
                 ("v1" in device_name)):
             shell = TelnetShellM2POE(self.host,
+                                    self.options.get(CONF_PASSWORD, ''))
+        elif "m1s" in device_name:
+            shell = TelnetShell(self.host,
                                     self.options.get(CONF_PASSWORD, ''))
         else:
             shell = TelnetShell(self.host,
