@@ -36,6 +36,15 @@ ATTR_COLOR_TEMP = "color_temp"
 ATTR_LUMI_XY = "xy_color"
 ATTR_LUMI_COLOR_MODE = "lumi_color_mode"  # 14.165.85, 2 = xy colour
 
+# Aqara Hub M1S model variants. The exact model can differ by region/revision.
+_M1S_RGB_MODELS = frozenset({
+    "lumi.gateway.acn01",   # M1S CN
+    "lumi.gateway.aeu01",   # M1S EU
+    "lumi.gateway.acn004",  # M1S 2022
+    "lumi.gateway.acn008",  # M1S Gen2
+    "lumi.gateway.agl002",  # M1S Gen2
+})
+
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Perform the setup for Xiaomi/Aqara devices."""
     def setup(gateway: Gateway, device: dict, attr: str):
@@ -160,10 +169,35 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
                 elif self._color_temp_key in data and ATTR_LUMI_XY not in data:
                     self._attr_color_mode = ColorMode.COLOR_TEMP
             if ATTR_RGB_COLOR in data and not self._sub_cct:
-                x_val = float(data[ATTR_RGB_COLOR] / (2**16))
-                y_val = float(data[ATTR_RGB_COLOR] - x_val)
-                self._attr_rgb_color = color_util.color_xy_to_RGB(x_val, y_val)
-            if ATTR_HS_COLOR in data and not self._sub_cct:
+                rgb_value = data[ATTR_RGB_COLOR]
+                if isinstance(rgb_value, (tuple, list)) and len(rgb_value) == 3:
+                    if self.device['type'] == 'gateway':
+                        # Gateway notifications contain brightness-scaled RGB.
+                        # HA exposes brightness separately, so normalize the hue.
+                        peak = max(rgb_value)
+                        if peak > 0:
+                            self._attr_rgb_color = tuple(
+                                max(0, min(255, round(channel * 255 / peak)))
+                                for channel in rgb_value
+                            )
+                        else:
+                            self._attr_rgb_color = (255, 255, 255)
+                        self._attr_hs_color = color_util.color_RGB_to_hs(
+                            *self._attr_rgb_color)
+                        self._attr_color_mode = ColorMode.RGB
+                        if ATTR_BRIGHTNESS not in data:
+                            self._attr_brightness = round(peak)
+                    else:
+                        self._attr_rgb_color = tuple(rgb_value)
+                elif isinstance(rgb_value, int):
+                    # CIE xy packed into two 16-bit unsigned components.
+                    x_val = ((rgb_value >> 16) & 0xFFFF) / 65535.0
+                    y_val = (rgb_value & 0xFFFF) / 65535.0
+                    self._attr_rgb_color = color_util.color_xy_to_RGB(
+                        x_val, y_val)
+            if (ATTR_HS_COLOR in data and not self._sub_cct and
+                    not (self.device['type'] == 'gateway' and
+                         isinstance(data.get(ATTR_RGB_COLOR), (tuple, list)))):
                 if self.device['type'] == 'zigbee':
                     if isinstance(data[ATTR_HS_COLOR], int):
                         value = hex(data[ATTR_HS_COLOR] & 0xFFFFFF).replace('0x', '')
@@ -187,6 +221,47 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
 
     def turn_on(self, **kwargs):
         """Turn the light on."""
+        if (self.device['type'] == 'gateway' and
+                self.device.get('model') in _M1S_RGB_MODELS):
+            # The M1S built-in light expects native RGB through ioctl/recv.
+            # Keep this path separate from Zigbee bulbs and other gateways.
+            if ATTR_RGB_COLOR in kwargs:
+                rgb = kwargs[ATTR_RGB_COLOR]
+            elif ATTR_HS_COLOR in kwargs:
+                rgb = color_util.color_hs_to_RGB(*kwargs[ATTR_HS_COLOR])
+            elif ATTR_COLOR_TEMP_KELVIN in kwargs:
+                rgb = color_util.color_temperature_to_rgb(
+                    kwargs[ATTR_COLOR_TEMP_KELVIN])
+            elif self._attr_rgb_color is not None:
+                rgb = self._attr_rgb_color
+            elif self._attr_hs_color is not None:
+                rgb = color_util.color_hs_to_RGB(*self._attr_hs_color)
+            else:
+                rgb = (255, 255, 255)
+
+            rgb = tuple(max(0, min(255, round(value))) for value in rgb)
+            brightness = kwargs.get(ATTR_BRIGHTNESS)
+            if brightness is None:
+                brightness = (self._attr_brightness
+                              if self._attr_brightness and self._attr_brightness > 0
+                              else 255)
+            brightness = max(0, min(255, round(brightness)))
+            brightness_percent = round(brightness * 100 / 255)
+            packed_rgb = ((brightness_percent << 24) |
+                          (rgb[0] << 16) | (rgb[1] << 8) | rgb[2])
+            payload = {ATTR_HS_COLOR: packed_rgb}
+            try:
+                if self.gateway.send(self.device, payload):
+                    self._state = brightness > 0
+                    self._attr_brightness = brightness
+                    self._attr_rgb_color = rgb
+                    self._attr_hs_color = color_util.color_RGB_to_hs(*rgb)
+                    self._attr_color_mode = ColorMode.RGB
+                    self.schedule_update_ha_state()
+            except Exception:
+                _LOGGER.exception("Failed to send M1S RGB command")
+            return
+
         payload = {}
 
         if ATTR_BRIGHTNESS in kwargs:
@@ -215,7 +290,8 @@ class GatewayLight(GatewayGenericDevice, LightEntity):
 
         if (ATTR_HS_COLOR in kwargs or ATTR_BRIGHTNESS in kwargs):
             if self._attr_hs_color:
-                payload[ATTR_HS_COLOR] = color_util.color_temperature_kelvin_to_mired(self._attr_color_temp_kelvin)
+                # HS represents hue/saturation, not Kelvin. Do not convert
+                # an uninitialized color temperature (None) here.
                 rgb = color_util.color_hs_to_RGB(*self._attr_hs_color)
                 rgba = (self._attr_brightness,) + rgb
                 if isinstance(self._attr_brightness, int):
