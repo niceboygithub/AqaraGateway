@@ -400,9 +400,6 @@ DEVICES = [{
 }, {
     # light with brightness and color temp
     'lumi.dimmer.rcbac1': ["Aqara", "RGBW LED Dimmer", "ZNDDMK11LM"],  # @Kris
-    'lumi.dimmer.acn005': ["Aqara", "RGBW LED Dimmer T1 (240W)", "AL010CNW03"],
-    'lumi.dimmer.acn004': ["Aqara", "RGBW LED Dimmer T1 (120W)", "AL010CNW02"],
-    'lumi.dimmer.acn003': ["Aqara", "RGBW LED Dimmer T1 (60W)", "AL010CNW01"],
     'lumi.dimmer.acn002': ["Aqara", "RGBW LED Dimmer T2 (24W)", ""],
     'lumi.dimmer.acn001': ["Aqara", "RGBW LED Dimmer T2", ""],
     'params': [
@@ -438,6 +435,16 @@ DEVICES = [{
         ['8.0.2022', None, 'ambilight', None],
         ['8.0.2150', None, 'dynamic', None],
         ['14.163.85', None, 'music_mode', 'select'],
+    ]
+}, {
+    # Aqara LED Strip Driver T1 (single channel, CCT)
+    'lumi.dimmer.acn005': ["Aqara", "LED Strip Driver T1 (240W)", "ZNDDQDQ13LM"],
+    'lumi.dimmer.acn004': ["Aqara", "LED Strip Driver T1 (120W)", "ZNDDQDQ12LM"],
+    'lumi.dimmer.acn003': ["Aqara", "LED Strip Driver T1 (60W)", "ZNDDQDQ11LM"],
+    'params': [
+        ['4.1.85', 'power_status', 'light', 'light'],
+        ['1.7.85', 'light_level', 'brightness', None],
+        ['1.9.85', 'colour_temperature', 'color_temp', None],
     ]
 }, {
     # light with brightness and color temp
