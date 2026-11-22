@@ -1134,12 +1134,12 @@ DEVICES_AIOT = [{
         ['4.1.85', 'channel_0', 'channel 1', 'switch'],
         ['4.2.85', 'channel_1', 'channel 2', 'switch'],
         ['4.3.85', 'channel_2', 'channel 3', 'switch'],
-        ['13.1.85', None, 'button_1', None],
-        ['13.2.85', None, 'button_2', None],
-        ['13.3.85', None, 'button_3', None],
-        ['13.5.85', None, 'button_both_12', None],
-        ['13.6.85', None, 'button_both_13', None],
-        ['13.7.85', None, 'button_both_23', None],
+        ['13.1.85', None, 'button_1', 'event'],
+        ['13.2.85', None, 'button_2', 'event'],
+        ['13.3.85', None, 'button_3', 'event'],
+        ['13.5.85', None, 'button_both_12', 'event'],
+        ['13.6.85', None, 'button_both_13', 'event'],
+        ['13.7.85', None, 'button_both_23', 'event'],
         [None, None, 'switch', 'binary_sensor'],
     ]
 }, {
