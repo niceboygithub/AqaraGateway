@@ -1592,6 +1592,7 @@ DEVICES_AIOT = [{
         ['1.7.85', 'light_level', 'brightness', None],
         ['1.9.85', 'colour_temperature', 'color_temp', None],
         ['4.1.85', 'power_status', 'light', 'light'],
+        ['4.27.85', None, 'night_light', 'switch'],
         ['4.21.85', 'power_status', 'power', None],
         ['0.1.85', None, 'current_temperature', None],
         ['1.8.85', None, 'target_temperature', None],

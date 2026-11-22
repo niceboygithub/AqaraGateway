@@ -114,6 +114,11 @@ class GatewaySwitch(GatewayGenericDevice, SwitchEntity, RestoreEntity):
                     self._attr_is_on = False
                 else:
                     self._attr_is_on = bool(value)
+            if (key == 'light' and value == 0
+                    and self._model == 'lumi.bhf_light.acn001'
+                    and self._attr == 'night_light'):
+                # the night light goes out whenever the main light is off
+                self._attr_is_on = False
         self.async_write_ha_state()
 
     def turn_on(self, **kwargs):
@@ -122,4 +127,12 @@ class GatewaySwitch(GatewayGenericDevice, SwitchEntity, RestoreEntity):
 
     def turn_off(self, **kwargs):
         """Turn the switch off."""
+        if (self._model == 'lumi.bhf_light.acn001'
+                and self._attr == 'night_light'):
+            # writing 4.27.85=0 is ignored; the Aqara app turns the
+            # night light off with the main light power (4.1.85=0)
+            self.gateway.send(self.device, {'light': 0})
+            self._attr_is_on = False
+            self.schedule_update_ha_state()
+            return
         self.gateway.send(self.device, {self._attr: 0})
