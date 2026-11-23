@@ -4,7 +4,7 @@ from typing import Any
 
 from homeassistant.const import ATTR_TEMPERATURE, PRECISION_WHOLE, UnitOfTemperature
 from homeassistant.helpers import device_registry as dr
-from homeassistant.components.climate import ATTR_CURRENT_TEMPERATURE, ATTR_HVAC_ACTION, ClimateEntity
+from homeassistant.components.climate import ATTR_HVAC_ACTION, ClimateEntity, RestoreClimate
 from homeassistant.components.climate.const import (
     HVACAction,
     HVACMode,
@@ -12,7 +12,6 @@ from homeassistant.components.climate.const import (
     SWING_OFF,
     SWING_ON
 )
-from homeassistant.helpers.restore_state import RestoreEntity
 
 from . import DOMAIN, GatewayGenericDevice
 from .core.gateway import Gateway
@@ -59,7 +58,7 @@ async def async_unload_entry(hass, entry):
 # =============================================================================
 # Original generic climate (ac_state byte-packing) — DO NOT MODIFY
 # =============================================================================
-class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
+class AqaraGenericClimate(GatewayGenericDevice, RestoreClimate):
     # pylint: disable=too-many-instance-attributes
     """Initialize the AqaraGenericClimate."""
 
@@ -77,13 +76,25 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
         self._model = device['model']
         super().__init__(gateway, device, attr)
 
+    async def async_added_to_hass(self):
+        """Restore native temperatures until the gateway reports fresh data."""
+        await super().async_added_to_hass()
+        cached = await self.async_get_last_climate_data()
+        if cached is None:
+            return
+        if self._current_temp is None:
+            self._current_temp = cached.native_current_temperature
+        if self._target_temp in (None, 0):
+            if cached.native_target_temperature is not None:
+                self._target_temp = cached.native_target_temperature
+
     @property
     def precision(self) -> float:
         """ return precision """
         return PRECISION_WHOLE
 
     @property
-    def temperature_unit(self):
+    def native_temperature_unit(self):
         """ return temperature uint """
         return UnitOfTemperature.CELSIUS
 
@@ -98,12 +109,12 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
         return [HVACMode.OFF, HVACMode.COOL, HVACMode.HEAT]
 
     @property
-    def current_temperature(self):
+    def native_current_temperature(self):
         """ return current temperature """
         return self._current_temp
 
     @property
-    def target_temperature(self):
+    def native_target_temperature(self):
         """ return target temperature """
         return self._target_temp
 
@@ -210,7 +221,7 @@ class AqaraGenericClimate(GatewayGenericDevice, ClimateEntity):
 # =============================================================================
 # VRF Air Conditioning (multi-zone, per-unit indexed control)
 # =============================================================================
-class AqaraVRFClimate(GatewayGenericDevice, ClimateEntity):
+class AqaraVRFClimate(GatewayGenericDevice, RestoreClimate):
     """Climate entity for Aqara VRF Air Conditioning controllers.
 
     Supports multi-zone VRF systems where each indoor unit is identified
@@ -244,10 +255,23 @@ class AqaraVRFClimate(GatewayGenericDevice, ClimateEntity):
             ClimateEntityFeature.TARGET_TEMPERATURE |
             ClimateEntityFeature.FAN_MODE
         )
-        self._attr_temperature_unit = UnitOfTemperature.CELSIUS
+        self._attr_native_temperature_unit = UnitOfTemperature.CELSIUS
+        self._attr_native_current_temperature = None
+        self._attr_native_target_temperature = None
         self._attr_target_temperature_step = 0.5
         self._attr_max_temp = 35
         self._attr_min_temp = 16
+
+    async def async_added_to_hass(self):
+        """Restore only previous temperatures, not HVAC power or mode."""
+        await super().async_added_to_hass()
+        cached = await self.async_get_last_climate_data()
+        if cached is None:
+            return
+        if self._attr_native_current_temperature is None:
+            self._attr_native_current_temperature = cached.native_current_temperature
+        if self._attr_native_target_temperature is None:
+            self._attr_native_target_temperature = cached.native_target_temperature
 
     @property
     def hvac_mode(self) -> HVACMode:
@@ -265,7 +289,7 @@ class AqaraVRFClimate(GatewayGenericDevice, ClimateEntity):
         temp = kwargs[ATTR_TEMPERATURE]
         target_key = f"target_temperature_{self.index}"
         self.gateway.send(self.device, {target_key: int(temp * 100)})
-        self._attr_target_temperature = temp
+        self._attr_native_target_temperature = temp
         if self.hass:
             self.async_write_ha_state()
 
@@ -318,13 +342,13 @@ class AqaraVRFClimate(GatewayGenericDevice, ClimateEntity):
             if keys['cur'] in data:
                 val = data[keys['cur']]
                 if val > 0:
-                    self._attr_current_temperature = (
+                    self._attr_native_current_temperature = (
                         val / 100 if val > 500 else val)
 
             if keys['tar'] in data:
                 val = data[keys['tar']]
                 if val > 0:
-                    self._attr_target_temperature = (
+                    self._attr_native_target_temperature = (
                         val / 100 if val > 500 else val)
 
             if keys['pwr'] in data:
@@ -484,20 +508,22 @@ class AqaraClimateYuba(AqaraGenericClimate, ClimateEntity):
 # =============================================================================
 # Towel warmer — DO NOT MODIFY
 # =============================================================================
-class AqaraTowelWarmer(GatewayGenericDevice, ClimateEntity, RestoreEntity):
+class AqaraTowelWarmer(GatewayGenericDevice, RestoreClimate):
     _attr_hvac_modes: list[HVACMode] = [HVACMode.OFF, HVACMode.HEAT]
     _attr_max_temp: float = 65
     _attr_min_temp: float = 45
     _attr_precision: float = PRECISION_WHOLE
     _attr_supported_features: ClimateEntityFeature = ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.TURN_OFF | ClimateEntityFeature.TURN_ON
     _attr_target_temperature_step: float = 1
-    _attr_temperature_unit: str = UnitOfTemperature.CELSIUS
+    _attr_native_temperature_unit: str = UnitOfTemperature.CELSIUS
 
     _enable_turn_on_off_backwards_compatibility = False
 
     def __init__(self, gateway: Gateway, device: dict, attr: str):
         self._attr = attr
         self._attr_hvac_mode: HVACMode | None = None
+        self._attr_native_current_temperature = None
+        self._attr_native_target_temperature = None
         super().__init__(gateway, device, attr)
 
     async def async_added_to_hass(self):
@@ -507,10 +533,13 @@ class AqaraTowelWarmer(GatewayGenericDevice, ClimateEntity, RestoreEntity):
                 self._attr_hvac_mode = HVACMode(last_state.state)
             if ATTR_HVAC_ACTION in last_state.attributes:
                 self._attr_hvac_action = HVACAction(last_state.attributes[ATTR_HVAC_ACTION])
-            self._attr_current_temperature = last_state.attributes.get(ATTR_CURRENT_TEMPERATURE)
-            self._attr_target_temperature = last_state.attributes.get(ATTR_TEMPERATURE)
-
         await super().async_added_to_hass()
+        cached = await self.async_get_last_climate_data()
+        if cached is not None:
+            if self._attr_native_current_temperature is None:
+                self._attr_native_current_temperature = cached.native_current_temperature
+            if self._attr_native_target_temperature is None:
+                self._attr_native_target_temperature = cached.native_target_temperature
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
         """Set new target temperature."""
@@ -525,9 +554,9 @@ class AqaraTowelWarmer(GatewayGenericDevice, ClimateEntity, RestoreEntity):
 
     def update(self, data: dict):
         if 'current_temperature' in data:
-            self._attr_current_temperature = data['current_temperature']
+            self._attr_native_current_temperature = data['current_temperature']
         if 'target_temperature' in data:
-            self._attr_target_temperature = data['target_temperature']
+            self._attr_native_target_temperature = data['target_temperature']
         if 'power' in data:
             if data['power'] == 1:
                 self._attr_hvac_mode = HVACMode.HEAT

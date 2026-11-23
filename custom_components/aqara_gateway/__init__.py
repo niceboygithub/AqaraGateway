@@ -9,8 +9,11 @@ from homeassistant.core import HomeAssistant, Event
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.restore_state import RestoreEntity, ExtraStoredData
+from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.entity_registry import EntityRegistry
 from homeassistant.helpers.system_info import async_get_system_info
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC
 
 from .core.gateway import Gateway
@@ -187,7 +190,17 @@ async def _setup_logger(hass: HomeAssistant):
         _LOGGER.debug(f"SysInfo: {info}")
 
 
-class GatewayGenericDevice(Entity):
+class AqaraNativeReading(ExtraStoredData):
+    """Cache a native sensor reading without display-unit conversion."""
+
+    def __init__(self, value):
+        self.value = value
+
+    def as_dict(self):
+        return {"aqara_native_reading_v1": self.value}
+
+
+class GatewayGenericDevice(RestoreEntity):
     # pylint: disable=too-many-instance-attributes
     """ Gateway Generic Device """
 
@@ -203,17 +216,37 @@ class GatewayGenericDevice(Entity):
         self._name = (self.device['device_name'] + ' ' +
                         self._attr.replace('_', ' ').title())
 
-        self.entity_id = f"{DOMAIN}.{self._unique_id}"
-        self.entity_id = self.entity_id.replace(' ', '_').replace(':', '').lower()
+        # Let Home Assistant assign the platform-specific entity_id.
+        # The unique_id stays unchanged, preserving registered entity IDs.
 
     def debug(self, message: str):
         """ debug function """
-        self.gateway.debug(f"{self.entity_id} | {message}")
+        self.gateway.debug(f"{self.entity_id or self._unique_id} | {message}")
+
+    @property
+    def extra_restore_state_data(self):
+        """Save native passive measurements, not the state of actuators."""
+        if isinstance(self, SensorEntity) and type(self._state) in (int, float, str, bool):
+            if isinstance(self._state, float) and not math.isfinite(self._state):
+                return None
+            return AqaraNativeReading(self._state)
+        return super().extra_restore_state_data
 
     async def async_added_to_hass(self):
-        """ added to hass """
+        """Attach listener and restore a cached reading if no live value exists."""
+        await super().async_added_to_hass()
         if 'init' in self.device:
             self.update(self.device['init'])
+        if isinstance(self, SensorEntity) and self._state is None:
+            try:
+                restored = await self.async_get_last_extra_data()
+                data = restored.as_dict() if restored is not None else {}
+                value = data.get('aqara_native_reading_v1')
+                if type(value) in (int, float, str, bool):
+                    if not isinstance(value, float) or math.isfinite(value):
+                        self._state = value
+            except (ValueError, TypeError, AttributeError) as exc:
+                _LOGGER.debug("Cannot restore %s: %s", self._unique_id, exc)
         self.gateway.add_update(self.device['did'], self.update)
 
     async def async_will_remove_from_hass(self) -> None:
@@ -240,6 +273,25 @@ class GatewayGenericDevice(Entity):
         """ return available """
         return self.device.get('online', True)
 
+    def _get_gateway_device_id(self):
+        """Resolve the parent gateway ID within the owning config entry.
+
+        The hub is normally registered before its Zigbee devices. If it
+        isn't registered yet, omit the relationship instead of failing
+        setup; it can be restored on a subsequent integration reload.
+        """
+        gateway_mac = self.gateway.device.get('mac')
+        if not gateway_mac:
+            return None
+        try:
+            return dr.async_get_device_id_by_identifier(
+                self.hass,
+                (DOMAIN, gateway_mac),
+                config_entry_id=self.gateway._config_entry.entry_id,
+            )
+        except ValueError:
+            return None
+
     @property
     def device_info(self):
         device = self.device
@@ -259,24 +311,28 @@ class GatewayGenericDevice(Entity):
                 'serial_number': device.get('serial_number', "")
             }
         if type_ == 'zigbee':
-            return {
+            info = {
                 'connections': {(type_, device.get('mac', ""))},
                 'identifiers': {(DOMAIN, device.get('mac', ""))},
                 'manufacturer': device.get('device_manufacturer', ""),
                 'model': device.get('device_model', ""),
                 'name': device.get('device_name', ""),
                 'sw_version': device.get('model_ver', ""),
-                'via_device': (DOMAIN, self.gateway.device['mac'])
             }
-        # ble and mesh
-        return {
-            'connections': {('bluetooth', device['mac'])},
-            'identifiers': {(DOMAIN, device['mac'])},
-            'manufacturer': device.get('device_manufacturer'),
-            'model': device['device_model'],
-            'name': device['device_name'],
-            'via_device': (DOMAIN, self.gateway.device['mac'])
-        }
+        else:
+            # BLE and mesh
+            info = {
+                'connections': {('bluetooth', device['mac'])},
+                'identifiers': {(DOMAIN, device['mac'])},
+                'manufacturer': device.get('device_manufacturer'),
+                'model': device['device_model'],
+                'name': device['device_name'],
+            }
+
+        via_device_id = self._get_gateway_device_id()
+        if via_device_id is not None:
+            info['via_device_id'] = via_device_id
+        return info
 
     def update(self, data: dict):
         """ update """
